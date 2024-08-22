@@ -8,7 +8,7 @@ import {
   Param,
   Post,
   Query,
-  UseGuards
+  UseGuards,
 } from '@nestjs/common';
 import { RoutingEnum } from '../../../../../core/routes/routing';
 import { PaginationViewModel } from '../../../../../core/utils/sorting-base-filter';
@@ -42,6 +42,8 @@ export class SAController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   async createSA(@Body() body: CreateUserDto): Promise<SAViewType> {
+    console.log(body);
+
     const createCommand = new CreateSACommand(body);
     return this.saCrudApiService.create(createCommand);
   }

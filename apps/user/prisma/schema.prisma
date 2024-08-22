@@ -12,7 +12,7 @@ datasource db {
 model UserAccount {
   id                           String         @id @default(uuid())
   userName                     String         @unique
-  email                        String
+  email                        String         @unique
   passwordHash                 String
   confirmationCode             String
   confirmationExpDate          DateTime
@@ -28,11 +28,11 @@ model UserAccount {
 model UserSession {
   id                String         @id @default(uuid())
   ip                String
-  userAgentInfo     String         @map("user_agent_info")
-  deviceId          String         @map("device_id")
-  refreshToken      String         @map("refresh_token")
-  rtIssuedAt        DateTime       @map("rt_issued_at")
-  rtExpirationDate  DateTime       @map("rt_expiration_date")
+  userAgentInfo     String         
+  deviceId          String         
+  refreshToken      String         
+  rtIssuedAt        DateTime       
+  rtExpirationDate  DateTime       
 
   userAccount       UserAccount    @relation("UserSessions", fields: [userId], references: [id])
   userId            String

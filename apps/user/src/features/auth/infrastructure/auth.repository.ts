@@ -1,10 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { UserRecoveryType } from '../api/models/auth.output.models/auth.output.models';
-import { LoginOrEmailType } from '../api/models/auth.output.models/auth.user.types';
+import {
+  EmailDtoType,
+  LoginOrEmailType,
+} from '../api/models/auth.output.models/auth.user.types';
 import { CreateTempAccountDto } from '../api/models/temp-account.models.ts/temp-account-models';
 import { UpdatePasswordDto } from '../api/models/auth-input.models.ts/password-recovery.types';
 import { OutputId } from '../../../../core/api/dto/output-id.dto';
-import { UserAccount } from '@prisma/client';
+import { Prisma, UserAccount } from '@prisma/client';
+import { PrismaService } from '../../../../core/db/prisma/prisma.service';
+import { DefaultArgs } from '@prisma/client/runtime/library';
 
 type BanInfoType = {
   isBanned: boolean;
@@ -12,11 +17,12 @@ type BanInfoType = {
 
 @Injectable()
 export class AuthRepository {
-  private tempUserAccounts: any
-  private userAccounts: any
-  private userBans: any
-  constructor(
-  ) {}
+  private tempUserAccounts: any;
+  private userAccounts: Prisma.UserAccountDelegate<DefaultArgs>;
+  private userBans: any;
+  constructor(private readonly prisma: PrismaService) {
+    this.userAccounts = this.prisma.userAccount;
+  }
 
   async createTemporaryUserAccount(
     createDto: CreateTempAccountDto,
@@ -89,9 +95,7 @@ export class AuthRepository {
     try {
       const currentTime = new Date();
 
-      const result = await this.userAccounts.findOneBy({
-        
-      });
+      const result = await this.userAccounts.findFirst({});
 
       if (!result) return null;
 
@@ -104,34 +108,29 @@ export class AuthRepository {
     }
   }
 
-  async findByLoginOrEmail(
-    inputData: LoginOrEmailType,
-  ): Promise<UserAccount | null> {
+  async findUserByEmail(inputData: EmailDtoType): Promise<UserAccount | null> {
     try {
-      const { email, login, loginOrEmail } = inputData;
+      const { email } = inputData;
 
-
-      const result = await this.userAccounts.findOne({  });
+      const result = await this.userAccounts.findFirst({ where: { email } });
 
       if (!result) return null;
 
       return result;
     } catch (e) {
-      console.error(
-        `there were some problems during find user by login or email, ${e}`,
-      );
+      console.error(`there were some problems during find user by email, ${e}`);
       return null;
     }
   }
 
   async updateConfirmation(id: string): Promise<boolean> {
     try {
-      const result = await this.userAccounts.update(
-        { id },
-        { is_confirmed: true },
-      );
+      const result = await this.userAccounts.update({
+        where: { id },
+        data: { isConfirmed: true },
+      });
 
-      return result.affected !== 0;
+      return !!result;
     } catch (error) {
       console.error(
         `there were some problems during update user's confirmation code: ${error}`,
@@ -140,21 +139,20 @@ export class AuthRepository {
     }
   }
 
+  // todo add user id
   async updateConfirmationCode(
     email: string,
     confirmationCode: string,
     newConfirmationExpDate: Date,
   ): Promise<boolean> {
     try {
-      const result = await this.userAccounts.update(
-        { email },
-        {
-          confirmation_code: confirmationCode,
-          confirmation_expiration_date: newConfirmationExpDate,
-        },
-      );
+      // const result = await this.userAccounts.update({
+      //   where: { email },
+      //   data: { confirmationCode, confirmationExpDate: newConfirmationExpDate },
+      // });
 
-      return result.affected !== 0;
+      // return !!result;
+      return true;
     } catch (error) {
       console.error(
         `Database fails operate during update confirmation code operation ${error}`,
@@ -168,15 +166,15 @@ export class AuthRepository {
     recoveryData: UserRecoveryType,
   ): Promise<boolean> {
     try {
-      const result = await this.userAccounts.update(
-        { email: email },
-        {
-          password_recovery_code: recoveryData.recoveryCode,
-          password_recovery_expiration_date: recoveryData.expirationDate,
-        },
-      );
+      // const result = await this.userAccounts.update(
+      //   { email: email },
+      //   {
+      //     password_recovery_code: recoveryData.recoveryCode,
+      //     password_recovery_expiration_date: recoveryData.expirationDate,
+      //   },
+      // );
 
-      return result.affected !== 0;
+      return true;
     } catch (error) {
       console.error(
         `Database fails operate during update recovery code operation ${error}`,
@@ -189,17 +187,17 @@ export class AuthRepository {
     try {
       const { passwordHash, passwordSalt, recoveryCode } = updateData;
 
-      const result = await this.userAccounts.update(
-        { password_recovery_code: recoveryCode },
-        {
-          password_recovery_code: '',
-          password_recovery_expiration_date: '',
-          password_hash: passwordHash,
-          password_salt: passwordSalt,
-        },
-      );
+      // const result = await this.userAccounts.update(
+      //   { password_recovery_code: recoveryCode },
+      //   {
+      //     password_recovery_code: '',
+      //     password_recovery_expiration_date: '',
+      //     password_hash: passwordHash,
+      //     password_salt: passwordSalt,
+      //   },
+      // );
 
-      return result.affected !== 0;
+      return true;
     } catch (error) {
       console.error(
         `Database fails operate with update user password ${error}`,

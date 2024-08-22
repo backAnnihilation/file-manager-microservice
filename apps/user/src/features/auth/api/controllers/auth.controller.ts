@@ -16,10 +16,7 @@ import { ApiTagsEnum, RoutingEnum } from '../../../../../core/routes/routing';
 import { LocalAuthGuard } from '../../infrastructure/guards/local-auth.guard';
 import { CustomThrottlerGuard } from '../../../../../core/infrastructure/guards/custom-throttler.guard';
 import { AuthNavigate } from '../../../../../core/routes/auth-navigate';
-import {
-  RefreshTokenEndpoint,
-  SignInEndpoint,
-} from '../../dto/documentation/signIn/signIn-description';
+import { SignInEndpoint } from './swagger/signIn/signIn.description';
 import { CommandBus } from '@nestjs/cqrs';
 import { AuthService } from '../../application/auth.service';
 import { ConfirmEmailCommand } from '../../application/use-cases/commands/confirm-email.command';
@@ -52,6 +49,9 @@ import {
   ErrorType,
   makeErrorsMessages,
 } from '../../../../../core/utils/error-handler';
+import { Response } from 'express';
+import { CaptureGuard } from '../../infrastructure/guards/validate-capture.guard';
+import { RefreshTokenEndpoint } from './swagger/refresh-token.description';
 
 // todo Response from express doesn't work
 @ApiTags(ApiTagsEnum.Auth)
@@ -66,18 +66,15 @@ export class AuthController {
 
   // todo authCUDService
   @SignInEndpoint()
-  @UseGuards(CustomThrottlerGuard, LocalAuthGuard)
+  @UseGuards(CustomThrottlerGuard, LocalAuthGuard, CaptureGuard)
   @HttpCode(HttpStatus.OK)
   @Post(AuthNavigate.Login)
   async login(
     @UserPayload() userInfo: UserSessionDto,
     @GetClientInfo() clientInfo: ClientInfo,
-    @Res({ passthrough: true }) res: any,
+    @Res({ passthrough: true }) res: Response,
     @Body() body: UserCredentialsWithCaptureTokenDto,
   ) {
-    const isValid = this.authService.validateCaptureToken(body.recaptureToken);
-    if (!isValid) throw new BadRequestException('Invalid recapture token');
-
     const { accessToken, refreshToken } =
       await this.authService.createTokenPair(userInfo.userId);
 
@@ -108,6 +105,7 @@ export class AuthController {
 
     res.cookie('refreshToken', refreshToken, { httpOnly: true, secure: true });
 
+    // res.header('accessToken', accessToken);
     return { accessToken };
   }
 
@@ -117,7 +115,7 @@ export class AuthController {
   @Post(AuthNavigate.RefreshToken)
   async refreshToken(
     @UserPayload() userInfo: UserSessionDto,
-    @Res({ passthrough: true }) res: any,
+    @Res({ passthrough: true }) res: Response,
   ) {
     const { userId, deviceId } = userInfo;
 
@@ -135,27 +133,26 @@ export class AuthController {
       issuedAt,
       expirationDate,
     });
-
-    await this.commandBus.execute<UpdateIssuedTokenCommand, boolean>(command);
+    await this.commandBus.execute(command);
 
     res.cookie('refreshToken', refreshToken, { httpOnly: true, secure: true });
     return { accessToken };
   }
 
-  @UseGuards(CustomThrottlerGuard)
+  @UseGuards(CustomThrottlerGuard, CaptureGuard)
   @Post(AuthNavigate.NewPassword)
   @HttpCode(HttpStatus.NO_CONTENT)
-  async confirmPasswordRecovery(@Body() data: RecoveryPassDto) {
+  async confirmPasswordRecovery(@Body() body: RecoveryPassDto) {
     const existingAccount =
-      await this.authQueryRepo.findUserAccountByRecoveryCode(data.recoveryCode);
+      await this.authQueryRepo.findUserAccountByRecoveryCode(body.recoveryCode);
 
     if (existingAccount) {
-      const command = new UpdatePasswordCommand(data);
+      const command = new UpdatePasswordCommand(body);
 
       return this.commandBus.execute<UpdatePasswordCommand, boolean>(command);
     }
 
-    const command = new UpdatePassTempAccountCommand(data);
+    const command = new UpdatePassTempAccountCommand(body);
 
     return this.commandBus.execute(command);
   }
@@ -185,7 +182,7 @@ export class AuthController {
   @HttpCode(HttpStatus.NO_CONTENT)
   async registration(
     @Body() data: CreateUserDto,
-    @Res({ passthrough: true }) res: any,
+    @Res({ passthrough: true }) res: Response,
   ) {
     const { userName, email } = data;
 

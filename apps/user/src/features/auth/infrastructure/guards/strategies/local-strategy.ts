@@ -15,14 +15,14 @@ import { LayerNoticeInterceptor } from '../../../../../../core/utils/notificatio
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy) {
   constructor(private commandBus: CommandBus) {
-    super({ usernameField: 'loginOrEmail' });
+    super({ usernameField: 'email' });
   }
 
-  async validate(loginOrEmail: string, password: string): Promise<UserIdType> {
-    await this.validateInputModel(loginOrEmail, password);
+  async validate(email: string, password: string): Promise<UserIdType> {
+    await this.validateInputModel(email, password);
 
     const command = new VerificationCredentialsCommand({
-      loginOrEmail,
+      email,
       password,
     });
 
@@ -37,9 +37,9 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
     return result.data;
   }
 
-  private async validateInputModel(loginOrEmail: string, password: string) {
+  private async validateInputModel(email: string, password: string) {
     const validation = new UserCredentialsDto();
-    validation.loginOrEmail = loginOrEmail;
+    validation.email = email;
     validation.password = password;
     try {
       await validateOrReject(validation);
