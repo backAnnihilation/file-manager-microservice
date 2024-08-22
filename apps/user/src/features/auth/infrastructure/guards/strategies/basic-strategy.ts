@@ -6,21 +6,19 @@ import { BasicStrategy } from 'passport-http';
 
 @Injectable()
 export class BasicSAStrategy extends PassportStrategy(BasicStrategy) {
+  private password: string;
+  private userName: string;
   constructor(private configService: ConfigService<EnvironmentVariable>) {
     super();
+    this.password = this.configService.get('BASIC_AUTH_PASSWORD');
+    this.userName = this.configService.get('BASIC_AUTH_USERNAME');
   }
 
   public validate = async (
     username: string,
     password: string,
   ): Promise<boolean> => {
-    const { USERNAME, PASSWORD } = this.configService.get('basicAuth', {
-      infer: true,
-    });
-
-    if (USERNAME === username && PASSWORD === password) {
-      return true;
-    }
+    if (this.userName === username && this.password === password) return true;
 
     throw new UnauthorizedException();
   };

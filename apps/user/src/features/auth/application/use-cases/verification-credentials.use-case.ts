@@ -3,7 +3,10 @@ import { UserIdType } from '../../../admin/api/models/outputSA.models.ts/user-mo
 import { AuthRepository } from '../../infrastructure/auth.repository';
 import { VerificationCredentialsCommand } from './commands/verification-credentials.command';
 import { BcryptAdapter } from '../../../../../core/adapters/bcrypt.adapter';
-import { LayerNoticeInterceptor, GetErrors } from '../../../../../core/utils/notification';
+import {
+  LayerNoticeInterceptor,
+  GetErrors,
+} from '../../../../../core/utils/notification';
 
 @CommandHandler(VerificationCredentialsCommand)
 export class VerificationCredentialsUseCase
@@ -21,24 +24,14 @@ export class VerificationCredentialsUseCase
     command: VerificationCredentialsCommand,
   ): Promise<LayerNoticeInterceptor<UserIdType | null>> {
     const notice = new LayerNoticeInterceptor<UserIdType>();
-    const { loginOrEmail, password } = command.verificationDto;
+    const { email, password } = command.verificationDto;
 
-    const userAccount = await this.authRepo.findByLoginOrEmail({
-      loginOrEmail,
+    const userAccount = await this.authRepo.findUserByEmail({
+      email,
     });
 
     if (!userAccount) {
       notice.addError('User not found', this.location, GetErrors.NotFound);
-      return notice;
-    }
-
-    const user = await this.authRepo.getUserBanInfo(userAccount.id);
-    if (user?.isBanned) {
-      notice.addError(
-        `User with loginOrEmail ${loginOrEmail} is banned`,
-        this.location,
-        GetErrors.DeniedAccess,
-      );
       return notice;
     }
 

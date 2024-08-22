@@ -1,53 +1,34 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import {
-  EnvironmentVariables
-} from '../config/configuration';
+import { EnvironmentVariables } from '../config/configuration';
 
 @Injectable()
 export class CaptureAdapter {
   private secretKey: string;
+  private apiUrl: string;
+  private readonly threshold = 0.5;
   constructor(private configService: ConfigService<EnvironmentVariables>) {
     this.secretKey = this.configService.get('GOOGLE_CAPTURE_SECRET');
+    this.apiUrl = 'https://www.google.com/recaptcha/api/siteverify';
   }
-  async isValid(captureRaw: string) {
+  async validateCaptureToken(captureToken: string) {
     try {
-      fetch('https://www.google.com/recaptcha/api/siteverify', {
+      return await fetch(this.apiUrl, {
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
         method: 'POST',
-        body: `secret=${this.secretKey}&response=${captureRaw}`,
+        body: `secret=${this.secretKey}&response=${captureToken}`,
       })
         .then((res) => res.json())
-        .then((result) => {
-          if (result.success) {
-            return true;
-          } else {
-            return false;
-          }
-        });
-      const rawResult = await fetch(
-        'https://www.google.com/recaptcha/api/siteverify',
-        {
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-          method: 'POST',
-          body: `secret=${this.secretKey}&response=${captureRaw}`,
-        },
-      );
-
-      const response: RecaptchaResponse = await rawResult.json();
-
-      if (!response.success || response.score < 0.5) return false;
-
-      return true;
+        .then((result) => this.isCaptchaValid(result));
     } catch (error) {
       console.error('Failed to verify captcha', error);
       return false;
     }
   }
+  private isCaptchaValid = (response: RecaptchaResponse) =>
+    response.success && response.score >= this.threshold;
 }
 
 type RecaptchaResponse = {

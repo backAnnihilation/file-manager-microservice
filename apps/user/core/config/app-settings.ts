@@ -11,6 +11,7 @@ export const applyAppSettings = (app: INestApplication) => {
   swaggerSetup(app);
   exceptionFilterSetup(app);
   app.use(cookieParser());
-  // app.setGlobalPrefix('api/v1');
+  // todo use prefix only in prod
+  app.setGlobalPrefix('api/v1');
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
 };

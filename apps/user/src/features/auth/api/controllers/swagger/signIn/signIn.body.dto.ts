@@ -3,12 +3,12 @@ import { IsNotEmpty, IsString } from 'class-validator';
 
 export class SignInDto {
   @ApiProperty({
-    description: 'User login or email',
+    description: 'User email',
     example: 'example@example.com',
   })
   @IsString()
   @IsNotEmpty()
-  loginOrEmail: string;
+  email: string;
 
   @ApiProperty({
     description: 'User password',
@@ -18,5 +18,3 @@ export class SignInDto {
   @IsNotEmpty()
   password: string;
 }
-
-

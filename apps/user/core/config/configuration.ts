@@ -27,11 +27,11 @@ export class EnvironmentVariables {
   @IsString()
   REFRESH_TOKEN_SECRET: string;
 
-  // @IsString()
-  // BASIC_AUTH_USERNAME: string;
+  @IsString()
+  BASIC_AUTH_USERNAME: string;
 
-  // @IsString()
-  // BASIC_AUTH_PASSWORD: string;
+  @IsString()
+  BASIC_AUTH_PASSWORD: string;
 
   @IsString()
   EMAIL_PASSWORD: string;

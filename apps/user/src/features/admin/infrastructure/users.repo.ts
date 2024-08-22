@@ -11,9 +11,9 @@ export class UsersRepository {
     this.userAccounts = this.prisma.userAccount;
   }
 
-  async save(userDto: Prisma.UserAccountCreateInput): Promise<void> {
+  async save(userDto: Prisma.UserAccountCreateInput): Promise<UserAccount> {
     try {
-      await this.userAccounts.create({ data: userDto });
+      return await this.userAccounts.create({ data: userDto });
     } catch (error) {
       console.log(error);
       throw new Error(`user is not saved: ${error}`);
