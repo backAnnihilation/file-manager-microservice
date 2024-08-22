@@ -9,6 +9,7 @@ export class UserCredentialsDto {
   /**
    * loginOrEmail of the user account
    */
+  
   @iSValidField(frequentLength)
   loginOrEmail: string;
 

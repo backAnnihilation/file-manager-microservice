@@ -13,6 +13,9 @@ export class AuthQueryRepository {
   async findByLoginOrEmail(inputDto: LoginOrEmailType) {
     return 'viewUserAccount';
   }
+  async findByEmailAndName({ email, userName }) {
+    return { accountData: { email: '', login: '', id: '' } };
+  }
 
   async getUserById(userId: string) {
     return { accountData: { email: '', login: '', id: '' } };

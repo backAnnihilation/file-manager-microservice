@@ -1,10 +1,9 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { BcryptAdapter } from '../../../../infra/adapters/bcrypt.adapter';
-import { GetErrors } from '../../../../infra/utils/interlay-error-handler.ts/error-constants';
-import { LayerNoticeInterceptor } from '../../../../infra/utils/interlay-error-handler.ts/error-layer-interceptor';
 import { UserIdType } from '../../../admin/api/models/outputSA.models.ts/user-models';
 import { AuthRepository } from '../../infrastructure/auth.repository';
 import { VerificationCredentialsCommand } from './commands/verification-credentials.command';
+import { BcryptAdapter } from '../../../../../core/adapters/bcrypt.adapter';
+import { LayerNoticeInterceptor, GetErrors } from '../../../../../core/utils/notification';
 
 @CommandHandler(VerificationCredentialsCommand)
 export class VerificationCredentialsUseCase
@@ -45,7 +44,7 @@ export class VerificationCredentialsUseCase
 
     const validPassword = await this.bcryptAdapter.compareAsync(
       password,
-      userAccount.password_hash,
+      userAccount.passwordHash,
     );
 
     if (validPassword) {

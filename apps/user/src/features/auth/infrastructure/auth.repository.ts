@@ -1,14 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Equal, FindOptionsWhere, MoreThanOrEqual, Repository } from 'typeorm';
-import { OutputId } from '../../../domain/output.models';
-import { UserAccount } from '../../admin/domain/entities/user-account.entity';
 import { UserRecoveryType } from '../api/models/auth.output.models/auth.output.models';
 import { LoginOrEmailType } from '../api/models/auth.output.models/auth.user.types';
 import { CreateTempAccountDto } from '../api/models/temp-account.models.ts/temp-account-models';
-import { TemporaryUserAccount } from '../domain/entities/temp-account.entity';
 import { UpdatePasswordDto } from '../api/models/auth-input.models.ts/password-recovery.types';
-import { UserBans } from '../domain/entities/user-bans.entity';
+import { OutputId } from '../../../../core/api/dto/output-id.dto';
+import { UserAccount } from '@prisma/client';
 
 type BanInfoType = {
   isBanned: boolean;
@@ -16,13 +12,10 @@ type BanInfoType = {
 
 @Injectable()
 export class AuthRepository {
+  private tempUserAccounts: any
+  private userAccounts: any
+  private userBans: any
   constructor(
-    @InjectRepository(UserAccount)
-    private readonly userAccounts: Repository<UserAccount>,
-    @InjectRepository(UserBans)
-    private readonly userBans: Repository<UserBans>,
-    @InjectRepository(TemporaryUserAccount)
-    private readonly tempUserAccounts: Repository<TemporaryUserAccount>,
   ) {}
 
   async createTemporaryUserAccount(
@@ -60,7 +53,7 @@ export class AuthRepository {
 
   async findTemporaryAccountByRecoveryCode(
     recoveryCode: string,
-  ): Promise<TemporaryUserAccount | null> {
+  ): Promise<any | null> {
     try {
       const result = await this.tempUserAccounts.findOneBy({
         recovery_code: recoveryCode,
@@ -97,8 +90,7 @@ export class AuthRepository {
       const currentTime = new Date();
 
       const result = await this.userAccounts.findOneBy({
-        confirmation_code: confirmationCode,
-        confirmation_expiration_date: MoreThanOrEqual(currentTime),
+        
       });
 
       if (!result) return null;
@@ -118,14 +110,8 @@ export class AuthRepository {
     try {
       const { email, login, loginOrEmail } = inputData;
 
-      const conditions: FindOptionsWhere<UserAccount>[] = [
-        { email: Equal(email) },
-        { login: Equal(login) },
-        { email: Equal(loginOrEmail) },
-        { login: Equal(loginOrEmail) },
-      ];
 
-      const result = await this.userAccounts.findOne({ where: conditions });
+      const result = await this.userAccounts.findOne({  });
 
       if (!result) return null;
 

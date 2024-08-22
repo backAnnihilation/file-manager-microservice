@@ -1,38 +1,14 @@
-import { UserAccount } from '../../../domain/entities/user-account.entity';
-import {
-  BloggerBannedUsersViewType,
-  SAViewWithBannedUsersType,
-} from './userAdmin.view-type';
+import { UserAccount } from '@prisma/client';
+import { SAViewType } from './userAdmin.view-type';
 
-export const getSAViewModel = (
-  user: UserAccount,
-): SAViewWithBannedUsersType => ({
+export const getSAViewModel = (user: UserAccount): SAViewType => ({
   id: user.id,
-  login: user.login,
+  userName: user.userName,
   email: user.email,
-  createdAt: user.created_at.toISOString(),
-  banInfo: {
-    isBanned: user.userBan?.isBanned || false,
-    banDate: user.userBan?.banDate || null,
-    banReason: user.userBan?.banReason || null,
-  },
+  createdAt: user.createdAt.toISOString(),
+  // banInfo: {
+  //   isBanned: user.userBan?.isBanned || false,
+  //   banDate: user.userBan?.banDate || null,
+  //   banReason: user.userBan?.banReason || null,
+  // },
 });
-
-export const getBloggerBannedUsersView = (
-  user: UserBloggerBannedRaw,
-): BloggerBannedUsersViewType => ({
-  id: user.id,
-  login: user.login,
-  banInfo: {
-    isBanned: true,
-    banDate: user.banDate.toISOString(),
-    banReason: user.banReason,
-  },
-});
-
-type UserBloggerBannedRaw = {
-  id: string;
-  login: string;
-  banDate: Date;
-  banReason: string;
-};

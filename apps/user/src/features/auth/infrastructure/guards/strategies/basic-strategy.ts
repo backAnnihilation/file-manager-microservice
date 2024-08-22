@@ -1,12 +1,12 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
+import { EnvironmentVariable } from '../../../../../../core/config/configuration';
 import { BasicStrategy } from 'passport-http';
-import { ConfigurationType } from '../../../../../settings/config/configuration';
 
 @Injectable()
 export class BasicSAStrategy extends PassportStrategy(BasicStrategy) {
-  constructor(private configService: ConfigService<ConfigurationType>) {
+  constructor(private configService: ConfigService<EnvironmentVariable>) {
     super();
   }
 

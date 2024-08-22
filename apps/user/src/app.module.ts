@@ -12,6 +12,9 @@ import { PassportModule } from '@nestjs/passport';
 import { CaptureAdapter } from '../core/adapters/capture.adapter';
 import { SecurityQueryRepo } from './features/security/api/query-repositories/security.query.repo';
 import { AuthController } from './features/auth/api/controllers/auth.controller';
+import { PrismaModule } from '../core/db/prisma/prisma.module';
+import { EmailManager } from '../core/managers/email-manager';
+import { EmailAdapter } from '../core/adapters/email.adapter';
 
 @Module({
   imports: [
@@ -19,6 +22,7 @@ import { AuthController } from './features/auth/api/controllers/auth.controller'
     PassportModule,
     ConfigurationModule,
     CqrsModule,
+    PrismaModule,
     ThrottlerModule.forRoot([{ limit: 20, ttl: Math.pow(20, 3) }]),
   ],
   controllers: [AppController, SecurityController, AuthController],
@@ -28,6 +32,8 @@ import { AuthController } from './features/auth/api/controllers/auth.controller'
     AuthQueryRepository,
     CaptureAdapter,
     SecurityQueryRepo,
+    EmailManager,
+    EmailAdapter,
   ],
 })
 export class AppModule {}

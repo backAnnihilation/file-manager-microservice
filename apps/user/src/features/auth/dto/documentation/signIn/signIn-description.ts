@@ -20,7 +20,7 @@ const TooManyRequestsApiResponse = () =>
 
 export const SignInEndpoint = () =>
   applyDecorators(
-    ApiBody({ type: UserCredentialsWithCaptureTokenDto }),
+    ApiBody({ required: true, type: UserCredentialsWithCaptureTokenDto }),
     ApiResponse({ status: HttpStatus.OK, type: AccessTokenResponseDto }),
     ApiResponse({ status: HttpStatus.BAD_REQUEST, type: ErrorResponseDto }),
     UnauthorizedApiResponse(),
@@ -33,12 +33,11 @@ export const RefreshTokenEndpoint = () =>
     UnauthorizedApiResponse(),
   );
 
-  export const ConfirmPasswordRecoveryEndpoint = () =>
-    applyDecorators(
-      ApiBody({ type: UserCredentialsWithCaptureTokenDto }),
-      ApiResponse({ status: HttpStatus.OK, type: AccessTokenResponseDto }),
-      ApiResponse({ status: HttpStatus.BAD_REQUEST, type: ErrorResponseDto }),
-      UnauthorizedApiResponse(),
-      TooManyRequestsApiResponse(),
-    );
-  
+export const ConfirmPasswordRecoveryEndpoint = () =>
+  applyDecorators(
+    ApiBody({ type: UserCredentialsWithCaptureTokenDto }),
+    ApiResponse({ status: HttpStatus.OK, type: AccessTokenResponseDto }),
+    ApiResponse({ status: HttpStatus.BAD_REQUEST, type: ErrorResponseDto }),
+    UnauthorizedApiResponse(),
+    TooManyRequestsApiResponse(),
+  );

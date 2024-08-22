@@ -1,15 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
-import {
-  BaseCrudApiService,
-  BaseViewModel,
-} from '../../../domain/base-services/base.crud.api.service';
+import { SAViewType } from '../api/models/user.view.models/userAdmin.view-type';
 import { UsersQueryRepo } from '../api/query-repositories/users.query.repo';
+import { BaseCUDApiService } from '../../../../core/api/services/base-cud-api.service';
 
 @Injectable()
-export class BloggerCrudApiService<TCommand> extends BaseCrudApiService<
+export class SACudApiService<TCommand> extends BaseCUDApiService<
   TCommand,
-  BaseViewModel
+  SAViewType
 > {
   constructor(commandBus: CommandBus, usersQueryRepo: UsersQueryRepo) {
     super(commandBus, usersQueryRepo);

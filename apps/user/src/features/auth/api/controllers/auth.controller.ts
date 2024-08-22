@@ -10,10 +10,9 @@ import {
   Res,
   UseGuards,
 } from '@nestjs/common';
-// import { Response } from 'express';
 import { ClientInfo } from '../models/auth-input.models.ts/client-info.type';
 import { UserCredentialsWithCaptureTokenDto } from '../models/auth-input.models.ts/verify-credentials.model';
-import { RoutingEnum } from '../../../../../core/routes/routing';
+import { ApiTagsEnum, RoutingEnum } from '../../../../../core/routes/routing';
 import { LocalAuthGuard } from '../../infrastructure/guards/local-auth.guard';
 import { CustomThrottlerGuard } from '../../../../../core/infrastructure/guards/custom-throttler.guard';
 import { AuthNavigate } from '../../../../../core/routes/auth-navigate';
@@ -48,7 +47,14 @@ import { OutputId } from '../../../../../core/api/dto/output-id.dto';
 import { handleErrors } from '../../../../../core/utils/handle-response-errors';
 import { extractDeviceInfo } from '../../infrastructure/utils/device-info-extractor';
 import { DeleteActiveSessionCommand } from '../../../security/application/use-cases/commands/delete-active-session.command';
+import { ApiTags } from '@nestjs/swagger';
+import {
+  ErrorType,
+  makeErrorsMessages,
+} from '../../../../../core/utils/error-handler';
 
+// todo Response from express doesn't work
+@ApiTags(ApiTagsEnum.Auth)
 @Controller(RoutingEnum.auth)
 export class AuthController {
   constructor(
@@ -63,7 +69,7 @@ export class AuthController {
   @UseGuards(CustomThrottlerGuard, LocalAuthGuard)
   @HttpCode(HttpStatus.OK)
   @Post(AuthNavigate.Login)
-  async singIn(
+  async login(
     @UserPayload() userInfo: UserSessionDto,
     @GetClientInfo() clientInfo: ClientInfo,
     @Res({ passthrough: true }) res: any,
@@ -179,29 +185,24 @@ export class AuthController {
   @HttpCode(HttpStatus.NO_CONTENT)
   async registration(
     @Body() data: CreateUserDto,
-    @Res({ passthrough: true }) res: Response,
+    @Res({ passthrough: true }) res: any,
   ) {
     const { userName, email } = data;
 
-    // const foundUser = await this.authQueryRepo.findByLoginOrEmail({
-    //   login,
-    //   email,
-    // });
+    const foundUser = await this.authQueryRepo.findByEmailAndName({
+      userName,
+      email,
+    });
 
-    // if (foundUser) {
-    //   let errors: ErrorType;
+    if (foundUser) {
+      let errors: ErrorType;
 
-    //   if (foundUser.accountData.email === email) {
-    //     errors = makeErrorsMessages('email');
-    //   }
-
-    //   if (foundUser.accountData.login === login) {
-    //     errors = makeErrorsMessages('login');
-    //   }
-
-    //   res.status(HttpStatus.BAD_REQUEST).send(errors!);
-    //   return;
-    // }
+      if (foundUser.accountData.email === email) {
+        errors = makeErrorsMessages('email');
+      }
+      res.status(HttpStatus.BAD_REQUEST).send(errors!);
+      return;
+    }
 
     const command = new CreateUserCommand(data);
 
