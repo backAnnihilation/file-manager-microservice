@@ -1,14 +1,5 @@
 import { plainToInstance } from 'class-transformer';
-import {
-  IsString,
-  IsNumber,
-  IsOptional,
-  IsEnum,
-  IsUrl,
-  Max,
-  Min,
-  validateSync,
-} from 'class-validator';
+import { IsString, IsNumber, IsEnum, validateSync } from 'class-validator';
 
 export enum Environment {
   DEVELOPMENT = 'DEVELOPMENT',
@@ -21,26 +12,26 @@ export class EnvironmentVariables {
   @IsNumber()
   PORT: number;
 
-  // @IsString()
-  // ACCESS_TOKEN_SECRET: string;
+  @IsString()
+  ACCESS_TOKEN_SECRET: string;
 
-  // @IsString()
-  // REFRESH_TOKEN_SECRET: string;
+  @IsString()
+  REFRESH_TOKEN_SECRET: string;
 
-  // @IsString()
-  // BASIC_AUTH_USERNAME: string;
+  @IsString()
+  BASIC_AUTH_USERNAME: string;
 
-  // @IsString()
-  // BASIC_AUTH_PASSWORD: string;
+  @IsString()
+  BASIC_AUTH_PASSWORD: string;
 
-  // @IsString()
-  // EMAIL_PASSWORD: string;
+  @IsString()
+  EMAIL_PASSWORD: string;
 
-  // @IsString()
-  // EMAIL_USER: string;
+  @IsString()
+  EMAIL_USER: string;
 
-  // @IsString()
-  // EMAIL_SERVICE: string;
+  @IsString()
+  EMAIL_SERVICE: string;
 
   // @IsUrl()
   // DATABASE_URL: string;
@@ -115,6 +106,8 @@ export class EnvironmentVariables {
 
   // @IsString()
   // STRIPE_WEBHOOK_SECRET: string;
+  @IsString()
+  USERS_DATABASE_URL: string;
 
   @IsString()
   GOOGLE_CAPTURE_SECRET: string;

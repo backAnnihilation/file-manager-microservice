@@ -7,10 +7,10 @@ import { iSValidField } from '../../../../../../core/validation/validate-input-f
 
 export class UserCredentialsDto {
   /**
-   * loginOrEmail of the user account
+   * email of the user account
    */
   @iSValidField(frequentLength)
-  loginOrEmail: string;
+  email: string;
 
   /**
    * password of the user account.
@@ -21,5 +21,5 @@ export class UserCredentialsDto {
 
 export class UserCredentialsWithCaptureTokenDto extends UserCredentialsDto {
   @IsString()
-  recaptureToken: string;
+  captureToken: string;
 }

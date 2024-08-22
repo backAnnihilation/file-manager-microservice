@@ -1,11 +1,12 @@
 import { CommandHandler, ICommandHandler, EventBus } from '@nestjs/cqrs';
 import { v4 as uuidv4 } from 'uuid';
-import { validateOrRejectModel } from '../../../../infra/utils/validators/validate-or-reject.model';
+import {
+  LayerNoticeInterceptor,
+  GetErrors,
+} from '../../../../../core/utils/notification';
+import { AuthRepository } from '../../infrastructure/auth.repository';
 import { UpdatePassTempAccountCommand } from './commands/update-password-temporary-account.command';
 import { CreateUserAccountEvent } from './events/create-user-account-event';
-import { AuthRepository } from '../../infrastructure/auth.repository';
-import { LayerNoticeInterceptor } from '../../../../infra/utils/interlay-error-handler.ts/error-layer-interceptor';
-import { GetErrors } from '../../../../infra/utils/interlay-error-handler.ts/error-constants';
 
 @CommandHandler(UpdatePassTempAccountCommand)
 export class UpdatePasswordTemporaryAccountUseCase
@@ -20,16 +21,7 @@ export class UpdatePasswordTemporaryAccountUseCase
     command: UpdatePassTempAccountCommand,
   ): Promise<LayerNoticeInterceptor<boolean>> {
     const notice = new LayerNoticeInterceptor<boolean>();
-    try {
-      await validateOrRejectModel(command, UpdatePassTempAccountCommand);
-    } catch (error) {
-      notice.addError(
-        'incorrect model',
-        'validateOrRejectModel',
-        GetErrors.IncorrectModel,
-      );
-      return notice;
-    }
+
     const { recoveryCode, newPassword } = command.updateDto;
 
     const temporaryUserAccount =
@@ -44,11 +36,11 @@ export class UpdatePasswordTemporaryAccountUseCase
       return notice;
     }
 
-    const uniqueLogin = uuidv4();
+    const generatedUserName = uuidv4();
 
     const event = new CreateUserAccountEvent({
       email: temporaryUserAccount.email,
-      login: uniqueLogin,
+      userName: generatedUserName,
       password: newPassword,
     });
 

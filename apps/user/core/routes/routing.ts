@@ -6,3 +6,9 @@ export enum RoutingEnum {
   auth = '/auth',
   security = '/security/devices',
 }
+
+export enum ApiTagsEnum {
+  Users = 'users',
+  Auth = 'auth',
+  Security = 'security',
+}

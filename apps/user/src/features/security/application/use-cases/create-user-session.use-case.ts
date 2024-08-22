@@ -1,11 +1,12 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { OutputId } from '../../../../domain/output.models';
-import { validateOrRejectModel } from '../../../../infra/utils/validators/validate-or-reject.model';
-import { CreateSessionCommand } from './commands/create-session.command';
+import { OutputId } from '../../../../../core/api/dto/output-id.dto';
+import {
+  LayerNoticeInterceptor,
+  GetErrors,
+} from '../../../../../core/utils/notification';
+import { UserSessionDto } from '../../../auth/api/models/dtos/user-session.dto';
 import { SecurityRepository } from '../../infrastructure/security.repository';
-import { LayerNoticeInterceptor } from '../../../../infra/utils/interlay-error-handler.ts/error-layer-interceptor';
-import { GetErrors } from '../../../../infra/utils/interlay-error-handler.ts/error-constants';
-import { UserSessionRawDto } from '../../../auth/api/models/dtos/user-session.dto';
+import { CreateSessionCommand } from './commands/create-session.command';
 
 @CommandHandler(CreateSessionCommand)
 export class CreateUserSessionUseCase
@@ -17,16 +18,6 @@ export class CreateUserSessionUseCase
     command: CreateSessionCommand,
   ): Promise<LayerNoticeInterceptor<OutputId | null>> {
     const notice = new LayerNoticeInterceptor<OutputId>();
-    try {
-      await validateOrRejectModel(command, CreateSessionCommand);
-    } catch (error) {
-      notice.addError(
-        'Input data incorrect',
-        'input',
-        GetErrors.IncorrectModel,
-      );
-      return notice;
-    }
 
     const {
       ipAddress,
@@ -37,7 +28,7 @@ export class CreateUserSessionUseCase
       userPayload,
     } = command.inputData;
 
-    const sessionDto = new UserSessionRawDto(
+    const sessionDto = new UserSessionDto(
       ipAddress,
       `Device type: ${deviceType}, Application: ${browser}`,
       userId,
@@ -49,6 +40,7 @@ export class CreateUserSessionUseCase
 
     if (!result) {
       notice.addError('Session not created', 'db', GetErrors.NotCreated);
+      return notice;
     } else {
       notice.addData({ id: result.id });
     }

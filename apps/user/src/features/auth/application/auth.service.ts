@@ -1,32 +1,29 @@
 import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
 import { v4 as uuidv4 } from 'uuid';
 import {
-  VerifyTokensType,
-  TokensMeta,
-  Payload,
-  JwtTokens,
-} from '../api/models/auth-input.models.ts/jwt.types';
+  ConfigurationType,
+  EnvironmentVariables,
+} from '../../../../core/config/configuration';
 import { UserSessionDto } from '../../security/api/models/security-input.models/security-session-info.model';
-import { ConfigurationType } from '../../../../core/config/configuration';
-import { JwtService } from '@nestjs/jwt';
-import { ConfigService } from '@nestjs/config';
-import { CaptureAdapter } from '../../../../core/adapters/capture.adapter';
+import {
+  JwtTokens,
+  Payload,
+  TokensMeta,
+  VerifyTokensType,
+} from '../api/models/auth-input.models.ts/jwt.types';
 
 @Injectable()
 export class AuthService {
-  private jwtConfig: ConfigurationType['jwtSettings'];
+  private accessTokenSecret: string;
+  private refreshTokenSecret: string;
   constructor(
     private jwtService: JwtService,
-    private configService: ConfigService<ConfigurationType>,
-    private captureAdapter: CaptureAdapter,
+    private configService: ConfigService<EnvironmentVariables>,
   ) {
-    this.jwtConfig = this.configService.get('jwtSettings', {
-      infer: true,
-    });
-  }
-
-  async validateCaptureToken(token: string) {
-    return this.captureAdapter.isValid(token);
+    this.accessTokenSecret = this.configService.get('ACCESS_TOKEN_SECRET');
+    this.refreshTokenSecret = this.configService.get('REFRESH_TOKEN_SECRET');
   }
 
   async createTokenPair(userId: string): Promise<JwtTokens> {
@@ -78,11 +75,11 @@ export class AuthService {
   ): Promise<[accessToken: string, refreshToken: string]> {
     return Promise.all([
       this.jwtService.signAsync(payload, {
-        secret: this.jwtConfig.ACCESS_TOKEN_SECRET,
+        secret: this.accessTokenSecret,
         expiresIn: '10h',
       }),
       this.jwtService.signAsync(payload, {
-        secret: this.jwtConfig.REFRESH_TOKEN_SECRET,
+        secret: this.refreshTokenSecret,
         expiresIn: '20h',
       }),
     ]);
