@@ -1,14 +1,9 @@
 import { CommandHandler, EventBus, ICommandHandler } from '@nestjs/cqrs';
+import { BcryptAdapter } from '../../../../../core/adapters/bcrypt.adapter';
+import { LayerNoticeInterceptor } from '../../../../../core/utils/notification';
 import { UserIdType } from '../../../admin/api/models/outputSA.models.ts/user-models';
 import { UsersRepository } from '../../../admin/infrastructure/users.repo';
 import { CreateUserCommand } from './commands/create-user.command';
-import { EmailNotificationEvent } from './events/email-notification-event';
-import { UserAccount } from '../../../admin/domain/entities/user-account.entity';
-import { BcryptAdapter } from '../../../../../core/adapters/bcrypt.adapter';
-import {
-  LayerNoticeInterceptor,
-  GetErrors,
-} from '../../../../../core/utils/notification';
 
 @CommandHandler(CreateUserCommand)
 export class CreateUserUseCase implements ICommandHandler<CreateUserCommand> {
@@ -36,7 +31,7 @@ export class CreateUserUseCase implements ICommandHandler<CreateUserCommand> {
       isConfirmed: false,
     };
 
-    notice.addData(userDto)
+    notice.addData(userDto);
     // const user = UserAccount.create(userDto);
 
     // const result = await this.usersRepo.save(user);

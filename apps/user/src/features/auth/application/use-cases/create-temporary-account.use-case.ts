@@ -1,10 +1,10 @@
-import { OutputId } from '../../../../domain/output.models';
 import { UserRecoveryType } from '../../api/models/auth.output.models/auth.output.models';
 import { CreateTemporaryAccountCommand } from './commands/create-temp-account.command';
 import { SendRecoveryMsgCommand } from './commands/send-recovery-msg.command';
 import { createRecoveryCode } from '../helpers/create-recovery-message.helper';
 import { AuthRepository } from '../../infrastructure/auth.repository';
 import { CommandHandler, ICommandHandler, CommandBus } from '@nestjs/cqrs';
+import { OutputId } from '../../../../../core/api/dto/output-id.dto';
 
 @CommandHandler(CreateTemporaryAccountCommand)
 export class CreateTemporaryAccountUseCase

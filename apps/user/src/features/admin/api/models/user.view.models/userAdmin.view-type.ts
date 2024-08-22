@@ -12,7 +12,7 @@ export type SAViewType = {
   /**
    *  user's login
    */
-  login: string;
+  userName: string;
 
   /**
    * user's email
@@ -25,12 +25,12 @@ export type SAViewType = {
   createdAt: string | Date;
 };
 
-export type SAViewWithBannedUsersType = SAViewType & {
-  banInfo: BanUserInfo;
-};
+// export type SAViewWithBannedUsersType = SAViewType & {
+//   banInfo: BanUserInfo;
+// };
 
-export type BloggerBannedUsersViewType = {
-  id: string;
-  login: string;
-  banInfo: BanUserInfo;
-};
+// export type BloggerBannedUsersViewType = {
+//   id: string;
+//   login: string;
+//   banInfo: BanUserInfo;
+// };

@@ -9,20 +9,20 @@ import { UserIdType } from '../../../../admin/api/models/outputSA.models.ts/user
 import { CommandBus } from '@nestjs/cqrs';
 import { PassportStrategy } from '@nestjs/passport';
 import { VerificationCredentialsCommand } from '../../../application/use-cases/commands/verification-credentials.command';
-import { LayerNoticeInterceptor } from '../../../../../infra/utils/interlay-error-handler.ts/error-layer-interceptor';
 import { UserCredentialsDto } from '../../../api/models/auth-input.models.ts/verify-credentials.model';
+import { LayerNoticeInterceptor } from '../../../../../../core/utils/notification';
 
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy) {
   constructor(private commandBus: CommandBus) {
-    super({ usernameField: 'loginOrEmail' });
+    super({ usernameField: 'email' });
   }
 
-  async validate(loginOrEmail: string, password: string): Promise<UserIdType> {
-    await this.validateInputModel(loginOrEmail, password);
+  async validate(email: string, password: string): Promise<UserIdType> {
+    await this.validateInputModel(email, password);
 
     const command = new VerificationCredentialsCommand({
-      loginOrEmail,
+      email,
       password,
     });
 
@@ -37,9 +37,9 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
     return result.data;
   }
 
-  private async validateInputModel(loginOrEmail: string, password: string) {
+  private async validateInputModel(email: string, password: string) {
     const validation = new UserCredentialsDto();
-    validation.loginOrEmail = loginOrEmail;
+    validation.email = email;
     validation.password = password;
     try {
       await validateOrReject(validation);

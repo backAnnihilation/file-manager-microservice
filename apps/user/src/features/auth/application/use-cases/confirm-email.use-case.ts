@@ -13,7 +13,7 @@ export class ConfirmEmailUseCase
 
     const user = await this.authRepo.findUserAccountByConfirmationCode(code);
 
-    if (!user || user.is_confirmed) return false;
+    if (!user || user.isConfirmed) return false;
 
     return this.authRepo.updateConfirmation(user.id);
   }

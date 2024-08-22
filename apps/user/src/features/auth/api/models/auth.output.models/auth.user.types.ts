@@ -9,6 +9,10 @@ export type LoginOrEmailType = {
   loginOrEmail?: string;
 };
 
+export type EmailDtoType = {
+  email: string;
+}
+
 export type AuthUserType = {
   id?: string;
   login: string;

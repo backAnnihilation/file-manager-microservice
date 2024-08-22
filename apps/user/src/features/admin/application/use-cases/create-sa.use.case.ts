@@ -1,15 +1,10 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { BcryptAdapter } from '../../../../infra/adapters/bcrypt.adapter';
-import {
-  CreateUserErrors,
-  GetErrors,
-} from '../../../../infra/utils/interlay-error-handler.ts/error-constants';
-import { LayerNoticeInterceptor } from '../../../../infra/utils/interlay-error-handler.ts/error-layer-interceptor';
-import { validateOrRejectModel } from '../../../../infra/utils/validators/validate-or-reject.model';
+import { BcryptAdapter } from '../../../../../core/adapters/bcrypt.adapter';
+import { LayerNoticeInterceptor } from '../../../../../core/utils/notification';
 import { ResponseIdType } from '../../api/models/outputSA.models.ts/user-models';
-import { UserAccount } from '../../domain/entities/user-account.entity';
 import { UsersRepository } from '../../infrastructure/users.repo';
 import { CreateSACommand } from '../commands/create-sa.command';
+import { UserModelDto } from '../dto/create-user.dto';
 
 @CommandHandler(CreateSACommand)
 export class CreateSAUseCase implements ICommandHandler<CreateSACommand> {
@@ -23,45 +18,21 @@ export class CreateSAUseCase implements ICommandHandler<CreateSACommand> {
   ): Promise<LayerNoticeInterceptor<ResponseIdType>> {
     let notice = new LayerNoticeInterceptor<ResponseIdType>();
 
-    try {
-      await validateOrRejectModel(command, CreateSACommand);
-    } catch (error) {
-      notice.addError(
-        'Input data incorrect',
-        'input',
-        GetErrors.IncorrectModel,
-      );
-      return notice;
-    }
+    const { email, userName, password } = command.createData;
 
-    const { email, login, password } = command.createData;
+    const { passwordHash } = await this.bcryptAdapter.createHash(password);
 
-    const { passwordSalt, passwordHash } = await this.bcryptAdapter.createHash(
-      password,
+    const isConfirmed = true;
+    const userDto = new UserModelDto(
+      userName,
+      email,
+      passwordHash,
+      isConfirmed,
     );
 
-    const saDto = {
-      login,
-      email,
-      passwordSalt,
-      passwordHash,
-      isConfirmed: true,
-    };
+    const savedUser = await this.usersRepo.save(userDto);
 
-    const user = UserAccount.create(saDto);
-
-    const userAdmin = await this.usersRepo.save(user);
-
-    if (!userAdmin) {
-      notice.addError(
-        'Could not create sa',
-        'db',
-        CreateUserErrors.DatabaseFail,
-      );
-    } else {
-      notice.addData({ id: userAdmin.userId });
-    }
-
+    notice.addData({ id: savedUser.id });
     return notice;
   }
 }

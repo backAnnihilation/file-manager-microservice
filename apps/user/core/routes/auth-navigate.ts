@@ -1,9 +1,9 @@
 export enum AuthNavigate {
-  Login = 'singin',
+  Login = 'signin',
+  Registration = 'signup',
   RefreshToken = 'refresh-token',
   NewPassword = 'new-password',
   PasswordRecovery = 'password-recovery',
-  Registration = 'singup',
   RegistrationConfirmation = 'registration-confirmation',
   RegistrationEmailResending = 'registration-email-resending',
   GetProfile = 'me',
