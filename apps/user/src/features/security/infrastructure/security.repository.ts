@@ -1,18 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { EntityManager, Not, Repository } from 'typeorm';
-import { UserSessionRawDto } from '../../auth/api/models/dtos/user-session.dto';
-import { UserSession } from '../domain/entities/security.entity';
-import { OutputId } from '../../../domain/output.models';
+import { OutputId } from '../../../../core/api/dto/output-id.dto';
+import { UserSessionDto } from '../../auth/api/models/dtos/user-session.dto';
 
 @Injectable()
 export class SecurityRepository {
-  constructor(
-    @InjectRepository(UserSession)
-    private readonly userSessions: Repository<UserSession>,
-  ) {}
+  private userSessions: any;
+  constructor() {}
   async createSession(
-    sessionDto: Readonly<UserSessionRawDto>,
+    sessionDto: Readonly<UserSessionDto>,
   ): Promise<OutputId | null> {
     try {
       const session = this.userSessions.create({
@@ -34,13 +29,13 @@ export class SecurityRepository {
     }
   }
 
-  async deleteRefreshTokensBannedUser(userId: string, manager: EntityManager) {
-    try {
-      await manager.delete(UserSession, { userAccount: { id: userId } });
-    } catch (error) {
-      throw new Error(`Database fails during delete operation ${error}`);
-    }
-  }
+  // async deleteRefreshTokensBannedUser(userId: string, manager: EntityManager) {
+  //   try {
+  //     await manager.delete(UserSession, { userAccount: { id: userId } });
+  //   } catch (error) {
+  //     throw new Error(`Database fails during delete operation ${error}`);
+  //   }
+  // }
 
   async updateIssuedToken(
     deviceId: string,
@@ -82,21 +77,22 @@ export class SecurityRepository {
   }
 
   async deleteOtherUserSessions(deviceId: string): Promise<boolean> {
-    try {
-      const otherSessions = await this.userSessions.findOneBy({
-        device_id: Not(deviceId),
-      });
+    return true;
+    // try {
+    //   const otherSessions = await this.userSessions.findOneBy({
+    //     device_id: Not(deviceId),
+    //   });
 
-      if (!otherSessions) return false;
+    //   if (!otherSessions) return false;
 
-      const result = await this.userSessions.remove(otherSessions);
+    //   const result = await this.userSessions.remove(otherSessions);
 
-      return !!result;
-    } catch (error) {
-      console.error(
-        `Database fails operate with delete other sessions ${error}`,
-      );
-      return false;
-    }
+    //   return !!result;
+    // } catch (error) {
+    //   console.error(
+    //     `Database fails operate with delete other sessions ${error}`,
+    //   );
+    //   return false;
+    // }
   }
 }

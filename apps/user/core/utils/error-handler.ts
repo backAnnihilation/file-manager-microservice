@@ -8,9 +8,9 @@ export type ErrorType = { errorsMessages: ErrorsMessages[] };
 export const makeErrorsMessages = (msg: string): ErrorType => {
   const errorsMessages: Array<ErrorsMessages> = [];
 
-  if (msg === 'login' || msg === 'email') {
+  if (msg === 'email') {
     errorsMessages.push({
-      message: `User with such ${msg} is already exists in the system`,
+      message: `User with this ${msg} is already registered`,
       field: `${msg}`,
     });
   }

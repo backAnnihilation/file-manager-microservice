@@ -1,18 +1,18 @@
 import {
   loginLength,
-  loginMatch,
   passwordLength,
   frequentLength,
   emailMatches,
-} from '../../../../../domain/validation.constants';
-import { iSValidField } from '../../../../../infra/decorators/transform/transform-params';
+  stringMatch,
+} from '../../../../../../core/validation/length-constants';
+import { iSValidField } from '../../../../../../core/validation/validate-input-fields';
 
 export class CreateUserDto {
   /**
    * user's login
    */
-  @iSValidField(loginLength, loginMatch)
-  login: string;
+  @iSValidField(loginLength, stringMatch)
+  userName: string;
 
   /**
    * user's registration password

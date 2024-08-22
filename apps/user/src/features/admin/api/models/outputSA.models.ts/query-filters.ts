@@ -1,12 +1,5 @@
 import { IsEnum, IsOptional } from 'class-validator';
-import {
-  BaseFilter,
-  SortDirections,
-} from '../../../../../domain/sorting-base-filter';
-import {
-  ValidateSortBy,
-  ValidSortDirection,
-} from '../../../../../infra/decorators/transform/transform-params';
+import { BaseFilter } from '../../../../../../core/utils/sorting-base-filter';
 
 export enum BanStatus {
   all = 'all',
@@ -14,16 +7,17 @@ export enum BanStatus {
   notBanned = 'notBanned',
 }
 
+// todo ValidSortDirection and ValidateSortBy
 export class SAQueryFilter extends BaseFilter {
   pageNumber: string;
   pageSize: string;
 
   @IsOptional()
-  @ValidateSortBy('sa')
+  // @ValidateSortBy('sa')
   sortBy: string;
 
-  @ValidSortDirection()
-  sortDirection: SortDirections;
+  // @ValidSortDirection()
+  sortDirection: any;
 
   searchEmailTerm: string;
   searchLoginTerm: string;

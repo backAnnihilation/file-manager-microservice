@@ -1,4 +1,4 @@
-import { UserAccount } from '../../../../admin/domain/entities/user-account.entity';
+import { UserAccount } from '@prisma/client';
 import { UserAccountViewModel } from './auth.output.models';
 
 export const getUserAccountViewModel = (
@@ -6,13 +6,13 @@ export const getUserAccountViewModel = (
 ): UserAccountViewModel => ({
   accountData: {
     id: user.id,
-    login: user.login,
+    userName: user.userName,
     email: user.email,
-    createdAt: user.created_at.toISOString(),
+    createdAt: user.createdAt.toISOString(),
   },
   emailConfirmation: {
-    confirmationCode: user.confirmation_code,
-    expirationDate: user.confirmation_expiration_date.toISOString(),
-    isConfirmed: user.is_confirmed,
+    confirmationCode: user.confirmationCode,
+    expirationDate: user.confirmationExpDate.toISOString(),
+    isConfirmed: user.isConfirmed,
   },
 });

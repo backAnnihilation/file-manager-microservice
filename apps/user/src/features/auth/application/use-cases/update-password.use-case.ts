@@ -1,8 +1,7 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { BcryptAdapter } from '../../../../infra/adapters/bcrypt.adapter';
-import { validateOrRejectModel } from '../../../../infra/utils/validators/validate-or-reject.model';
 import { UpdatePasswordCommand } from './commands/update-password.command';
 import { AuthRepository } from '../../infrastructure/auth.repository';
+import { BcryptAdapter } from '../../../../../core/adapters/bcrypt.adapter';
 
 @CommandHandler(UpdatePasswordCommand)
 export class UpdatePasswordUseCase
@@ -15,8 +14,6 @@ export class UpdatePasswordUseCase
 
   async execute(command: UpdatePasswordCommand): Promise<boolean> {
     try {
-      await validateOrRejectModel(command, UpdatePasswordCommand);
-
       const { recoveryCode, newPassword } = command.updateDto;
 
       const { passwordHash, passwordSalt } =

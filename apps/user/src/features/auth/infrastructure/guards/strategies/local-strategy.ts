@@ -9,8 +9,8 @@ import { UserIdType } from '../../../../admin/api/models/outputSA.models.ts/user
 import { CommandBus } from '@nestjs/cqrs';
 import { PassportStrategy } from '@nestjs/passport';
 import { VerificationCredentialsCommand } from '../../../application/use-cases/commands/verification-credentials.command';
-import { LayerNoticeInterceptor } from '../../../../../infra/utils/interlay-error-handler.ts/error-layer-interceptor';
 import { UserCredentialsDto } from '../../../api/models/auth-input.models.ts/verify-credentials.model';
+import { LayerNoticeInterceptor } from '../../../../../../core/utils/notification';
 
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy) {

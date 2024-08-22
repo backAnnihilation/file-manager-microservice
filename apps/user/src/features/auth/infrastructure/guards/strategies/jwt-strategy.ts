@@ -1,10 +1,14 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Request } from 'express';
-import { ExtractJwt, Strategy } from 'passport-jwt';
 import { SecurityQueryRepo } from '../../../../security/api/query-repositories/security.query.repo';
 import { ConfigService } from '@nestjs/config';
-import { ConfigurationType } from '../../../../../settings/config/configuration';
+import {
+  ConfigurationType,
+  EnvironmentVariables,
+} from '../../../../../../core/config/configuration';
+import { ExtractJwt, Strategy } from 'passport-jwt';
+// import { ExtractJwt, Strategy } from 'passport-jwt';
 
 @Injectable()
 export class AccessTokenStrategy extends PassportStrategy(
@@ -13,13 +17,12 @@ export class AccessTokenStrategy extends PassportStrategy(
 ) {
   constructor(
     private securityQueryRepo: SecurityQueryRepo,
-    private configService: ConfigService<ConfigurationType>,
+    private configService: ConfigService<EnvironmentVariables>,
   ) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
-      secretOrKey: configService.get('jwtSettings', { infer: true })
-        .ACCESS_TOKEN_SECRET,
+      secretOrKey: configService.get('ACCESS_TOKEN_SECRET'),
     });
   }
 
@@ -41,13 +44,12 @@ export class RefreshTokenStrategy extends PassportStrategy(
 ) {
   constructor(
     private securityQueryRepo: SecurityQueryRepo,
-    private configService: ConfigService<ConfigurationType>,
+    private configService: ConfigService<EnvironmentVariables>,
   ) {
     super({
       jwtFromRequest: ExtractJwt.fromExtractors([cookieExtractor]),
       ignoreExpiration: false,
-      secretOrKey: configService.get('jwtSettings', { infer: true })
-        .REFRESH_TOKEN_SECRET,
+      secretOrKey: configService.get('REFRESH_TOKEN_SECRET'),
     });
   }
 

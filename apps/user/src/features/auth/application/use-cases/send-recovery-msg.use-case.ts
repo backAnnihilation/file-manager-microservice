@@ -1,6 +1,6 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { EmailManager } from '../../../../infra/managers/email-manager';
 import { SendRecoveryMsgCommand } from './commands/send-recovery-msg.command';
+import { EmailManager } from '../../../../../core/managers/email-manager';
 
 @CommandHandler(SendRecoveryMsgCommand)
 export class SendRecoveryMsgUseCase
