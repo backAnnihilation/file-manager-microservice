@@ -2,13 +2,12 @@ import { Injectable } from '@nestjs/common';
 import { UserRecoveryType } from '../api/models/auth.output.models/auth.output.models';
 import {
   EmailDtoType,
-  LoginOrEmailType,
 } from '../api/models/auth.output.models/auth.user.types';
 import { CreateTempAccountDto } from '../api/models/temp-account.models.ts/temp-account-models';
 import { UpdatePasswordDto } from '../api/models/auth-input.models.ts/password-recovery.types';
 import { OutputId } from '../../../../core/api/dto/output-id.dto';
 import { Prisma, UserAccount } from '@prisma/client';
-import { PrismaService } from '../../../../core/db/prisma/prisma.service';
+import { DatabaseService } from '../../../../core/db/prisma/prisma.service';
 import { DefaultArgs } from '@prisma/client/runtime/library';
 
 type BanInfoType = {
@@ -20,7 +19,7 @@ export class AuthRepository {
   private tempUserAccounts: any;
   private userAccounts: Prisma.UserAccountDelegate<DefaultArgs>;
   private userBans: any;
-  constructor(private readonly prisma: PrismaService) {
+  constructor(private readonly prisma: DatabaseService) {
     this.userAccounts = this.prisma.userAccount;
   }
 

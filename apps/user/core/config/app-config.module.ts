@@ -1,5 +1,5 @@
 import { ConfigModule } from '@nestjs/config';
-import { validate } from './config/configuration';
+import { validate } from './configuration';
 import { Global, Module } from '@nestjs/common';
 
 @Global()

@@ -16,7 +16,7 @@ import { ApiTagsEnum, RoutingEnum } from '../../../../../core/routes/routing';
 import { LocalAuthGuard } from '../../infrastructure/guards/local-auth.guard';
 import { CustomThrottlerGuard } from '../../../../../core/infrastructure/guards/custom-throttler.guard';
 import { AuthNavigate } from '../../../../../core/routes/auth-navigate';
-import { SignInEndpoint } from './swagger/signIn/signIn.description';
+import { SignInEndpoint } from '../swagger/signIn.description';
 import { CommandBus } from '@nestjs/cqrs';
 import { AuthService } from '../../application/auth.service';
 import { ConfirmEmailCommand } from '../../application/use-cases/commands/confirm-email.command';
@@ -31,7 +31,10 @@ import { GetClientInfo } from '../../infrastructure/decorators/client-ip.decorat
 import { UserPayload } from '../../infrastructure/decorators/user-payload.decorator';
 import { AccessTokenGuard } from '../../infrastructure/guards/accessToken.guard';
 import { RefreshTokenGuard } from '../../infrastructure/guards/refreshToken.guard';
-import { RegistrationEmailDto } from '../models/auth-input.models.ts/password-recovery.types';
+import {
+  InputEmailDto,
+  RecoveryPasswordDto,
+} from '../models/auth-input.models.ts/password-recovery.types';
 import { RecoveryPassDto } from '../models/auth-input.models.ts/recovery.model';
 import { RegistrationCodeDto } from '../models/auth-input.models.ts/registration-code.model';
 import { CreateUserDto } from '../models/auth-input.models.ts/user-registration.model';
@@ -51,7 +54,11 @@ import {
 } from '../../../../../core/utils/error-handler';
 import { Response } from 'express';
 import { CaptureGuard } from '../../infrastructure/guards/validate-capture.guard';
-import { RefreshTokenEndpoint } from './swagger/refresh-token.description';
+import { RefreshTokenEndpoint } from '../swagger/refresh-token.description';
+import { SignUpEndpoint } from '../swagger/signup-endpoint.description';
+import { GetProfileEndpoint } from '../swagger/get-user-profile.description';
+import { PasswordRecoveryEndpoint } from '../swagger/recovery-password.description';
+import { ConfirmPasswordEndpoint } from '../swagger/confirm-password-recovery.description';
 
 // todo Response from express doesn't work
 @ApiTags(ApiTagsEnum.Auth)
@@ -139,6 +146,27 @@ export class AuthController {
     return { accessToken };
   }
 
+  @PasswordRecoveryEndpoint()
+  @UseGuards(CustomThrottlerGuard, CaptureGuard)
+  @Post(AuthNavigate.PasswordRecovery)
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async passwordRecovery(@Body() data: RecoveryPasswordDto): Promise<void> {
+    const userAccount = await this.authQueryRepo.findUserByEmail(data);
+
+    if (!userAccount) {
+      const command = new CreateTemporaryAccountCommand(data);
+      await this.commandBus.execute<CreateTemporaryAccountCommand, OutputId>(
+        command,
+      );
+      return;
+    }
+
+    const command = new PasswordRecoveryCommand(data);
+
+    await this.commandBus.execute<PasswordRecoveryCommand, boolean>(command);
+  }
+
+  @ConfirmPasswordEndpoint()
   @UseGuards(CustomThrottlerGuard, CaptureGuard)
   @Post(AuthNavigate.NewPassword)
   @HttpCode(HttpStatus.NO_CONTENT)
@@ -157,26 +185,7 @@ export class AuthController {
     return this.commandBus.execute(command);
   }
 
-  @UseGuards(CustomThrottlerGuard)
-  @Post(AuthNavigate.PasswordRecovery)
-  @HttpCode(HttpStatus.NO_CONTENT)
-  async recoveryPassword(@Body() data: RegistrationEmailDto) {
-    const userAccount = await this.authQueryRepo.findByLoginOrEmail(data);
-
-    if (!userAccount) {
-      const command = new CreateTemporaryAccountCommand(data);
-
-      return await this.commandBus.execute<
-        CreateTemporaryAccountCommand,
-        OutputId
-      >(command);
-    }
-
-    const command = new PasswordRecoveryCommand(data);
-
-    await this.commandBus.execute<PasswordRecoveryCommand, boolean>(command);
-  }
-
+  @SignUpEndpoint()
   @Post(AuthNavigate.Registration)
   @UseGuards(CustomThrottlerGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
@@ -186,7 +195,7 @@ export class AuthController {
   ) {
     const { userName, email } = data;
 
-    const foundUser = await this.authQueryRepo.findByEmailAndName({
+    const foundUser = await this.authQueryRepo.findByEmailOrName({
       userName,
       email,
     });
@@ -231,26 +240,27 @@ export class AuthController {
   @Post(AuthNavigate.RegistrationEmailResending)
   @HttpCode(HttpStatus.NO_CONTENT)
   async registrationEmailResending(
-    @Body() data: RegistrationEmailDto,
+    @Body() data: InputEmailDto,
     @Res({ passthrough: true }) res: Response,
   ) {
-    const userAccount = await this.authQueryRepo.findByLoginOrEmail(data);
+    const userAccount = await this.authQueryRepo.findUserByEmail(data);
 
-    // if (
-    //   !userAccount ||
-    //   userAccount.emailConfirmation.isConfirmed ||
-    //   new Date(userAccount.emailConfirmation.expirationDate) < new Date()
-    // ) {
-    //   const errors = makeErrorsMessages('confirmation');
-    //   res.status(HttpStatus.BAD_REQUEST).send(errors);
-    //   return;
-    // }
+    if (
+      !userAccount ||
+      userAccount.emailConfirmation.isConfirmed ||
+      new Date(userAccount.emailConfirmation.expirationDate) < new Date()
+    ) {
+      const errors = makeErrorsMessages('confirmation');
+      res.status(HttpStatus.BAD_REQUEST).send(errors);
+      return;
+    }
 
     const command = new UpdateConfirmationCodeCommand(data);
 
     await this.commandBus.execute(command);
   }
 
+  @GetProfileEndpoint()
   @UseGuards(AccessTokenGuard)
   @Get(AuthNavigate.GetProfile)
   async getProfile(
@@ -261,9 +271,9 @@ export class AuthController {
     if (!user) {
       throw new NotFoundException('User not found');
     }
-    const { email, login, id: userId } = user.accountData;
+    const { email, userName, id: userId } = user.accountData;
 
-    return { email, login, userId };
+    return { email, userName, userId };
   }
 
   @UseGuards(RefreshTokenGuard)

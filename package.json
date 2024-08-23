@@ -6,6 +6,7 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
+    "prisma:migrate": "node ./apps/user/prisma/migrations/tools/add-migration.js",
     "generate:app": "npx prisma generate --schema=./apps/user/prisma/schema.prisma",
     "build": "nest build",
     "format": "prettier --write \"apps/**/*.ts\" \"libs/**/*.ts\"",

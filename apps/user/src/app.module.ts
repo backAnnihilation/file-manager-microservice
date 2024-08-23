@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { ConfigurationModule } from '../core/app-config.module';
+import { ConfigurationModule } from '../core/config/app-config.module';
 import { CqrsModule } from '@nestjs/cqrs';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { AuthService } from './features/auth/application/auth.service';
@@ -30,6 +29,10 @@ import { AuthRepository } from './features/auth/infrastructure/auth.repository';
 import { SecurityRepository } from './features/security/infrastructure/security.repository';
 import { UpdateIssuedTokenUseCase } from './features/auth/application/use-cases/update-issued-token.use-case';
 import { UpdatePasswordUseCase } from './features/auth/application/use-cases/update-password.use-case';
+import { CreateTemporaryAccountUseCase } from './features/auth/application/use-cases/create-temporary-account.use-case';
+import { SendRecoveryMessageEventHandler } from './features/auth/application/use-cases/send-recovery-msg.event';
+import { UserCreatedNoticeEventHandler } from './features/auth/application/use-cases/events/handlers/user-created-notification.event-handler';
+import { CreateUserUseCase } from './features/auth/application/use-cases/create-user.use-case';
 
 @Module({
   imports: [
@@ -40,12 +43,7 @@ import { UpdatePasswordUseCase } from './features/auth/application/use-cases/upd
     PrismaModule,
     ThrottlerModule.forRoot([{ limit: 20, ttl: Math.pow(20, 3) }]),
   ],
-  controllers: [
-    AppController,
-    SecurityController,
-    AuthController,
-    SAController,
-  ],
+  controllers: [SecurityController, AuthController, SAController],
   providers: [
     AppService,
     AuthService,
@@ -64,10 +62,14 @@ import { UpdatePasswordUseCase } from './features/auth/application/use-cases/upd
     CaptureGuard,
     VerificationCredentialsUseCase,
     CreateUserSessionUseCase,
+    CreateUserUseCase,
     AuthRepository,
     SecurityRepository,
     UpdateIssuedTokenUseCase,
     UpdatePasswordUseCase,
+    CreateTemporaryAccountUseCase,
+    SendRecoveryMessageEventHandler,
+    UserCreatedNoticeEventHandler,
   ],
 })
 export class AppModule {}

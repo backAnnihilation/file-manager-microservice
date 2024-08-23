@@ -1,14 +1,5 @@
 import { plainToInstance } from 'class-transformer';
-import {
-  IsString,
-  IsNumber,
-  IsOptional,
-  IsEnum,
-  IsUrl,
-  Max,
-  Min,
-  validateSync,
-} from 'class-validator';
+import { IsEnum, IsNumber, IsString, validateSync } from 'class-validator';
 
 export enum Environment {
   DEVELOPMENT = 'DEVELOPMENT',
@@ -200,7 +191,6 @@ export default () => {
   return getConfig(environmentVariables, currentEnvironment);
 };
 
-// todo
 export const validate = (config: Record<string, unknown>) => {
   const validatedConfig = plainToInstance(EnvironmentVariables, config, {
     enableImplicitConversion: true,
