@@ -1,7 +1,7 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { DefaultArgs } from '@prisma/client/runtime/library';
-import { PrismaService } from '../../../../../core/db/prisma/prisma.service';
+import { DatabaseService } from '../../../../../core/db/prisma/prisma.service';
 import { getQueryPagination } from '../../../../../core/utils/query-pagination';
 import { PaginationViewModel } from '../../../../../core/utils/sorting-base-filter';
 import {
@@ -15,7 +15,7 @@ import {
 @Injectable()
 export class UsersQueryRepo {
   private readonly userAccounts: Prisma.UserAccountDelegate<DefaultArgs>;
-  constructor(private prisma: PrismaService) {
+  constructor(private prisma: DatabaseService) {
     this.userAccounts = this.prisma.userAccount;
   }
 

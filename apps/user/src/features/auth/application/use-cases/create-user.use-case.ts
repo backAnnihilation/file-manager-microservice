@@ -4,6 +4,8 @@ import { LayerNoticeInterceptor } from '../../../../../core/utils/notification';
 import { UserIdType } from '../../../admin/api/models/outputSA.models.ts/user-models';
 import { UsersRepository } from '../../../admin/infrastructure/users.repo';
 import { CreateUserCommand } from './commands/create-user.command';
+import { UserModelDTO } from '../../../admin/application/dto/create-user.dto';
+import { EmailNotificationEvent } from './events/email-notification-event';
 
 @CommandHandler(CreateUserCommand)
 export class CreateUserUseCase implements ICommandHandler<CreateUserCommand> {
@@ -20,30 +22,21 @@ export class CreateUserUseCase implements ICommandHandler<CreateUserCommand> {
 
     const notice = new LayerNoticeInterceptor<any>();
 
-    const { passwordSalt, passwordHash } =
-      await this.bcryptAdapter.createHash(password);
+    const { passwordHash } = await this.bcryptAdapter.createHash(password);
 
-    const userDto = {
+    const isConfirmed = false;
+    const userDto = new UserModelDTO(
       userName,
       email,
-      passwordSalt,
       passwordHash,
-      isConfirmed: false,
-    };
+      isConfirmed,
+    );
 
-    notice.addData(userDto);
-    // const user = UserAccount.create(userDto);
+    const result = await this.usersRepo.save(userDto);
 
-    // const result = await this.usersRepo.save(user);
-
-    // if (!result) {
-    //   notice.addError('Could not create user', 'db', GetErrors.DatabaseFail);
-    // } else {
-    //   notice.addData({ userId: result.userId });
-    // }
-
-    // const event = new EmailNotificationEvent(email, user.confirmation_code);
-    // this.eventBus.publish(event);
+    const event = new EmailNotificationEvent(email, userDto.confirmationCode);
+    this.eventBus.publish(event);
+    notice.addData({ userId: result.id });
 
     return notice;
   }

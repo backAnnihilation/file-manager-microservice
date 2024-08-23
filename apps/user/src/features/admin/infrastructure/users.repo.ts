@@ -1,13 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { UserIdType } from '../api/models/outputSA.models.ts/user-models';
-import { PrismaService } from '../../../../core/db/prisma/prisma.service';
 import { Prisma, UserAccount } from '@prisma/client';
 import { DefaultArgs } from '@prisma/client/runtime/library';
+import { DatabaseService } from '../../../../core/db/prisma/prisma.service';
 
 @Injectable()
 export class UsersRepository {
   private readonly userAccounts: Prisma.UserAccountDelegate<DefaultArgs>;
-  constructor(private prisma: PrismaService) {
+  constructor(private prisma: DatabaseService) {
     this.userAccounts = this.prisma.userAccount;
   }
 

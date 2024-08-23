@@ -1,16 +1,20 @@
-import { CommandHandler, ICommandHandler, CommandBus } from '@nestjs/cqrs';
+import {
+  CommandHandler,
+  EventBus,
+  ICommandHandler
+} from '@nestjs/cqrs';
 import { UserRecoveryType } from '../../api/models/auth.output.models/auth.output.models';
 import { AuthRepository } from '../../infrastructure/auth.repository';
-import { PasswordRecoveryCommand } from './commands/recovery-password.command';
-import { SendRecoveryMsgCommand } from './commands/send-recovery-msg.command';
 import { createRecoveryCode } from '../helpers/create-recovery-message.helper';
+import { PasswordRecoveryCommand } from './commands/recovery-password.command';
+import { SendRecoveryMessageEvent } from './send-recovery-msg.event';
 
 @CommandHandler(PasswordRecoveryCommand)
 export class RecoveryPasswordUseCase
   implements ICommandHandler<PasswordRecoveryCommand>
 {
   constructor(
-    private commandBus: CommandBus,
+    private eventBus: EventBus,
     private authRepo: AuthRepository,
   ) {}
 
@@ -25,12 +29,12 @@ export class RecoveryPasswordUseCase
 
     if (!updateRecoveryCode) return false;
 
-    const recoveryMsgCommand = new SendRecoveryMsgCommand({
+    const event = new SendRecoveryMessageEvent({
       email,
       recoveryCode: recoveryPassInfo.recoveryCode,
     });
 
-    this.commandBus.execute(recoveryMsgCommand);
+    this.eventBus.publish(event);
 
     return updateRecoveryCode;
   }

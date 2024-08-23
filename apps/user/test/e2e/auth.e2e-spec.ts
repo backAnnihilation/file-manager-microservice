@@ -1,9 +1,14 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
-import { AppModule } from './../src/app.module';
+import { AppModule } from '../../src/app.module';
+import {
+  aDescribe,
+  skipSettings,
+  e2eTestNamesEnum,
+} from '../tools/skipSettings';
 
-describe('AppController (e2e)', () => {
+aDescribe(skipSettings.for(e2eTestNamesEnum.AUTH))('AuthController', () => {
   let app: INestApplication;
 
   beforeEach(async () => {
@@ -20,5 +25,7 @@ describe('AppController (e2e)', () => {
       .get('/')
       .expect(200)
       .expect('Hello World!');
+
+      testManager.registration()
   });
 });

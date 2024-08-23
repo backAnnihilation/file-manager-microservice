@@ -3,8 +3,14 @@ import { CreateTemporaryAccountCommand } from './commands/create-temp-account.co
 import { SendRecoveryMsgCommand } from './commands/send-recovery-msg.command';
 import { createRecoveryCode } from '../helpers/create-recovery-message.helper';
 import { AuthRepository } from '../../infrastructure/auth.repository';
-import { CommandHandler, ICommandHandler, CommandBus } from '@nestjs/cqrs';
+import {
+  CommandHandler,
+  ICommandHandler,
+  CommandBus,
+  EventBus,
+} from '@nestjs/cqrs';
 import { OutputId } from '../../../../../core/api/dto/output-id.dto';
+import { SendRecoveryMessageEvent } from './send-recovery-msg.event';
 
 @CommandHandler(CreateTemporaryAccountCommand)
 export class CreateTemporaryAccountUseCase
@@ -12,7 +18,7 @@ export class CreateTemporaryAccountUseCase
 {
   constructor(
     private authRepo: AuthRepository,
-    private commandBus: CommandBus,
+    private eventBus: EventBus,
   ) {}
 
   async execute(command: CreateTemporaryAccountCommand): Promise<OutputId> {
@@ -25,17 +31,28 @@ export class CreateTemporaryAccountUseCase
       expirationDate: recoveryPassInfo.expirationDate,
     };
 
-    const temporaryUserAccount = await this.authRepo.createTemporaryUserAccount(
-      tempAccountDto,
-    );
+    const temporaryUserAccount =
+      await this.authRepo.createTemporaryUserAccount(tempAccountDto);
 
-    const sendRecoveryMsgCommand = new SendRecoveryMsgCommand({
+    const event = new SendRecoveryMessageEvent({
       email,
       recoveryCode: recoveryPassInfo.recoveryCode,
     });
 
-    this.commandBus.execute(sendRecoveryMsgCommand);
+    this.eventBus.publish(event);
 
     return temporaryUserAccount!;
+  }
+}
+
+export class TempUserAccountDTO {
+  private recoveryCode: string;
+  private recoveryDate: Date;
+  constructor(
+    public email: string,
+    public recoveryData: UserRecoveryType,
+  ) {
+    this.recoveryCode = recoveryData.recoveryCode;
+    this.recoveryDate = recoveryData.expirationDate;
   }
 }
