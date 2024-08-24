@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 
-export const constants = {
+export const constantsForDataTesting = {
   inputData: {
     length01: '01',
     length02: '02',
@@ -29,8 +29,8 @@ export const constants = {
   },
 };
 
-export type ConstantsTestType = keyof typeof constants;
-export type AuthConstantsType = typeof constants.auth;
+export type ConstantsTestType = keyof typeof constantsForDataTesting;
+export type AuthConstantsType = typeof constantsForDataTesting.auth;
 export const feedbacksConstants = {
   createdContent: [
     'content include discussion about nature',

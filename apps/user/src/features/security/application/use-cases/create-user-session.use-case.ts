@@ -4,7 +4,7 @@ import {
   LayerNoticeInterceptor,
   GetErrors,
 } from '../../../../../core/utils/notification';
-import { UserSessionDto } from '../../../auth/api/models/dtos/user-session.dto';
+import { UserSessionDTO } from '../../../auth/api/models/dtos/user-session.dto';
 import { SecurityRepository } from '../../infrastructure/security.repository';
 import { CreateSessionCommand } from './commands/create-session.command';
 
@@ -28,7 +28,7 @@ export class CreateUserSessionUseCase
       userPayload,
     } = command.inputData;
 
-    const sessionDto = new UserSessionDto(
+    const sessionDto = new UserSessionDTO(
       ipAddress,
       `Device type: ${deviceType}, Application: ${browser}`,
       userId,
@@ -37,7 +37,8 @@ export class CreateUserSessionUseCase
     );
 
     const result = await this.securityRepo.createSession(sessionDto);
-
+    console.log(result);
+    
     if (!result) {
       notice.addError('Session not created', 'db', GetErrors.NotCreated);
       return notice;

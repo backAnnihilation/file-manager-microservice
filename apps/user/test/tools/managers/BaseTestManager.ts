@@ -1,19 +1,16 @@
 import { HttpServer, INestApplication } from '@nestjs/common';
 import { SortDirection } from '../../../core/utils/sorting-base-filter';
-import { AuthConstantsType, constants } from '../utils/test-constants';
-import { Prisma, PrismaClient } from '@prisma/client';
-import { DefaultArgs } from '@prisma/client/runtime/library';
+import {
+  AuthConstantsType,
+  constantsForDataTesting,
+} from '../utils/test-constants';
 
 export class BaseTestManager {
   protected readonly constants: AuthConstantsType;
   protected readonly application: INestApplication<HttpServer>;
-  protected usersRepo: Prisma.UserAccountDelegate<DefaultArgs>;
-  protected readonly prisma: PrismaClient;
 
   constructor(protected readonly app: INestApplication) {
-    this.constants = constants.auth;
-    this.prisma = this.app.get(PrismaClient);
-    this.usersRepo = this.prisma.userAccount;
+    this.constants = constantsForDataTesting.auth;
     this.application = this.app.getHttpServer();
   }
   assertMatch(responseData: any, expectedResult: any) {

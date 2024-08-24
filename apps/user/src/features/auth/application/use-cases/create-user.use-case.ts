@@ -31,11 +31,18 @@ export class CreateUserUseCase implements ICommandHandler<CreateUserCommand> {
       passwordHash,
       isConfirmed,
     );
+    const unconfirmedUserTheSameEmail =
+      await this.usersRepo.getUnconfirmedUserByEmail(email);
+
+    if (unconfirmedUserTheSameEmail) {
+      await this.usersRepo.deleteUser(unconfirmedUserTheSameEmail.id);
+    }
 
     const result = await this.usersRepo.save(userDto);
 
     const event = new EmailNotificationEvent(email, userDto.confirmationCode);
     this.eventBus.publish(event);
+
     notice.addData({ userId: result.id });
 
     return notice;

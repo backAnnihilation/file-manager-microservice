@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { AppService } from './app.service';
 import { ConfigurationModule } from '../core/config/app-config.module';
 import { CqrsModule } from '@nestjs/cqrs';
 import { ThrottlerModule } from '@nestjs/throttler';
@@ -33,6 +32,7 @@ import { CreateTemporaryAccountUseCase } from './features/auth/application/use-c
 import { SendRecoveryMessageEventHandler } from './features/auth/application/use-cases/send-recovery-msg.event';
 import { UserCreatedNoticeEventHandler } from './features/auth/application/use-cases/events/handlers/user-created-notification.event-handler';
 import { CreateUserUseCase } from './features/auth/application/use-cases/create-user.use-case';
+import { LocalStrategy } from './features/auth/infrastructure/guards/strategies/local-strategy';
 
 @Module({
   imports: [
@@ -45,7 +45,6 @@ import { CreateUserUseCase } from './features/auth/application/use-cases/create-
   ],
   controllers: [SecurityController, AuthController, SAController],
   providers: [
-    AppService,
     AuthService,
     AuthQueryRepository,
     CaptureAdapter,
@@ -56,6 +55,7 @@ import { CreateUserUseCase } from './features/auth/application/use-cases/create-
     SACudApiService,
     BasicSAAuthGuard,
     BasicSAStrategy,
+    LocalStrategy,
     CreateSAUseCase,
     BcryptAdapter,
     UsersRepository,

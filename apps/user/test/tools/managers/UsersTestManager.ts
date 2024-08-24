@@ -7,14 +7,19 @@ import { BaseTestManager } from './BaseTestManager';
 import { AuthUsersRouting } from '../routes/auth-users.routing';
 import { RoutingEnum } from '../../../core/routes/routing';
 import { SuperTestBody } from '../models/body.response.model';
+import { Prisma, PrismaClient } from '@prisma/client';
+import { DefaultArgs } from '@prisma/client/runtime/library';
 
 export class UsersTestManager extends BaseTestManager {
-  protected readonly routing: AuthUsersRouting
+  protected readonly routing: AuthUsersRouting;
+  protected usersRepo: Prisma.UserAccountDelegate<DefaultArgs>;
   constructor(
     protected readonly app: INestApplication,
+    private prisma: PrismaClient,
   ) {
     super(app);
     this.routing = new AuthUsersRouting();
+    this.usersRepo = this.prisma.userAccount;
   }
 
   createInputData(field?: AuthUserType | any): AuthUserType {
@@ -114,14 +119,13 @@ export class UsersTestManager extends BaseTestManager {
 
   async signIn(
     user: AuthUserType,
-    byLogin: boolean = false,
     expectedStatus = HttpStatus.OK,
   ): Promise<JwtTokens | any> {
     const res = await request(this.application)
       .post(this.routing.login())
       .send({
-        email: user.email,
-        password: user.password || 'qwerty',
+        email: user?.email || 'email',
+        password: user?.password || 'qwerty',
       })
       .expect(expectedStatus);
 
@@ -136,7 +140,7 @@ export class UsersTestManager extends BaseTestManager {
 
   async refreshToken(
     refreshToken: string,
-    expectedStatus: number = HttpStatus.OK,
+    expectedStatus = HttpStatus.OK,
   ): Promise<JwtTokens | any> {
     const response = await request(this.application)
       .post(this.routing.refreshToken())

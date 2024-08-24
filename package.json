@@ -6,7 +6,7 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "prisma:migrate": "node ./apps/user/prisma/migrations/tools/add-migration.js",
+    "prisma:migrate": "node ./apps/user/prisma/tools/add-migration.js",
     "generate:app": "npx prisma generate --schema=./apps/user/prisma/schema.prisma",
     "build": "nest build",
     "format": "prettier --write \"apps/**/*.ts\" \"libs/**/*.ts\"",
@@ -20,7 +20,7 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./apps/app/test/jest-e2e.json"
+    "test:e2e": "jest --config apps/user/test/jest-e2e.json --watch"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",

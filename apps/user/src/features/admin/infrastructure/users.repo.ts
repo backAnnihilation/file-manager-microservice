@@ -19,6 +19,17 @@ export class UsersRepository {
     }
   }
 
+  async getUnconfirmedUserByEmail(email: string): Promise<UserAccount | null> {
+    try {
+      return await this.userAccounts.findUnique({
+        where: { email, isConfirmed: false },
+      });
+    } catch (error) {
+      console.log(`error in getUserByEmail: ${error}`);
+      return null;
+    }
+  }
+
   // async saveRestrictionUserInfo(
   //   restrictionDto: UserBans,
   //   manager: EntityManager,
@@ -101,11 +112,9 @@ export class UsersRepository {
   //   }
   // }
 
-  async deleteUser(userId: string): Promise<boolean> {
+  async deleteUser(userId: string): Promise<UserAccount> {
     try {
-      // const result = await manager.delete(UserAccount, userId);
-      const result = await this.userAccounts.delete({ where: { id: userId } });
-      return !!result;
+      return await this.userAccounts.delete({ where: { id: userId } });
     } catch (error) {
       throw new Error(`error in deleteUser: ${error}`);
     }

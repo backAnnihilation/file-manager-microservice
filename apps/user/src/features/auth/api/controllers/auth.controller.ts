@@ -11,7 +11,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ClientInfo } from '../models/auth-input.models.ts/client-info.type';
-import { UserCredentialsWithCaptureTokenDto } from '../models/auth-input.models.ts/verify-credentials.model';
+import { UserCredentialsDto, UserCredentialsWithCaptureTokenDto } from '../models/auth-input.models.ts/verify-credentials.model';
 import { ApiTagsEnum, RoutingEnum } from '../../../../../core/routes/routing';
 import { LocalAuthGuard } from '../../infrastructure/guards/local-auth.guard';
 import { CustomThrottlerGuard } from '../../../../../core/infrastructure/guards/custom-throttler.guard';
@@ -49,6 +49,7 @@ import { extractDeviceInfo } from '../../infrastructure/utils/device-info-extrac
 import { DeleteActiveSessionCommand } from '../../../security/application/use-cases/commands/delete-active-session.command';
 import { ApiTags } from '@nestjs/swagger';
 import {
+  ErrorField,
   ErrorType,
   makeErrorsMessages,
 } from '../../../../../core/utils/error-handler';
@@ -80,7 +81,7 @@ export class AuthController {
     @UserPayload() userInfo: UserSessionDto,
     @GetClientInfo() clientInfo: ClientInfo,
     @Res({ passthrough: true }) res: Response,
-    @Body() body: UserCredentialsWithCaptureTokenDto,
+    @Body() body: UserCredentialsDto,
   ) {
     const { accessToken, refreshToken } =
       await this.authService.createTokenPair(userInfo.userId);
@@ -106,6 +107,8 @@ export class AuthController {
     >(command);
 
     if (result.hasError) {
+      console.log(result);
+
       const errors = handleErrors(result.code, result.extensions[0]);
       throw errors.error;
     }
@@ -195,16 +198,19 @@ export class AuthController {
   ) {
     const { userName, email } = data;
 
-    const foundUser = await this.authQueryRepo.findByEmailOrName({
+    const confirmedUser = await this.authQueryRepo.findConfirmedUserByEmailOrName({
       userName,
       email,
     });
 
-    if (foundUser) {
+    if (confirmedUser) {
       let errors: ErrorType;
-
-      if (foundUser.accountData.email === email) {
-        errors = makeErrorsMessages('email');
+      
+      if (confirmedUser.accountData.email === email) {
+        errors = makeErrorsMessages(ErrorField.Email);
+      }
+      if (confirmedUser.accountData.userName === userName) {
+        errors = makeErrorsMessages(ErrorField.UserName);
       }
       res.status(HttpStatus.BAD_REQUEST).send(errors!);
       return;
@@ -230,10 +236,10 @@ export class AuthController {
       boolean
     >(command);
 
-    // if (!confirmedUser) {
-    //   const errors = makeErrorsMessages('code');
-    //   res.status(HttpStatus.BAD_REQUEST).send(errors);
-    // }
+    if (!confirmedUser) {
+      const errors = makeErrorsMessages(ErrorField.Code);
+      res.status(HttpStatus.BAD_REQUEST).send(errors);
+    }
   }
 
   @UseGuards(CustomThrottlerGuard)
@@ -250,7 +256,7 @@ export class AuthController {
       userAccount.emailConfirmation.isConfirmed ||
       new Date(userAccount.emailConfirmation.expirationDate) < new Date()
     ) {
-      const errors = makeErrorsMessages('confirmation');
+      const errors = makeErrorsMessages(ErrorField.Confirmation);
       res.status(HttpStatus.BAD_REQUEST).send(errors);
       return;
     }
