@@ -37,8 +37,7 @@ export class CreateUserSessionUseCase
     );
 
     const result = await this.securityRepo.createSession(sessionDto);
-    console.log(result);
-    
+
     if (!result) {
       notice.addError('Session not created', 'db', GetErrors.NotCreated);
       return notice;

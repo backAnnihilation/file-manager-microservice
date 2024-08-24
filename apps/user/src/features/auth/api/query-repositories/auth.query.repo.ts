@@ -48,7 +48,14 @@ export class AuthQueryRepository {
     }
   }
 
-  async getUserById(userId: string) {
-    return { accountData: { email: '', userName: '', id: '' } };
+  async getById(id: string): Promise<UserAccountViewModel> {
+    try {
+      const result = await this.userAccounts.findFirst({ where: { id } });
+      if (!result) return null;
+      return getUserAccountViewModel(result);
+    } catch (error) {
+      console.log(`getById: ${error}`);
+      return null;
+    }
   }
 }
