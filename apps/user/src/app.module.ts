@@ -33,6 +33,9 @@ import { SendRecoveryMessageEventHandler } from './features/auth/application/use
 import { UserCreatedNoticeEventHandler } from './features/auth/application/use-cases/events/handlers/user-created-notification.event-handler';
 import { CreateUserUseCase } from './features/auth/application/use-cases/create-user.use-case';
 import { LocalStrategy } from './features/auth/infrastructure/guards/strategies/local-strategy';
+import { UpdateConfirmationCodeUseCase } from './features/auth/application/use-cases/update-confirmation-code.use-case';
+import { ConfirmRegistrationUseCase } from './features/auth/application/use-cases/confirm-registration.use-case';
+import { UserService } from './features/auth/application/user.service';
 
 @Module({
   imports: [
@@ -46,6 +49,7 @@ import { LocalStrategy } from './features/auth/infrastructure/guards/strategies/
   controllers: [SecurityController, AuthController, SAController],
   providers: [
     AuthService,
+    UserService,
     AuthQueryRepository,
     CaptureAdapter,
     SecurityQueryRepo,
@@ -70,6 +74,8 @@ import { LocalStrategy } from './features/auth/infrastructure/guards/strategies/
     CreateTemporaryAccountUseCase,
     SendRecoveryMessageEventHandler,
     UserCreatedNoticeEventHandler,
+    UpdateConfirmationCodeUseCase,
+    ConfirmRegistrationUseCase,
   ],
 })
 export class AppModule {}
