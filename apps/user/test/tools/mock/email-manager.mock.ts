@@ -1,5 +1,3 @@
-import { EmailManager } from '../../../core/managers/email-manager';
-
 export class EmailManagerMock {
   async sendEmailConfirmationMessage(): Promise<void> {
     await Promise.resolve();
@@ -9,7 +7,7 @@ export class EmailManagerMock {
   }
 }
 
-export class EmailMockService extends EmailManager {
+export class EmailMockService {
   sendEmailConfirmationMessage(
     email: string,
     confirmationCode: string,

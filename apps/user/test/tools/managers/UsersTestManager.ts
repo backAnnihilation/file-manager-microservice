@@ -22,7 +22,7 @@ export class UsersTestManager extends BaseTestManager {
     this.usersRepo = this.prisma.userAccount;
   }
 
-  createInputData(field?: AuthUserType | any): AuthUserType {
+  createInputData(field?: AuthUserType | object): AuthUserType {
     if (!field) {
       return {
         userName: ' ',
@@ -31,9 +31,9 @@ export class UsersTestManager extends BaseTestManager {
       };
     } else {
       return {
-        userName: field.userName || 'userName',
-        password: field.password || 'password',
-        email: field.email || 'kr4mboy@gmail.com',
+        userName: (field as AuthUserType).userName || 'userName',
+        password: (field as AuthUserType).password || 'password',
+        email: (field as AuthUserType).email || 'kr4mboy@gmail.com',
       };
     }
   }
@@ -68,7 +68,7 @@ export class UsersTestManager extends BaseTestManager {
 
     for (let i = 0; i < numberOfUsers; i++) {
       const userData = {
-        login: `login${i}`,
+        userName: `login${i}`,
         email: `email${i}@test.test`,
       };
 
@@ -165,14 +165,14 @@ export class UsersTestManager extends BaseTestManager {
   }
 
   async me(
+    accessToken: string,
     user: AuthUserType = null,
-    token: string,
     expectedStatus = HttpStatus.OK,
   ) {
     let userProfile: UserProfileType;
     await request(this.application)
       .get(this.routing.me())
-      .auth(token, this.constants.authBearer)
+      .auth(accessToken, this.constants.authBearer)
       .expect(expectedStatus)
       .expect(({ body }: SuperTestBody<UserProfileType>) => {
         userProfile = body;

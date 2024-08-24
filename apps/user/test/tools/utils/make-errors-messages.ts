@@ -1,24 +1,11 @@
-import { ErrorsMessages } from '../../../core/utils/error-handler';
-
-enum errors {
-  title = 'title',
-  name = 'name',
-  login = 'login',
-  shortDescription = 'shortDescription',
-  description = 'description',
-  blogId = 'blogId',
-  content = 'content',
-  postId = 'postId',
-  email = 'email',
-  loginOrEmail = 'loginOrEmail',
-  websiteUrl = 'websiteUrl',
-  password = 'password',
-}
-
-type ErrorsMessagesTypes = keyof typeof errors;
+import {
+  ErrorField,
+  ErrorsMessages,
+  ErrorsMessagesTypes,
+} from '../../../core/utils/error-handler';
 
 export const constructErrorMessages = (
-  fields: ErrorsMessagesTypes[],
+  fields: ErrorField[],
   message?: string,
 ) => {
   const errorsMessages: ErrorsMessages[] = [];

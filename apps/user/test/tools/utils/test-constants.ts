@@ -19,6 +19,11 @@ export const constantsForDataTesting = {
     validUUID: uuidv4(),
     EMAIL: 'kr4mboy@gmail.com',
     EMAIL2: 'kr4mboy@gmail.ru',
+    INVALID_EMAIL: 'invalid-email',
+    USER_NAME: 'Pythagoras',
+    USER_NAME2: 'Protagoras',
+    USER_NAME3: 'Socrates',
+    USER_NAME4: 'Aristotle',
     PASSWORD: 'password',
   },
   auth: {
