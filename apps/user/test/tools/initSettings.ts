@@ -8,6 +8,7 @@ import { AppModule } from '../../src/app.module';
 import { databaseService } from '../setupTests.e2e';
 import { UsersTestManager } from './managers/UsersTestManager';
 import { EmailMockService } from './mock/email-manager.mock';
+import { databaseCleanUp } from './utils/cleanUp';
 
 export const initSettings = async (
   addSettingsToModuleBuilder?: (moduleBuilder: TestingModuleBuilder) => void,
@@ -40,19 +41,6 @@ export const initSettings = async (
     applyAppSettings(app);
 
     await app.init();
-
-    // const prismaClient = testingAppModule.get(DatabaseService);
-
-    // await prismaClient.$transaction([
-    //   prismaClient.userSession.deleteMany({}),
-    //   prismaClient.userAccount.deleteMany({}),
-    // ]);
-    // await databaseService.$transaction([
-    //   databaseService.userSession.deleteMany({}),
-    //   databaseService.userAccount.deleteMany({}),
-    // ]);
-    // const prismaClient = testingAppModule.get(databaseService);
-    // console.log(prismaClient);
 
     const usersTestManager = new UsersTestManager(app, databaseService);
 
