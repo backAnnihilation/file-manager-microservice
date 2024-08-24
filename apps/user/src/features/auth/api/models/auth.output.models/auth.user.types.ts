@@ -11,5 +11,5 @@ export type AuthUserType = {
   id?: string;
   userName: string;
   email: string;
-  password: string;
+  password?: string;
 };

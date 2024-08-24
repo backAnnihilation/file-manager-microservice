@@ -16,6 +16,9 @@ export type UserRecoveryType = {
   recoveryCode: string;
   expirationDate: Date;
 };
+export type UpdateConfirmationCodeDto = UserRecoveryType & {
+  id: string;
+};
 
 export type UserAccountType = {
   accountData: UserType;
