@@ -1,7 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import {
-  EmailDtoType,
-} from '../models/auth.output.models/auth.user.types';
+import { EmailDtoType } from '../models/auth.output.models/auth.user.types';
 import { Prisma } from '@prisma/client';
 import { DatabaseService } from '../../../../../core/db/prisma/prisma.service';
 import { DefaultArgs } from '@prisma/client/runtime/library';
@@ -34,13 +32,13 @@ export class AuthQueryRepository {
       return null;
     }
   }
-  async findByEmailOrName({
-    email,
+  async findConfirmedUserByEmailOrName({
     userName,
+    email,
   }): Promise<UserAccountViewModel | null> {
     try {
       const result = await this.userAccounts.findFirst({
-        where: { OR: [{ email }, { userName }] },
+        where: { OR: [{ email }, { userName }], AND: { isConfirmed: true } },
       });
       if (!result) return null;
       return getUserAccountViewModel(result);

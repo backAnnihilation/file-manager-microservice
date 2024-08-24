@@ -1,27 +1,24 @@
 import { Injectable } from '@nestjs/common';
 import { OutputId } from '../../../../core/api/dto/output-id.dto';
-import { UserSessionDto } from '../../auth/api/models/dtos/user-session.dto';
+import { DatabaseService } from '../../../../core/db/prisma/prisma.service';
+import { DefaultArgs } from '@prisma/client/runtime/library';
+import { Prisma, UserSession } from '@prisma/client';
+import { UserSessionDTO } from '../../auth/api/models/dtos/user-session.dto';
 
 @Injectable()
 export class SecurityRepository {
-  private userSessions: any;
-  constructor() {}
+  private userSessions: Prisma.UserSessionDelegate<DefaultArgs>;
+  constructor(private prisma: DatabaseService) {
+    this.userSessions = this.prisma.userSession;
+  }
   async createSession(
-    sessionDto: Readonly<UserSessionDto>,
-  ): Promise<OutputId | null> {
+    sessionDto: UserSessionDTO,
+  ): Promise<OutputId> {
     try {
-      const session = this.userSessions.create({
-        ...sessionDto,
-        userAccount: {
-          id: sessionDto.user_id,
-        },
+      return await this.userSessions.create({
+        data: sessionDto,
+        select: { id: true },
       });
-
-      const result = await this.userSessions.save(session);
-
-      return {
-        id: result.id,
-      };
     } catch (error) {
       console.error(`
       Database fails operate with create session ${error}`);
@@ -43,12 +40,13 @@ export class SecurityRepository {
     exp: Date,
   ): Promise<boolean> {
     try {
-      const result = await this.userSessions.update(
-        { device_id: deviceId },
-        { rt_issued_at: issuedAt, rt_expiration_date: exp },
-      );
+      const result = false;
+      // const result = await this.userSessions.update(
+      //   { device_id: deviceId },
+      //   { rt_issued_at: issuedAt, rt_expiration_date: exp },
+      // );
 
-      return result.affected !== 0;
+      return result;
     } catch (error) {
       console.error(
         `Database fails operate with update token's issued at ${error}`,
@@ -59,13 +57,14 @@ export class SecurityRepository {
 
   async deleteSpecificSession(deviceId: string): Promise<boolean> {
     try {
-      const sessionToDelete = await this.userSessions.findOneBy({
-        device_id: deviceId,
-      });
+      const result = true;
+      // const sessionToDelete = await this.userSessions.findOneBy({
+      //   device_id: deviceId,
+      // });
 
-      if (!sessionToDelete) return false;
+      // if (!sessionToDelete) return false;
 
-      const result = await this.userSessions.remove(sessionToDelete);
+      // const result = await this.userSessions.remove(sessionToDelete);
 
       return !!result;
     } catch (error) {

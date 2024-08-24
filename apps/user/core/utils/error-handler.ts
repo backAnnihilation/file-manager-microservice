@@ -5,35 +5,42 @@ export type ErrorsMessages = {
 
 export type ErrorType = { errorsMessages: ErrorsMessages[] };
 
+export enum ErrorField {
+  Email = 'email',
+  Code = 'code',
+  Confirmation = 'confirmation',
+  UserName = 'userName'
+}
+
 export const makeErrorsMessages = (msg: string): ErrorType => {
   const errorsMessages: Array<ErrorsMessages> = [];
 
-  if (msg === 'email') {
+  if (msg === ErrorField.Email) {
     errorsMessages.push({
       message: `User with this ${msg} is already registered`,
       field: `${msg}`,
     });
   }
 
-  if (msg === 'code') {
+  if (msg === ErrorField.Code) {
     errorsMessages.push({
       message: `incorrect confirmation ${msg}, please check entered data or request again`,
       field: `${msg}`,
     });
   }
 
-  if (msg === 'confirmation') {
+  if (msg === ErrorField.Confirmation) {
     errorsMessages.push({
-      message: `Email is already confirmed or user doesn't exist`,
-      field: `email`,
+      message: `Email is already confirmed`,
+      field: ErrorField.Confirmation,
+    });
+  }
+  if (msg === ErrorField.UserName) {
+    errorsMessages.push({
+      message: `Username is already confirmed`,
+      field: ErrorField.UserName,
     });
   }
 
-  if (msg === 'rateLimit') {
-    errorsMessages.push({
-      message: `Too Many Requests`,
-      field: `rate limiting`,
-    });
-  }
   return { errorsMessages };
 };

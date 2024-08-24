@@ -24,15 +24,16 @@ export class EmailManager {
     email: string,
     recoveryCode: string,
   ): Promise<string> {
-    const recoveryLink = `https://somesite.com/password-recovery?recoveryCode=${recoveryCode}`;
+    const recoveryLink = `https://Incta.team/password-recovery?recoveryCode=${recoveryCode}`;
 
     const passwordRecoveryData = {
       from: `Cringe Hub👻`,
       subject: 'Password recovery',
-      message: `,
-      <p>To finish password recovery please follow the link below:
-      <a href='${recoveryLink}'>recovery password</a>
-      </p>`,
+      message: `
+                <p>To finish password recovery please follow the link below:
+                <a href='${recoveryLink}'>recovery password</a>
+                </p>
+              `,
       to: email,
     };
 
@@ -43,15 +44,15 @@ export class EmailManager {
     email: string,
     confirmationCode: string,
   ): Promise<string> {
-    const confirmationLink = `https://somesite.com/confirm-email?code=${confirmationCode}`;
+    const confirmationLink = `https://Incta.team/confirm-email?code=${confirmationCode}`;
 
     const confirmationData = {
-      from: `Cringe Hub👻`,
+      from: `Incta team👻`,
       subject: 'Email Confirmation',
       message: `<h1>Thank for your registration</h1>
-    <p>To finish registration please follow the link below:
-        <a href=${confirmationLink}>complete registration</a>
-    </p>`,
+                <p>To finish registration please follow the link below:
+                    <a href=${confirmationLink}>complete registration</a>
+                </p>`,
       to: email,
     };
 

@@ -1,8 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { UserRecoveryType } from '../api/models/auth.output.models/auth.output.models';
-import {
-  EmailDtoType,
-} from '../api/models/auth.output.models/auth.user.types';
+import { EmailDtoType } from '../api/models/auth.output.models/auth.user.types';
 import { CreateTempAccountDto } from '../api/models/temp-account.models.ts/temp-account-models';
 import { UpdatePasswordDto } from '../api/models/auth-input.models.ts/password-recovery.types';
 import { OutputId } from '../../../../core/api/dto/output-id.dto';

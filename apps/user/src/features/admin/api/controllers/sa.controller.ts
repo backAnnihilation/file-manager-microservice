@@ -42,8 +42,6 @@ export class SAController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   async createSA(@Body() body: CreateUserDto): Promise<SAViewType> {
-    console.log(body);
-
     const createCommand = new CreateSACommand(body);
     return this.saCrudApiService.create(createCommand);
   }
