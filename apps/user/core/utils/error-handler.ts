@@ -9,33 +9,46 @@ export enum ErrorField {
   Email = 'email',
   Code = 'code',
   Confirmation = 'confirmation',
-  UserName = 'userName'
+  UserName = 'userName',
+  Title = 'title',
+  Name = 'name',
+  Login = 'login',
+  ShortDescription = 'shortDescription',
+  Description = 'description',
+  BlogId = 'blogId',
+  Content = 'content',
+  PostId = 'postId',
+  LoginOrEmail = 'loginOrEmail',
+  WebsiteUrl = 'websiteUrl',
+  Password = 'password',
 }
 
-export const makeErrorsMessages = (msg: string): ErrorType => {
+export type ErrorsMessagesTypes = keyof typeof ErrorField;
+
+export const makeErrorsMessages = (invalidField: ErrorField): ErrorType => {
   const errorsMessages: Array<ErrorsMessages> = [];
 
-  if (msg === ErrorField.Email) {
+  if (invalidField === ErrorField.Email) {
     errorsMessages.push({
-      message: `User with this ${msg} is already registered`,
-      field: `${msg}`,
+      message: `User with this ${invalidField} is already registered or doesn't exist`,
+      field: `${invalidField}`,
     });
   }
 
-  if (msg === ErrorField.Code) {
+  if (invalidField === ErrorField.Code) {
     errorsMessages.push({
-      message: `incorrect confirmation ${msg}, please check entered data or request again`,
-      field: `${msg}`,
+      message: `incorrect confirmation ${invalidField}, please check entered data or request again`,
+      field: `${invalidField}`,
     });
   }
 
-  if (msg === ErrorField.Confirmation) {
+  if (invalidField === ErrorField.Confirmation) {
     errorsMessages.push({
       message: `Email is already confirmed`,
       field: ErrorField.Confirmation,
     });
   }
-  if (msg === ErrorField.UserName) {
+  if (invalidField === ErrorField.UserName) {
     errorsMessages.push({
       message: `Username is already confirmed`,
       field: ErrorField.UserName,
