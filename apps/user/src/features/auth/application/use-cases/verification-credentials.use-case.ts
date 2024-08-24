@@ -29,7 +29,7 @@ export class VerificationCredentialsUseCase
     const userAccount = await this.authRepo.findUserByEmail({
       email,
     });
-
+    
     if (!userAccount) {
       notice.addError('User not found', this.location, GetErrors.NotFound);
       return notice;

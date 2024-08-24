@@ -1,5 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { UserRecoveryType } from '../api/models/auth.output.models/auth.output.models';
+import {
+  UpdateConfirmationCodeDto,
+  UserRecoveryType,
+} from '../api/models/auth.output.models/auth.output.models';
 import { EmailDtoType } from '../api/models/auth.output.models/auth.user.types';
 import { CreateTempAccountDto } from '../api/models/temp-account.models.ts/temp-account-models';
 import { UpdatePasswordDto } from '../api/models/auth-input.models.ts/password-recovery.types';
@@ -90,9 +93,9 @@ export class AuthRepository {
     confirmationCode: string,
   ): Promise<UserAccount | null> {
     try {
-      const currentTime = new Date();
-
-      const result = await this.userAccounts.findFirst({});
+      const result = await this.userAccounts.findFirst({
+        where: { confirmationCode },
+      });
 
       if (!result) return null;
 
@@ -105,11 +108,9 @@ export class AuthRepository {
     }
   }
 
-  async findUserByEmail(inputData: EmailDtoType): Promise<UserAccount | null> {
+  async findUserByEmail(email: string): Promise<UserAccount | null> {
     try {
-      const { email } = inputData;
-
-      const result = await this.userAccounts.findFirst({ where: { email } });
+      const result = await this.userAccounts.findUnique({ where: { email } });
 
       if (!result) return null;
 
@@ -136,20 +137,21 @@ export class AuthRepository {
     }
   }
 
-  // todo add user id
   async updateConfirmationCode(
-    email: string,
-    confirmationCode: string,
-    newConfirmationExpDate: Date,
+    confirmationData: UpdateConfirmationCodeDto,
   ): Promise<boolean> {
     try {
-      // const result = await this.userAccounts.update({
-      //   where: { email },
-      //   data: { confirmationCode, confirmationExpDate: newConfirmationExpDate },
-      // });
+      const { id, expirationDate, recoveryCode } = confirmationData;
 
-      // return !!result;
-      return true;
+      const result = await this.userAccounts.update({
+        where: { id },
+        data: {
+          confirmationCode: recoveryCode,
+          confirmationExpDate: expirationDate,
+        },
+      });
+
+      return !!result;
     } catch (error) {
       console.error(
         `Database fails operate during update confirmation code operation ${error}`,

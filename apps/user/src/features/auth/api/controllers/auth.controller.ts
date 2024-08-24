@@ -11,7 +11,10 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ClientInfo } from '../models/auth-input.models.ts/client-info.type';
-import { UserCredentialsDto, UserCredentialsWithCaptureTokenDto } from '../models/auth-input.models.ts/verify-credentials.model';
+import {
+  UserCredentialsDto,
+  UserCredentialsWithCaptureTokenDto,
+} from '../models/auth-input.models.ts/verify-credentials.model';
 import { ApiTagsEnum, RoutingEnum } from '../../../../../core/routes/routing';
 import { LocalAuthGuard } from '../../infrastructure/guards/local-auth.guard';
 import { CustomThrottlerGuard } from '../../../../../core/infrastructure/guards/custom-throttler.guard';
@@ -61,7 +64,6 @@ import { GetProfileEndpoint } from '../swagger/get-user-profile.description';
 import { PasswordRecoveryEndpoint } from '../swagger/recovery-password.description';
 import { ConfirmPasswordEndpoint } from '../swagger/confirm-password-recovery.description';
 
-// todo Response from express doesn't work
 @ApiTags(ApiTagsEnum.Auth)
 @Controller(RoutingEnum.auth)
 export class AuthController {
@@ -153,14 +155,15 @@ export class AuthController {
   @UseGuards(CustomThrottlerGuard, CaptureGuard)
   @Post(AuthNavigate.PasswordRecovery)
   @HttpCode(HttpStatus.NO_CONTENT)
-  async passwordRecovery(@Body() data: RecoveryPasswordDto): Promise<void> {
+  async passwordRecovery(
+    @Body() data: RecoveryPasswordDto,
+    @Res() res: Response,
+  ): Promise<void> {
     const userAccount = await this.authQueryRepo.findUserByEmail(data);
 
     if (!userAccount) {
-      const command = new CreateTemporaryAccountCommand(data);
-      await this.commandBus.execute<CreateTemporaryAccountCommand, OutputId>(
-        command,
-      );
+      const error = makeErrorsMessages(ErrorField.Email);
+      res.status(HttpStatus.BAD_REQUEST).send(error);
       return;
     }
 
@@ -190,7 +193,7 @@ export class AuthController {
 
   @SignUpEndpoint()
   @Post(AuthNavigate.Registration)
-  @UseGuards(CustomThrottlerGuard)
+  @UseGuards(CaptureGuard, CustomThrottlerGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
   async registration(
     @Body() data: CreateUserDto,
@@ -198,21 +201,22 @@ export class AuthController {
   ) {
     const { userName, email } = data;
 
-    const confirmedUser = await this.authQueryRepo.findConfirmedUserByEmailOrName({
-      userName,
-      email,
-    });
+    const confirmedUser =
+      await this.authQueryRepo.findConfirmedUserByEmailOrName({
+        userName,
+        email,
+      });
 
     if (confirmedUser) {
-      let errors: ErrorType;
-      
+      let errors: ErrorType[] = [];
+
       if (confirmedUser.accountData.email === email) {
-        errors = makeErrorsMessages(ErrorField.Email);
+        errors.push(makeErrorsMessages(ErrorField.Email));
       }
       if (confirmedUser.accountData.userName === userName) {
-        errors = makeErrorsMessages(ErrorField.UserName);
+        errors.push(makeErrorsMessages(ErrorField.UserName));
       }
-      res.status(HttpStatus.BAD_REQUEST).send(errors!);
+      res.status(HttpStatus.BAD_REQUEST).send(errors);
       return;
     }
 
@@ -225,45 +229,35 @@ export class AuthController {
   @UseGuards(CustomThrottlerGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
   @Post(AuthNavigate.RegistrationConfirmation)
-  async registrationConfirmation(
-    @Body() data: RegistrationCodeDto,
-    @Res({ passthrough: true }) res: Response,
-  ) {
+  async registrationConfirmation(@Body() data: RegistrationCodeDto) {
     const command = new ConfirmEmailCommand(data);
-
-    const confirmedUser = await this.commandBus.execute<
+    const confirmedUserNotification = await this.commandBus.execute<
       ConfirmEmailCommand,
-      boolean
+      LayerNoticeInterceptor<boolean>
     >(command);
 
-    if (!confirmedUser) {
-      const errors = makeErrorsMessages(ErrorField.Code);
-      res.status(HttpStatus.BAD_REQUEST).send(errors);
+    if (confirmedUserNotification.hasError) {
+      const { error } = handleErrors(
+        confirmedUserNotification.code,
+        confirmedUserNotification.extensions[0],
+      );
+      throw error;
     }
   }
 
   @UseGuards(CustomThrottlerGuard)
   @Post(AuthNavigate.RegistrationEmailResending)
   @HttpCode(HttpStatus.NO_CONTENT)
-  async registrationEmailResending(
-    @Body() data: InputEmailDto,
-    @Res({ passthrough: true }) res: Response,
-  ) {
-    const userAccount = await this.authQueryRepo.findUserByEmail(data);
-
-    if (
-      !userAccount ||
-      userAccount.emailConfirmation.isConfirmed ||
-      new Date(userAccount.emailConfirmation.expirationDate) < new Date()
-    ) {
-      const errors = makeErrorsMessages(ErrorField.Confirmation);
-      res.status(HttpStatus.BAD_REQUEST).send(errors);
-      return;
-    }
-
+  async registrationEmailResending(@Body() data: InputEmailDto) {
     const command = new UpdateConfirmationCodeCommand(data);
-
-    await this.commandBus.execute(command);
+    const notificationResponse = await this.commandBus.execute(command);
+    if (notificationResponse.hasError) {
+      const { error } = handleErrors(
+        notificationResponse.code,
+        notificationResponse.extensions[0],
+      );
+      throw error;
+    }
   }
 
   @GetProfileEndpoint()
@@ -272,11 +266,10 @@ export class AuthController {
   async getProfile(
     @UserPayload() userInfo: UserSessionDto,
   ): Promise<UserProfileType> {
-    const user = await this.authQueryRepo.getUserById(userInfo.userId);
+    const user = await this.authQueryRepo.getById(userInfo.userId);
 
-    if (!user) {
-      throw new NotFoundException('User not found');
-    }
+    if (!user) throw new NotFoundException('User not found');
+
     const { email, userName, id: userId } = user.accountData;
 
     return { email, userName, userId };
