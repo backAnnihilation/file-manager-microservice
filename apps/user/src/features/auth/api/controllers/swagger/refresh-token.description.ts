@@ -17,5 +17,5 @@ export const RefreshTokenEndpoint = () =>
         'Returns JWT accessToken (expired after 10 seconds) in body and JWT refreshToken in cookie (http-only, secure) (expired after 20 seconds).',
     }),
     UnauthorizedViaTokenApiResponse(),
-    ApiSecurity('refreshToken')
+    ApiSecurity('refreshToken'),
   );

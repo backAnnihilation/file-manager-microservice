@@ -81,6 +81,7 @@ export class AuthController {
     @UserPayload() userInfo: UserSessionDto,
     @GetClientInfo() clientInfo: ClientInfo,
     @Res({ passthrough: true }) res: Response,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     @Body() body: UserCredentialsDto,
   ) {
     const { accessToken, refreshToken } =

@@ -3,7 +3,8 @@ import {
   ApiBody,
   ApiOperation,
   ApiProperty,
-  ApiResponse, ApiSecurity,
+  ApiResponse,
+  ApiSecurity,
 } from '@nestjs/swagger';
 import { SingUpErrorResponse } from './shared/error-message-response';
 import { PasswordDescription } from './shared/password-description';
@@ -26,8 +27,7 @@ export const SignUpEndpoint = () =>
     ApiResponse({ status: HttpStatus.BAD_REQUEST, type: SingUpErrorResponse }),
     TooManyRequestsApiResponse(),
     CaptchaHeader(),
-    ApiSecurity('captchaToken')
-
+    ApiSecurity('captchaToken'),
   );
 
 class SignUpDto {

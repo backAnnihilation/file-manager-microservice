@@ -18,8 +18,7 @@ export const RegistrationConfirmationEndpoint = () =>
     ApiBody({ type: RegistrationConfirmationCodeDto, required: true }),
     ApiResponse({
       status: HttpStatus.NO_CONTENT,
-      description:
-        'Email was verified. Account was activated',
+      description: 'Email was verified. Account was activated',
     }),
     ApiResponse({
       status: HttpStatus.BAD_REQUEST,

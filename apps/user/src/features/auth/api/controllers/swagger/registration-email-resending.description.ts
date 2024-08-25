@@ -3,7 +3,8 @@ import {
   ApiBody,
   ApiOperation,
   ApiProperty,
-  ApiResponse, ApiSecurity,
+  ApiResponse,
+  ApiSecurity,
 } from '@nestjs/swagger';
 import { TooManyRequestsApiResponse } from './shared/too-many-requests-api-response';
 import { CaptchaHeader } from './shared/capture-using';
@@ -28,7 +29,7 @@ export const RegistrationEmailResendingEndpoint = () =>
     }),
     TooManyRequestsApiResponse(),
     CaptchaHeader(),
-    ApiSecurity('captchaToken')
+    ApiSecurity('captchaToken'),
   );
 
 class EmailBodyDto {
