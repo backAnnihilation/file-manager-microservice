@@ -1,17 +1,23 @@
 import { CommandHandler, EventBus, ICommandHandler } from '@nestjs/cqrs';
 import { BcryptAdapter } from '../../../../../core/adapters/bcrypt.adapter';
-import { LayerNoticeInterceptor } from '../../../../../core/utils/notification';
+import {
+  GetErrors,
+  LayerNoticeInterceptor,
+} from '../../../../../core/utils/notification';
 import { UserIdType } from '../../../admin/api/models/outputSA.models.ts/user-models';
 import { UsersRepository } from '../../../admin/infrastructure/users.repo';
 import { CreateUserCommand } from './commands/create-user.command';
 import { UserModelDTO } from '../../../admin/application/dto/create-user.dto';
 import { EmailNotificationEvent } from './events/email-notification-event';
+import { AuthRepository } from '../../infrastructure/auth.repository';
 
 @CommandHandler(CreateUserCommand)
 export class CreateUserUseCase implements ICommandHandler<CreateUserCommand> {
+  private location = this.constructor.name;
   constructor(
     private usersRepo: UsersRepository,
     private bcryptAdapter: BcryptAdapter,
+    private authRepo: AuthRepository,
     private eventBus: EventBus,
   ) {}
 
@@ -19,8 +25,30 @@ export class CreateUserUseCase implements ICommandHandler<CreateUserCommand> {
     command: CreateUserCommand,
   ): Promise<LayerNoticeInterceptor<UserIdType> | null> {
     const { email, userName, password } = command.createDto;
-
     const notice = new LayerNoticeInterceptor<any>();
+
+    const confirmedUser = await this.authRepo.findConfirmedUserByEmailOrName({
+      userName,
+      email,
+    });
+
+    if (confirmedUser) {
+      if (confirmedUser.email === email) {
+        notice.addError(
+          `User with email ${email} already exists`,
+          this.location,
+          GetErrors.IncorrectModel,
+        );
+      }
+      if (confirmedUser.userName === userName) {
+        notice.addError(
+          `User with userName ${userName} already exists`,
+          this.location,
+          GetErrors.IncorrectModel,
+        );
+      }
+      return notice;
+    }
 
     const { passwordHash } = await this.bcryptAdapter.createHash(password);
 
@@ -32,7 +60,7 @@ export class CreateUserUseCase implements ICommandHandler<CreateUserCommand> {
       isConfirmed,
     );
     const unconfirmedUserTheSameEmail =
-      await this.usersRepo.getUnconfirmedUserByEmail(email);
+      await this.usersRepo.getUnconfirmedUserByEmailOrName(email, userName);
 
     if (unconfirmedUserTheSameEmail) {
       await this.usersRepo.deleteUser(unconfirmedUserTheSameEmail.id);

@@ -6,6 +6,8 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
+    "prisma:deploy": "cd apps/user && npx prisma migrate deploy",
+    "prisma:m": "npx --prefix apps/user migrate dev --name ${migrationName}",
     "prisma:migrate": "node ./apps/user/prisma/tools/add-migration.js",
     "generate:app": "npx prisma generate --schema=./apps/user/prisma/schema.prisma",
     "build": "nest build",
