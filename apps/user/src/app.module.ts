@@ -35,8 +35,12 @@ import { LocalStrategy } from './features/auth/infrastructure/guards/strategies/
 import { UpdateConfirmationCodeUseCase } from './features/auth/application/use-cases/update-confirmation-code.use-case';
 import { ConfirmRegistrationUseCase } from './features/auth/application/use-cases/confirm-registration.use-case';
 import { UserService } from './features/auth/application/user.service';
-import { AccessTokenStrategy } from './features/auth/infrastructure/guards/strategies/acces-token.strategy';
+import { AccessTokenStrategy } from './features/auth/infrastructure/guards/strategies/access-token.strategy';
 import { RefreshTokenStrategy } from './features/auth/infrastructure/guards/strategies/refresh-token.strategy';
+import { DeleteActiveSessionUseCase } from './features/security/application/use-cases/delete-active-session.use-case';
+import { AuthenticationApiService } from './features/auth/application/auth-token-response.service';
+import { PasswordRecoveryUseCase } from './features/auth/application/use-cases/password-recovery.use-case';
+import { DeleteOtherUserSessionsUseCase } from './features/security/application/use-cases/delete-other-user-sessions.use-case';
 
 @Module({
   imports: [
@@ -75,9 +79,13 @@ import { RefreshTokenStrategy } from './features/auth/infrastructure/guards/stra
     SendRecoveryMessageEventHandler,
     UserCreatedNoticeEventHandler,
     UpdateConfirmationCodeUseCase,
+    DeleteActiveSessionUseCase,
     ConfirmRegistrationUseCase,
+    AuthenticationApiService,
     AccessTokenStrategy,
     RefreshTokenStrategy,
+    PasswordRecoveryUseCase,
+    DeleteOtherUserSessionsUseCase,
   ],
 })
 export class AppModule {}

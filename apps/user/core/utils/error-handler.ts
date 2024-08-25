@@ -27,32 +27,33 @@ export type ErrorsMessagesTypes = keyof typeof ErrorField;
 
 export const makeErrorsMessages = (invalidField: ErrorField): ErrorType => {
   const errorsMessages: Array<ErrorsMessages> = [];
-
-  if (invalidField === ErrorField.Email) {
-    errorsMessages.push({
-      message: `User with this ${invalidField} is already registered or doesn't exist`,
-      field: `${invalidField}`,
-    });
-  }
-
-  if (invalidField === ErrorField.Code) {
-    errorsMessages.push({
-      message: `incorrect confirmation ${invalidField}, please check entered data or request again`,
-      field: `${invalidField}`,
-    });
-  }
-
-  if (invalidField === ErrorField.Confirmation) {
-    errorsMessages.push({
-      message: `Email is already confirmed`,
-      field: ErrorField.Confirmation,
-    });
-  }
-  if (invalidField === ErrorField.UserName) {
-    errorsMessages.push({
-      message: `Username is already confirmed`,
-      field: ErrorField.UserName,
-    });
+  const doPush = Array.prototype.push.bind(errorsMessages);
+  switch (invalidField) {
+    case ErrorField.Email:
+      doPush({
+        message: `User with this ${invalidField} is already registered or doesn't exist`,
+        field: `${invalidField}`,
+      });
+      break;
+    case ErrorField.Code:
+      doPush({
+        message: `incorrect confirmation ${invalidField}, please check entered data or request again`,
+        field: `${invalidField}`,
+      });
+      break;
+    case ErrorField.Confirmation:
+      doPush({
+        message: `Email is already confirmed`,
+        field: ErrorField.Confirmation,
+      });
+    case ErrorField.UserName:
+      doPush({
+        message: `Username is already confirmed`,
+        field: ErrorField.UserName,
+      });
+    default:
+      doPush({ message: `Invalid ${invalidField}`, field: `${invalidField}` });
+      break;
   }
 
   return { errorsMessages };
