@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   Body,
   Controller,
   Get,
@@ -11,19 +10,14 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ClientInfo } from '../models/auth-input.models.ts/client-info.type';
-import {
-  UserCredentialsDto,
-  UserCredentialsWithCaptureTokenDto,
-} from '../models/auth-input.models.ts/verify-credentials.model';
+import { UserCredentialsDto } from '../models/auth-input.models.ts/verify-credentials.model';
 import { ApiTagsEnum, RoutingEnum } from '../../../../../core/routes/routing';
 import { LocalAuthGuard } from '../../infrastructure/guards/local-auth.guard';
 import { CustomThrottlerGuard } from '../../../../../core/infrastructure/guards/custom-throttler.guard';
 import { AuthNavigate } from '../../../../../core/routes/auth-navigate';
-import { SignInEndpoint } from '../swagger/signIn.description';
 import { CommandBus } from '@nestjs/cqrs';
 import { AuthService } from '../../application/auth.service';
 import { ConfirmEmailCommand } from '../../application/use-cases/commands/confirm-email.command';
-import { CreateTemporaryAccountCommand } from '../../application/use-cases/commands/create-temp-account.command';
 import { CreateUserCommand } from '../../application/use-cases/commands/create-user.command';
 import { PasswordRecoveryCommand } from '../../application/use-cases/commands/recovery-password.command';
 import { UpdateConfirmationCodeCommand } from '../../application/use-cases/commands/update-confirmation-code.command';
@@ -58,11 +52,15 @@ import {
 } from '../../../../../core/utils/error-handler';
 import { Response } from 'express';
 import { CaptureGuard } from '../../infrastructure/guards/validate-capture.guard';
-import { RefreshTokenEndpoint } from '../swagger/refresh-token.description';
-import { SignUpEndpoint } from '../swagger/signup-endpoint.description';
-import { GetProfileEndpoint } from '../swagger/get-user-profile.description';
-import { PasswordRecoveryEndpoint } from '../swagger/recovery-password.description';
-import { ConfirmPasswordEndpoint } from '../swagger/confirm-password-recovery.description';
+import { SignInEndpoint } from './swagger/sign-in.description';
+import { RefreshTokenEndpoint } from './swagger/refresh-token.description';
+import { PasswordRecoveryEndpoint } from './swagger/recovery-password.description';
+import { ConfirmPasswordEndpoint } from './swagger/confirm-password-recovery.description';
+import { SignUpEndpoint } from './swagger/sign-up.description';
+import { GetProfileEndpoint } from './swagger/get-user-profile.description';
+import { LogoutEndpoint } from './swagger/logout-description';
+import { RegistrationEmailResendingEndpoint } from './swagger/registration-email-resending.description';
+import { RegistrationConfirmationEndpoint } from './swagger/registration-confirmation.description';
 
 @ApiTags(ApiTagsEnum.Auth)
 @Controller(RoutingEnum.auth)
@@ -121,6 +119,41 @@ export class AuthController {
     return { accessToken };
   }
 
+  @SignUpEndpoint()
+  @Post(AuthNavigate.Registration)
+  @UseGuards(CaptureGuard, CustomThrottlerGuard)
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async registration(
+    @Body() data: CreateUserDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const { userName, email } = data;
+
+    const confirmedUser =
+      await this.authQueryRepo.findConfirmedUserByEmailOrName({
+        userName,
+        email,
+      });
+
+    if (confirmedUser) {
+      let errors: ErrorType[] = [];
+
+      if (confirmedUser.accountData.email === email) {
+        errors.push(makeErrorsMessages(ErrorField.Email));
+      }
+      if (confirmedUser.accountData.userName === userName) {
+        errors.push(makeErrorsMessages(ErrorField.UserName));
+      }
+      res.status(HttpStatus.BAD_REQUEST).send(errors);
+      return;
+    }
+
+    const command = new CreateUserCommand(data);
+
+    const resultNotification = await this.commandBus.execute(command);
+    return resultNotification.data;
+  }
+
   @RefreshTokenEndpoint()
   @UseGuards(RefreshTokenGuard)
   @HttpCode(HttpStatus.OK)
@@ -149,6 +182,30 @@ export class AuthController {
 
     res.cookie('refreshToken', refreshToken, { httpOnly: true, secure: true });
     return { accessToken };
+  }
+
+  @GetProfileEndpoint()
+  @UseGuards(AccessTokenGuard)
+  @Get(AuthNavigate.GetProfile)
+  async getProfile(
+    @UserPayload() userInfo: UserSessionDto,
+  ): Promise<UserProfileType> {
+    const user = await this.authQueryRepo.getById(userInfo.userId);
+
+    if (!user) throw new NotFoundException('User not found');
+
+    const { email, userName, id: userId } = user.accountData;
+
+    return { email, userName, userId };
+  }
+
+  @LogoutEndpoint()
+  @UseGuards(RefreshTokenGuard)
+  @Post(AuthNavigate.Logout)
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async logout(@UserPayload() userInfo: UserSessionDto) {
+    const command = new DeleteActiveSessionCommand(userInfo);
+    await this.commandBus.execute(command);
   }
 
   @PasswordRecoveryEndpoint()
@@ -190,42 +247,7 @@ export class AuthController {
 
     return this.commandBus.execute(command);
   }
-
-  @SignUpEndpoint()
-  @Post(AuthNavigate.Registration)
-  @UseGuards(CaptureGuard, CustomThrottlerGuard)
-  @HttpCode(HttpStatus.NO_CONTENT)
-  async registration(
-    @Body() data: CreateUserDto,
-    @Res({ passthrough: true }) res: Response,
-  ) {
-    const { userName, email } = data;
-
-    const confirmedUser =
-      await this.authQueryRepo.findConfirmedUserByEmailOrName({
-        userName,
-        email,
-      });
-
-    if (confirmedUser) {
-      let errors: ErrorType[] = [];
-
-      if (confirmedUser.accountData.email === email) {
-        errors.push(makeErrorsMessages(ErrorField.Email));
-      }
-      if (confirmedUser.accountData.userName === userName) {
-        errors.push(makeErrorsMessages(ErrorField.UserName));
-      }
-      res.status(HttpStatus.BAD_REQUEST).send(errors);
-      return;
-    }
-
-    const command = new CreateUserCommand(data);
-
-    const resultNotification = await this.commandBus.execute(command);
-    return resultNotification.data;
-  }
-
+  @RegistrationConfirmationEndpoint()
   @UseGuards(CustomThrottlerGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
   @Post(AuthNavigate.RegistrationConfirmation)
@@ -244,7 +266,7 @@ export class AuthController {
       throw error;
     }
   }
-
+  @RegistrationEmailResendingEndpoint()
   @UseGuards(CustomThrottlerGuard)
   @Post(AuthNavigate.RegistrationEmailResending)
   @HttpCode(HttpStatus.NO_CONTENT)
@@ -258,28 +280,5 @@ export class AuthController {
       );
       throw error;
     }
-  }
-
-  @GetProfileEndpoint()
-  @UseGuards(AccessTokenGuard)
-  @Get(AuthNavigate.GetProfile)
-  async getProfile(
-    @UserPayload() userInfo: UserSessionDto,
-  ): Promise<UserProfileType> {
-    const user = await this.authQueryRepo.getById(userInfo.userId);
-
-    if (!user) throw new NotFoundException('User not found');
-
-    const { email, userName, id: userId } = user.accountData;
-
-    return { email, userName, userId };
-  }
-
-  @UseGuards(RefreshTokenGuard)
-  @Post(AuthNavigate.Logout)
-  @HttpCode(HttpStatus.NO_CONTENT)
-  async logout(@UserPayload() userInfo: UserSessionDto) {
-    const command = new DeleteActiveSessionCommand(userInfo);
-    await this.commandBus.execute(command);
   }
 }

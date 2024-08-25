@@ -1,9 +1,18 @@
 import { applyDecorators, HttpStatus } from '@nestjs/common';
-import { ApiBearerAuth, ApiProperty, ApiResponse } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiProperty,
+  ApiResponse,
+} from '@nestjs/swagger';
 import { UnauthorizedViaTokenApiResponse } from './shared/authorization.response';
 
 export const GetProfileEndpoint = () =>
   applyDecorators(
+    ApiOperation({
+      summary: 'Get info about the current user',
+      description: 'Get email, login and userId about the current user',
+    }),
     ApiResponse({
       status: HttpStatus.OK,
       type: UserProfileResponseDto,
