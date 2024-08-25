@@ -23,12 +23,10 @@ import { SignInEndpoint } from '../swagger/signIn.description';
 import { CommandBus } from '@nestjs/cqrs';
 import { AuthService } from '../../application/auth.service';
 import { ConfirmEmailCommand } from '../../application/use-cases/commands/confirm-email.command';
-import { CreateTemporaryAccountCommand } from '../../application/use-cases/commands/create-temp-account.command';
 import { CreateUserCommand } from '../../application/use-cases/commands/create-user.command';
 import { PasswordRecoveryCommand } from '../../application/use-cases/commands/recovery-password.command';
 import { UpdateConfirmationCodeCommand } from '../../application/use-cases/commands/update-confirmation-code.command';
 import { UpdateIssuedTokenCommand } from '../../application/use-cases/commands/update-Issued-token.command';
-import { UpdatePassTempAccountCommand } from '../../application/use-cases/commands/update-password-temporary-account.command';
 import { UpdatePasswordCommand } from '../../application/use-cases/commands/update-password.command';
 import { GetClientInfo } from '../../infrastructure/decorators/client-ip.decorator';
 import { UserPayload } from '../../infrastructure/decorators/user-payload.decorator';
@@ -63,6 +61,7 @@ import { SignUpEndpoint } from '../swagger/signup-endpoint.description';
 import { GetProfileEndpoint } from '../swagger/get-user-profile.description';
 import { PasswordRecoveryEndpoint } from '../swagger/recovery-password.description';
 import { ConfirmPasswordEndpoint } from '../swagger/confirm-password-recovery.description';
+import { JwtTokens } from '../models/auth-input.models.ts/jwt.types';
 
 @ApiTags(ApiTagsEnum.Auth)
 @Controller(RoutingEnum.auth)
@@ -85,39 +84,26 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
     @Body() body: UserCredentialsDto,
   ) {
-    const { accessToken, refreshToken } =
-      await this.authService.createTokenPair(userInfo.userId);
-
-    const userPayload = this.authService.getUserPayloadByToken(refreshToken);
-
-    if (!userPayload) throw new Error();
-
-    const { browser, deviceType } = extractDeviceInfo(clientInfo.userAgentInfo);
-
     const command = new CreateSessionCommand({
-      userPayload,
-      browser,
-      deviceType,
-      ipAddress: clientInfo.ip,
+      clientInfo,
       userId: userInfo.userId,
-      refreshToken,
     });
-
-    const result = await this.commandBus.execute<
+    const notificationResult = await this.commandBus.execute<
       CreateSessionCommand,
-      LayerNoticeInterceptor<OutputId>
+      LayerNoticeInterceptor<JwtTokens>
     >(command);
 
-    if (result.hasError) {
-      console.log(result);
-
-      const errors = handleErrors(result.code, result.extensions[0]);
+    if (notificationResult.hasError) {
+      const errors = handleErrors(
+        notificationResult.code,
+        notificationResult.extensions[0],
+      );
       throw errors.error;
     }
+    const { accessToken, refreshToken } = notificationResult.data;
 
     res.cookie('refreshToken', refreshToken, { httpOnly: true, secure: true });
 
-    // res.header('accessToken', accessToken);
     return { accessToken };
   }
 
@@ -130,6 +116,7 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
   ) {
     const { userId, deviceId } = userInfo;
+    console.log({ userId, deviceId });
 
     const { accessToken, refreshToken } =
       await this.authService.updateUserTokens(userId, deviceId);
@@ -180,15 +167,9 @@ export class AuthController {
     const existingAccount =
       await this.authQueryRepo.findUserAccountByRecoveryCode(body.recoveryCode);
 
-    if (existingAccount) {
-      const command = new UpdatePasswordCommand(body);
+    const command = new UpdatePasswordCommand(body);
 
-      return this.commandBus.execute<UpdatePasswordCommand, boolean>(command);
-    }
-
-    const command = new UpdatePassTempAccountCommand(body);
-
-    return this.commandBus.execute(command);
+    return this.commandBus.execute<UpdatePasswordCommand, boolean>(command);
   }
 
   @SignUpEndpoint()
