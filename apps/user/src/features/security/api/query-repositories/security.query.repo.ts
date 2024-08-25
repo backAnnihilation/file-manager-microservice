@@ -39,7 +39,7 @@ export class SecurityQueryRepo {
 
       if (!sessions) return null;
 
-      return getSessionViewModel(sessions[0]);
+      return getSessionViewModel(sessions);
     } catch (error) {
       console.log(`Database fails operate with find user session ${error}`);
       return null;
