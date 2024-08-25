@@ -1,4 +1,4 @@
-import { IsString, Matches } from 'class-validator';
+import { IsOptional, IsString, Matches } from 'class-validator';
 import { emailMatches } from '../../../../../../core/validation/length-constants';
 
 export type PasswordRecoveryType = {
@@ -6,9 +6,9 @@ export type PasswordRecoveryType = {
   recoveryCode: string;
 };
 
-export type SendRecoveryMsgType = { 
-  email: string; 
-  recoveryCode: string 
+export type SendRecoveryMsgType = {
+  email: string;
+  recoveryCode: string;
 };
 
 export class InputEmailDto {
@@ -20,8 +20,9 @@ export class InputEmailDto {
 }
 
 export class RecoveryPasswordDto extends InputEmailDto {
+  @IsOptional()
   @IsString()
-  captureToken: string;
+  captureToken?: string;
 }
 
 export type PasswordsType = {
@@ -29,5 +30,7 @@ export type PasswordsType = {
   passwordSalt: string;
 };
 
-export type UpdatePasswordDto = Pick<PasswordRecoveryType, 'recoveryCode'> &
-  PasswordsType;
+export type UpdatePasswordDto = {
+  userId: string;
+  passwordHash: string;
+};

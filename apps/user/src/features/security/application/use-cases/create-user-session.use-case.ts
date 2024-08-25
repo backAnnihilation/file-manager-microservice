@@ -47,7 +47,6 @@ export class CreateUserSessionUseCase
     const sessionDto = new UserSessionDTO(
       clientInfo.ip,
       `Device type: ${deviceType}, Application: ${browser}`,
-      userId,
       userPayload,
       refreshToken,
     );
