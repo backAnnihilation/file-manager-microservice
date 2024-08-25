@@ -21,7 +21,7 @@ export class AuthQueryRepository {
     emailDto: EmailDtoType,
   ): Promise<UserAccountViewModel | null> {
     try {
-      const result = await this.userAccounts.findFirst({
+      const result = await this.userAccounts.findUnique({
         where: { email: emailDto.email },
       });
       if (!result) return null;
@@ -29,21 +29,6 @@ export class AuthQueryRepository {
       return getUserAccountViewModel(result);
     } catch (error) {
       console.log(`findUserByEmail: ${error}`);
-      return null;
-    }
-  }
-  async findConfirmedUserByEmailOrName({
-    userName,
-    email,
-  }): Promise<UserAccountViewModel | null> {
-    try {
-      const result = await this.userAccounts.findFirst({
-        where: { OR: [{ email }, { userName }], AND: { isConfirmed: true } },
-      });
-      if (!result) return null;
-      return getUserAccountViewModel(result);
-    } catch (error) {
-      console.log(`findByEmailOrName: ${error}`);
       return null;
     }
   }

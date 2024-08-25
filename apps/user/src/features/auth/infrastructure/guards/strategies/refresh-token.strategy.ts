@@ -6,6 +6,7 @@ import { EnvironmentVariables } from '../../../../../../core/config/configuratio
 import { SecurityQueryRepo } from '../../../../security/api/query-repositories/security.query.repo';
 import { Request } from 'express';
 import { StrategyType } from '../../../../../../core/infrastructure/guards/models/strategy.enum';
+import { SecurityRepository } from '../../../../security/infrastructure/security.repository';
 
 @Injectable()
 export class RefreshTokenStrategy extends PassportStrategy(
@@ -13,7 +14,7 @@ export class RefreshTokenStrategy extends PassportStrategy(
   StrategyType.RefreshToken,
 ) {
   constructor(
-    private securityQueryRepo: SecurityQueryRepo,
+    private securityRepo: SecurityRepository,
     private configService: ConfigService<EnvironmentVariables>,
   ) {
     super({
@@ -24,15 +25,15 @@ export class RefreshTokenStrategy extends PassportStrategy(
   }
 
   async validate(payload: any) {
-    const { iat, deviceId } = payload;
-    console.log({ iat, deviceId });
+    const { iat, deviceId, userId } = payload;
 
     const tokenIssuedAt = new Date(iat * 1000).toISOString();
 
-    const userSession = await this.securityQueryRepo.getUserSession(deviceId);
-    console.log({ userSession });
+    const userSession = await this.securityRepo.getSession(userId, deviceId);
 
-    if (!userSession || tokenIssuedAt !== userSession.lastActiveDate) {
+    const lastActiveDate = userSession?.rtIssuedAt?.toISOString();
+
+    if (!userSession || tokenIssuedAt !== lastActiveDate) {
       throw new UnauthorizedException('Invalid refresh token');
     }
 

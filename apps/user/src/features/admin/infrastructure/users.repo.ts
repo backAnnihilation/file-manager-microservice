@@ -19,10 +19,13 @@ export class UsersRepository {
     }
   }
 
-  async getUnconfirmedUserByEmail(email: string): Promise<UserAccount | null> {
+  async getUnconfirmedUserByEmailOrName(
+    email: string,
+    userName: string,
+  ): Promise<UserAccount | null> {
     try {
-      return await this.userAccounts.findUnique({
-        where: { email, isConfirmed: false },
+      return await this.userAccounts.findFirst({
+        where: { OR: [{ email }, { userName }], isConfirmed: false },
       });
     } catch (error) {
       console.log(`error in getUserByEmail: ${error}`);

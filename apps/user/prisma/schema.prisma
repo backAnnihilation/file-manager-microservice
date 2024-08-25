@@ -34,6 +34,6 @@ model UserSession {
   rtIssuedAt        DateTime       
   rtExpirationDate  DateTime       
 
-  userAccount       UserAccount?    @relation("UserSessions", fields: [userId], references: [id], onDelete: Cascade)
+  userAccount       UserAccount    @relation("UserSessions", fields: [userId], references: [id], onDelete: Cascade)
   userId            String
 }
