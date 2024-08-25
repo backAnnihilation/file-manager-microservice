@@ -11,18 +11,15 @@ export class SecurityRepository {
   constructor(private prisma: DatabaseService) {
     this.userSessions = this.prisma.userSession;
   }
-  async createSession(
-    sessionDto: UserSessionDTO,
-  ): Promise<OutputId> {
+  async createSession(sessionDto: UserSessionDTO): Promise<void> {
     try {
-      return await this.userSessions.create({
+      await this.userSessions.create({
         data: sessionDto,
-        select: { id: true },
       });
     } catch (error) {
       console.error(`
       Database fails operate with create session ${error}`);
-      return null;
+      throw new Error(`Database fails operate with create session ${error}`);
     }
   }
 
