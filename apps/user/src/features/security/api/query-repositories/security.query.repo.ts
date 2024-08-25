@@ -1,27 +1,28 @@
 import { Injectable } from '@nestjs/common';
 import { getSessionViewModel } from '../models/security.view.models/security.view.model';
 import { SecurityViewDeviceModel } from '../models/security.view.models/security.view.types';
+import { DatabaseService } from '../../../../../core/db/prisma/prisma.service';
+import { DefaultArgs } from '@prisma/client/runtime/library';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class SecurityQueryRepo {
-  private userSessions: any;
-  constructor() {}
+  private userSessions: Prisma.UserSessionDelegate<DefaultArgs>;
+  constructor(private prisma: DatabaseService) {
+    this.userSessions = this.prisma.userSession;
+  }
 
   async getUserActiveSessions(
     userId: string,
   ): Promise<SecurityViewDeviceModel[] | null> {
     try {
-      const sessions = await this.userSessions.find({
-        where: {
-          userAccount: { id: userId },
-        },
-      });
+      const sessions = await this.userSessions.findMany({ where: { userId } });
 
       if (!sessions) return null;
 
       return sessions.map(getSessionViewModel);
     } catch (error) {
-      // console.log(`Database fails operate with find user sessions ${error}`);
+      console.log(`Database fails operate with find user sessions ${error}`);
       return null;
     }
   }
@@ -30,9 +31,9 @@ export class SecurityQueryRepo {
     deviceId: string,
   ): Promise<SecurityViewDeviceModel | null> {
     try {
-      const sessions = await this.userSessions.find({
+      const sessions = await this.userSessions.findFirst({
         where: {
-          device_id: deviceId,
+          deviceId,
         },
       });
 
@@ -40,7 +41,7 @@ export class SecurityQueryRepo {
 
       return getSessionViewModel(sessions[0]);
     } catch (error) {
-      // console.log(`Database fails operate with find user session ${error}`);
+      console.log(`Database fails operate with find user session ${error}`);
       return null;
     }
   }
