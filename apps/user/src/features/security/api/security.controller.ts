@@ -19,6 +19,7 @@ import { UserSessionDto } from './models/security-input.models/security-session-
 import { SecurityInterface } from './models/security-input.models/security.interface';
 import { SecurityViewDeviceModel } from './models/security.view.models/security.view.types';
 import { SecurityQueryRepo } from './query-repositories/security.query.repo';
+import { GetUserActiveSessionsEndpoint } from './swagger/get-sessions.description';
 
 @Controller('security/devices')
 @UseGuards(RefreshTokenGuard)
@@ -28,7 +29,9 @@ export class SecurityController implements SecurityInterface {
     private commandBus: CommandBus,
   ) {}
 
+  @GetUserActiveSessionsEndpoint()
   @Get()
+  @HttpCode(HttpStatus.OK)
   async getUserActiveSessions(
     @UserPayload() userInfo: UserSessionDto,
   ): Promise<SecurityViewDeviceModel[]> {

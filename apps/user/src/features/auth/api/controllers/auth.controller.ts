@@ -58,7 +58,7 @@ import { PasswordRecoveryEndpoint } from './swagger/recovery-password.descriptio
 import { ConfirmPasswordEndpoint } from './swagger/confirm-password-recovery.description';
 import { SignUpEndpoint } from './swagger/sign-up.description';
 import { GetProfileEndpoint } from './swagger/get-user-profile.description';
-import { LogoutEndpoint } from './swagger/logout-description';
+import { LogoutEndpoint } from './swagger/logout.description';
 import { RegistrationEmailResendingEndpoint } from './swagger/registration-email-resending.description';
 import { RegistrationConfirmationEndpoint } from './swagger/registration-confirmation.description';
 
