@@ -45,7 +45,7 @@ class SignUpDto {
 
   @ApiProperty({
     required: true,
-    example: 'John Doe',
+    example: 'Batman',
     minLength: 6,
     maxLength: 30,
     description: 'must be unique',
