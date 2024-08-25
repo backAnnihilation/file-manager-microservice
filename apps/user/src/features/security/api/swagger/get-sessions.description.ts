@@ -1,5 +1,10 @@
 import { applyDecorators, HttpStatus } from '@nestjs/common';
-import { ApiResponse, ApiSecurity, ApiProperty, ApiOperation } from '@nestjs/swagger';
+import {
+  ApiResponse,
+  ApiSecurity,
+  ApiProperty,
+  ApiOperation,
+} from '@nestjs/swagger';
 import { UnauthorizedViaTokenApiResponse } from './shared/authorization.response';
 
 export class SecurityViewDeviceModel {

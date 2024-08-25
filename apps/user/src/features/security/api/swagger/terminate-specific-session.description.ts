@@ -12,7 +12,8 @@ export const TerminateSpecificSessionEndpoint = () =>
     ApiParam({ name: 'id', type: String, description: 'ID of the device' }),
     ApiOperation({
       summary: 'Terminate specific session',
-      description: 'Terminate a specific user session by id. In cookie must be refreshToken',
+      description:
+        'Terminate a specific user session by id. In cookie must be refreshToken',
     }),
     ApiResponse({
       status: HttpStatus.OK,
