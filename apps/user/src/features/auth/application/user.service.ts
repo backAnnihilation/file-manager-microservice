@@ -10,15 +10,14 @@ export class UserService {
   private location = this.constructor.name;
   constructor() {}
 
-  validateUserAccount = (
-    validateDto: ValidationFieldsType = {
-      userAccount: null,
-      isConfirmed: true,
-      isExist: true,
-      isExpired: true,
-    },
-  ) => {
-    const { userAccount, isConfirmed, isExist, isExpired } = validateDto;
+  validateUserAccount = (validateDto: ValidationFieldsType) => {
+    const {
+      userAccount,
+      isConfirmed = false,
+      isExist = true,
+      isExpired = true,
+    } = validateDto;
+
     const notice = new LayerNoticeInterceptor();
 
     if (isExist) {
@@ -45,9 +44,10 @@ export class UserService {
       const isValid = this.checkConfirmationRelevant(
         userAccount.confirmationExpDate,
       );
+
       if (!isValid) {
         notice.addError(
-          'confirmation code expired',
+          'confirmation code has expired',
           this.location,
           GetErrors.Forbidden,
         );
@@ -64,7 +64,7 @@ export class UserService {
 }
 
 type ValidationFieldsType = {
-  userAccount: UserAccount | null;
+  userAccount: UserAccount;
   isConfirmed?: boolean;
   isExist?: boolean;
   isExpired?: boolean;
