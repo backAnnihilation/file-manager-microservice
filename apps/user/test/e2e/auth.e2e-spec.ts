@@ -51,11 +51,11 @@ aDescribe(skipSettings.for(e2eTestNamesEnum.AUTH))('AuthController', () => {
     await app.close();
   });
 
-  it.only('constant true', () => {
+  it('constant true', () => {
     expect(1).toBe(1);
   });
 
-  describe('testing signIn api', () => {
+  describe.only('testing signIn api', () => {
     afterAll(async () => {
       await dbCleaner();
     });
