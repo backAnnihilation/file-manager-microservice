@@ -29,7 +29,7 @@ model UserSession {
   id                String         @id @default(uuid())
   ip                String
   userAgentInfo     String         
-  deviceId          String         
+  deviceId          String         @unique
   refreshToken      String         
   rtIssuedAt        DateTime       
   rtExpirationDate  DateTime       
