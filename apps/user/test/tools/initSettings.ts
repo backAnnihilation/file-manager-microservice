@@ -5,10 +5,9 @@ import { EnvironmentVariables } from '../../core/config/configuration';
 import { DatabaseService } from '../../core/db/prisma/prisma.service';
 import { EmailManager } from '../../core/managers/email-manager';
 import { AppModule } from '../../src/app.module';
-import { databaseService } from '../setupTests.e2e';
+// import { databaseService } from '../setupTests.e2e';
 import { UsersTestManager } from './managers/UsersTestManager';
 import { EmailMockService } from './mock/email-manager.mock';
-import { databaseCleanUp } from './utils/cleanUp';
 
 export const initSettings = async (
   addSettingsToModuleBuilder?: (moduleBuilder: TestingModuleBuilder) => void,
@@ -19,8 +18,8 @@ export const initSettings = async (
         imports: [AppModule],
       },
     )
-      .overrideProvider(DatabaseService)
-      .useValue(databaseService)
+      // .overrideProvider(DatabaseService)
+      // .useValue(databaseService)
       .overrideProvider(EmailManager)
       .useValue(EmailMockService);
 
@@ -41,6 +40,8 @@ export const initSettings = async (
     applyAppSettings(app);
 
     await app.init();
+
+    const databaseService = app.get(DatabaseService)
 
     const usersTestManager = new UsersTestManager(app, databaseService);
 

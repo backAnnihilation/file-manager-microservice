@@ -9,8 +9,9 @@ export class DeleteActiveSessionUseCase
 {
   constructor(private securityRepo: SecurityRepository) {}
 
-  async execute(command: DeleteActiveSessionCommand): Promise<void> {
+  async execute(command: DeleteActiveSessionCommand): Promise<LayerNoticeInterceptor> {
     const notice = new LayerNoticeInterceptor();
-    return this.securityRepo.deleteSession(command.deleteData.deviceId);
+    await this.securityRepo.deleteSession(command.deleteData.deviceId);
+    return notice;
   }
 }

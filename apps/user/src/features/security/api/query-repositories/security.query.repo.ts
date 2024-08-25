@@ -31,7 +31,7 @@ export class SecurityQueryRepo {
     deviceId: string,
   ): Promise<SecurityViewDeviceModel | null> {
     try {
-      const sessions = await this.userSessions.findFirst({
+      const sessions = await this.userSessions.findUnique({
         where: {
           deviceId,
         },
@@ -39,7 +39,7 @@ export class SecurityQueryRepo {
 
       if (!sessions) return null;
 
-      return getSessionViewModel(sessions[0]);
+      return getSessionViewModel(sessions);
     } catch (error) {
       console.log(`Database fails operate with find user session ${error}`);
       return null;
