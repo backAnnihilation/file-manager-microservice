@@ -1,5 +1,5 @@
 import { applyDecorators, HttpStatus } from '@nestjs/common';
-import { ApiResponse, ApiSecurity, ApiProperty } from '@nestjs/swagger';
+import { ApiResponse, ApiSecurity, ApiProperty, ApiOperation } from '@nestjs/swagger';
 import { UnauthorizedViaTokenApiResponse } from './shared/authorization.response';
 
 export class SecurityViewDeviceModel {
@@ -18,6 +18,11 @@ export class SecurityViewDeviceModel {
 
 export const GetUserActiveSessionsEndpoint = () =>
   applyDecorators(
+    ApiOperation({
+      summary: 'Get all current user sessions',
+      description:
+        'Get all current user sessions. In cookie must be refreshToken',
+    }),
     ApiResponse({ status: HttpStatus.OK, type: SecurityViewDeviceModel }),
     UnauthorizedViaTokenApiResponse,
     ApiSecurity('refreshToken'),

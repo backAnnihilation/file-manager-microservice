@@ -2,12 +2,12 @@ import { applyDecorators, HttpStatus } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiSecurity } from '@nestjs/swagger';
 import { UnauthorizedViaTokenApiResponse } from './shared/authorization.response';
 
-export const CreateUserSaEndpoint = () =>
+export const TerminateOtherUserSessionsEndpoint = () =>
   applyDecorators(
     ApiOperation({
-      summary: 'Log out of the current device',
+      summary: 'Terminate other user sessions',
       description:
-        'Client must send a correct refreshToken in a cookie that will be revoked',
+        'Terminate all other active sessions except the current one. In cookie must be refreshToken',
     }),
     ApiResponse({
       status: HttpStatus.NO_CONTENT,

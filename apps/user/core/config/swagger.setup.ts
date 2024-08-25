@@ -38,7 +38,7 @@ export function swaggerSetup(app: INestApplication) {
     .build();
   const document = SwaggerModule.createDocument(app, config);
 
-  const pathsToRemove = [RoutingEnum.security, RoutingEnum.admins];
+  const pathsToRemove = [RoutingEnum.admins];
 
   const pathsToDelete = Object.keys(document.paths).filter((path) =>
     pathsToRemove.some((pathToRemove) => path.startsWith(pathToRemove)),

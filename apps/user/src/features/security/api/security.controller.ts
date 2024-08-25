@@ -20,7 +20,12 @@ import { SecurityInterface } from './models/security-input.models/security.inter
 import { SecurityViewDeviceModel } from './models/security.view.models/security.view.types';
 import { SecurityQueryRepo } from './query-repositories/security.query.repo';
 import { GetUserActiveSessionsEndpoint } from './swagger/get-sessions.description';
+import { TerminateOtherUserSessionsEndpoint } from './swagger/terminate-other-sessions.description';
+import { TerminateSpecificSessionEndpoint } from './swagger/terminate-specific-session.description';
+import { ApiTags } from '@nestjs/swagger';
+import { ApiTagsEnum } from '../../../../core/routes/routing';
 
+@ApiTags(ApiTagsEnum.Security)
 @Controller('security/devices')
 @UseGuards(RefreshTokenGuard)
 export class SecurityController implements SecurityInterface {
@@ -47,6 +52,7 @@ export class SecurityController implements SecurityInterface {
     return securityData;
   }
 
+  @TerminateOtherUserSessionsEndpoint()
   @Delete()
   @HttpCode(HttpStatus.NO_CONTENT)
   async terminateOtherUserSessions(@UserPayload() userInfo: UserSessionDto) {
@@ -54,6 +60,7 @@ export class SecurityController implements SecurityInterface {
     await this.commandBus.execute(command);
   }
 
+  @TerminateSpecificSessionEndpoint()
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   async terminateSpecificSession(
