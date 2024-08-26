@@ -51,7 +51,6 @@ import { RegistrationEmailResendingEndpoint } from './swagger/registration-email
 import { GetProfileEndpoint } from './swagger/get-user-profile.description';
 import { LogoutEndpoint } from './swagger/logout.description';
 
-
 @ApiTags(ApiTagsEnum.Auth)
 @Controller(RoutingEnum.auth)
 export class AuthController {
@@ -68,6 +67,7 @@ export class AuthController {
     @UserPayload() userInfo: UserSessionDto,
     @GetClientInfo() clientInfo: ClientInfo,
     @Res({ passthrough: true }) res: Response,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     @Body() body: UserCredentialsDto,
   ) {
     const command = new CreateSessionCommand({
@@ -80,6 +80,15 @@ export class AuthController {
     res.cookie('refreshToken', refreshToken, { httpOnly: true, secure: true });
 
     return { accessToken };
+  }
+
+  @SignUpEndpoint()
+  @Post(AuthNavigate.Registration)
+  @UseGuards(CaptureGuard, CustomThrottlerGuard)
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async registration(@Body() data: CreateUserDto) {
+    const command = new CreateUserCommand(data);
+    await this.authenticationApiService.authOperation(command);
   }
 
   @RefreshTokenEndpoint()
@@ -96,51 +105,6 @@ export class AuthController {
 
     res.cookie('refreshToken', refreshToken, { httpOnly: true, secure: true });
     return { accessToken };
-  }
-
-  @PasswordRecoveryEndpoint()
-  @UseGuards(CustomThrottlerGuard, CaptureGuard)
-  @Post(AuthNavigate.PasswordRecovery)
-  @HttpCode(HttpStatus.NO_CONTENT)
-  async passwordRecovery(@Body() data: RecoveryPasswordDto): Promise<void> {
-    const command = new PasswordRecoveryCommand(data);
-    await this.authenticationApiService.authOperation(command);
-  }
-
-  @ConfirmPasswordEndpoint()
-  @UseGuards(CustomThrottlerGuard, CaptureGuard)
-  @Post(AuthNavigate.NewPassword)
-  @HttpCode(HttpStatus.NO_CONTENT)
-  async confirmPasswordRecovery(@Body() body: RecoveryPassDto) {
-    const command = new UpdatePasswordCommand(body);
-    await this.authenticationApiService.authOperation(command);
-  }
-
-  @SignUpEndpoint()
-  @Post(AuthNavigate.Registration)
-  @UseGuards(CaptureGuard, CustomThrottlerGuard)
-  @HttpCode(HttpStatus.NO_CONTENT)
-  async registration(@Body() data: CreateUserDto) {
-    const command = new CreateUserCommand(data);
-    await this.authenticationApiService.authOperation(command);
-  }
-
-  @RegistrationConfirmationEndpoint()
-  @UseGuards(CustomThrottlerGuard)
-  @HttpCode(HttpStatus.NO_CONTENT)
-  @Post(AuthNavigate.RegistrationConfirmation)
-  async registrationConfirmation(@Body() data: RegistrationCodeDto) {
-    const command = new ConfirmEmailCommand(data);
-    await this.authenticationApiService.authOperation(command);
-  }
-
-  @RegistrationEmailResendingEndpoint()
-  @UseGuards(CustomThrottlerGuard)
-  @Post(AuthNavigate.RegistrationEmailResending)
-  @HttpCode(HttpStatus.NO_CONTENT)
-  async registrationEmailResending(@Body() data: InputEmailDto) {
-    const command = new UpdateConfirmationCodeCommand(data);
-    await this.authenticationApiService.authOperation(command);
   }
 
   @GetProfileEndpoint()
@@ -164,6 +128,42 @@ export class AuthController {
   @HttpCode(HttpStatus.NO_CONTENT)
   async logout(@UserPayload() userInfo: UserSessionDto) {
     const command = new DeleteActiveSessionCommand(userInfo);
+    await this.authenticationApiService.authOperation(command);
+  }
+
+  @PasswordRecoveryEndpoint()
+  @UseGuards(CustomThrottlerGuard, CaptureGuard)
+  @Post(AuthNavigate.PasswordRecovery)
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async passwordRecovery(@Body() data: RecoveryPasswordDto): Promise<void> {
+    const command = new PasswordRecoveryCommand(data);
+    await this.authenticationApiService.authOperation(command);
+  }
+
+  @ConfirmPasswordEndpoint()
+  @UseGuards(CustomThrottlerGuard, CaptureGuard)
+  @Post(AuthNavigate.NewPassword)
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async confirmPasswordRecovery(@Body() body: RecoveryPassDto) {
+    const command = new UpdatePasswordCommand(body);
+    await this.authenticationApiService.authOperation(command);
+  }
+
+  @RegistrationConfirmationEndpoint()
+  @UseGuards(CustomThrottlerGuard)
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @Post(AuthNavigate.RegistrationConfirmation)
+  async registrationConfirmation(@Body() data: RegistrationCodeDto) {
+    const command = new ConfirmEmailCommand(data);
+    await this.authenticationApiService.authOperation(command);
+  }
+
+  @RegistrationEmailResendingEndpoint()
+  @UseGuards(CustomThrottlerGuard)
+  @Post(AuthNavigate.RegistrationEmailResending)
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async registrationEmailResending(@Body() data: InputEmailDto) {
+    const command = new UpdateConfirmationCodeCommand(data);
     await this.authenticationApiService.authOperation(command);
   }
 }

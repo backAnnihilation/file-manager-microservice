@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { OutputId } from '../../../../core/api/dto/output-id.dto';
 import { DatabaseService } from '../../../../core/db/prisma/prisma.service';
 import { DefaultArgs } from '@prisma/client/runtime/library';
 import { Prisma, UserSession } from '@prisma/client';
