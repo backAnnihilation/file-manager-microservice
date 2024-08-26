@@ -19,11 +19,11 @@ import { UserSessionDto } from './models/security-input.models/security-session-
 import { SecurityInterface } from './models/security-input.models/security.interface';
 import { SecurityViewDeviceModel } from './models/security.view.models/security.view.types';
 import { SecurityQueryRepo } from './query-repositories/security.query.repo';
-import { GetUserActiveSessionsEndpoint } from './swagger/get-sessions.description';
-import { TerminateOtherUserSessionsEndpoint } from './swagger/terminate-other-sessions.description';
-import { TerminateSpecificSessionEndpoint } from './swagger/terminate-specific-session.description';
 import { ApiTags } from '@nestjs/swagger';
 import { ApiTagsEnum, RoutingEnum } from '../../../../core/routes/routing';
+import { GetUserActiveSessionsEndpoint } from './swagger/get-sessions.description';
+import { TerminateOtherUserSessionsEndpoint } from './swagger/terminate-other-sessions.description';
+import { DeleteSessionEndpoint } from './swagger/terminate-specific-session.description';
 
 @ApiTags(ApiTagsEnum.Security)
 @Controller(RoutingEnum.security)
@@ -36,7 +36,6 @@ export class SecurityController implements SecurityInterface {
 
   @GetUserActiveSessionsEndpoint()
   @Get()
-  @HttpCode(HttpStatus.OK)
   async getUserActiveSessions(
     @UserPayload() userInfo: UserSessionDto,
   ): Promise<SecurityViewDeviceModel[]> {
@@ -56,14 +55,14 @@ export class SecurityController implements SecurityInterface {
   @Delete()
   @HttpCode(HttpStatus.NO_CONTENT)
   async terminateOtherUserSessions(@UserPayload() userInfo: UserSessionDto) {
-    const command = new DeleteOtherUserSessionsCommand(userInfo.deviceId);
+    const command = new DeleteOtherUserSessionsCommand(userInfo);
     await this.commandBus.execute(command);
   }
 
-  @TerminateSpecificSessionEndpoint()
+  @DeleteSessionEndpoint()
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  async terminateSpecificSession(
+  async deleteSession(
     @Param('id') deviceId: string,
     @UserPayload() userInfo: UserSessionDto,
   ) {

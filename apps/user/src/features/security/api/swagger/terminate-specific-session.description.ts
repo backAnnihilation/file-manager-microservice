@@ -7,7 +7,7 @@ import {
 } from '@nestjs/swagger';
 import { UnauthorizedViaTokenApiResponse } from './shared/authorization.response';
 
-export const TerminateSpecificSessionEndpoint = () =>
+export const DeleteSessionEndpoint = () =>
   applyDecorators(
     ApiParam({ name: 'id', type: String, description: 'ID of the device' }),
     ApiOperation({
