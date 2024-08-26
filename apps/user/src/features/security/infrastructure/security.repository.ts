@@ -12,15 +12,7 @@ export class SecurityRepository {
   constructor(private prisma: DatabaseService) {
     this.userSessions = this.prisma.userSession;
   }
-  async createSession(sessionDto: UserSessionDTO): Promise<void> {
-    try {
-      await this.userSessions.create({
-        data: sessionDto,
-      });
-  private userSessions: Prisma.UserSessionDelegate<DefaultArgs>;
-  constructor(private prisma: DatabaseService) {
-    this.userSessions = this.prisma.userSession;
-  }
+
   async createSession(sessionDto: UserSessionDTO): Promise<void> {
     try {
       await this.userSessions.create({
@@ -29,17 +21,6 @@ export class SecurityRepository {
     } catch (error) {
       console.error(`
       Database fails operate with create session ${error}`);
-      throw new Error(`Database fails operate with create session ${error}`);
-    }
-  }
-
-  async getSession(userId: string, deviceId: string): Promise<UserSession> {
-    try {
-      return await this.userSessions.findFirst({
-        where: { AND: [{ userId }, { deviceId }] },
-      });
-    } catch (error) {
-      console.error(`Database fails operate with get session ${error}`);
       throw new Error(`Database fails operate with create session ${error}`);
     }
   }
@@ -65,42 +46,25 @@ export class SecurityRepository {
   async updateIssuedToken(
     deviceId: string,
     issuedAt: Date,
-    exp: Date,
-  ): Promise<void> {
+    exp: Date
   ): Promise<void> {
     try {
-      const session = await this.userSessions.findFirst({
-        where: { deviceId },
-      });
       await this.userSessions.update({
-        where: { id: session.id },
-        data: { rtIssuedAt: issuedAt, rtExpirationDate: exp },
-      });
-      const session = await this.userSessions.findFirst({
         where: { deviceId },
-      });
-      await this.userSessions.update({
-        where: { id: session.id },
         data: { rtIssuedAt: issuedAt, rtExpirationDate: exp },
       });
     } catch (error) {
-      console.error(error);
-      throw new Error(error);
       console.error(error);
       throw new Error(error);
     }
   }
 
   async deleteSession(deviceId: string): Promise<void> {
-  async deleteSession(deviceId: string): Promise<void> {
     try {
-      const session = await this.userSessions.findFirst({
-        where: { deviceId },
-      });
-      await this.userSessions.delete({ where: { id: session.id } });
+      await this.userSessions.delete({ where: { deviceId } });
     } catch (error) {
       console.error(
-        `Database operation failed while deleting session with deviceId ${deviceId}: ${error.message}`,
+        `Database operation failed while deleting session with deviceId ${deviceId}: ${error.message}`
       );
       throw new Error(error);
     }

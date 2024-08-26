@@ -1,10 +1,7 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { LayerNoticeInterceptor } from '../../../../../core/utils/notification';
 import { SecurityRepository } from '../../infrastructure/security.repository';
 import { DeleteActiveSessionCommand } from './commands/delete-active-session.command';
-import {
-  LayerNoticeInterceptor,
-  GetErrors,
-} from '../../../../../core/utils/notification';
 
 @CommandHandler(DeleteActiveSessionCommand)
 export class DeleteActiveSessionUseCase
@@ -15,33 +12,11 @@ export class DeleteActiveSessionUseCase
   constructor(private securityRepo: SecurityRepository) {}
 
   async execute(
-    command: DeleteActiveSessionCommand,
-  ): Promise<LayerNoticeInterceptor<void>> {
-    const notice = new LayerNoticeInterceptor<void>();
-
-    try {
-      const session = await this.securityRepo.getSession(
-        command.deleteData.userId,
-        command.deleteData.deviceId,
-      );
-
-      if (!session) {
-        notice.addError(
-          `Session with deviceId ${command.deleteData.deviceId} not found`,
-          this.location,
-          GetErrors.IncorrectModel,
-        );
-      }
-
-      await this.securityRepo.deleteSession(command.deleteData.deviceId);
-    } catch (error) {
-      notice.addError(
-        `Failed to delete session: ${error.message}`,
-        this.location,
-        GetErrors.DatabaseFail,
-      );
-    }
-
+    command: DeleteActiveSessionCommand
+  ): Promise<LayerNoticeInterceptor> {
+    const notice = new LayerNoticeInterceptor();
+    const { deviceId } = command.deleteData;
+    await this.securityRepo.deleteSession(deviceId);
     return notice;
   }
 }
