@@ -41,12 +41,16 @@ import { CreateUserDto } from '../models/auth-input.models.ts/user-registration.
 import { UserCredentialsDto } from '../models/auth-input.models.ts/verify-credentials.model';
 import { UserProfileType } from '../models/auth.output.models/auth.output.models';
 import { AuthQueryRepository } from '../query-repositories/auth.query.repo';
-import { ConfirmPasswordEndpoint } from '../swagger/confirm-password-recovery.description';
-import { GetProfileEndpoint } from '../swagger/get-user-profile.description';
-import { PasswordRecoveryEndpoint } from '../swagger/recovery-password.description';
-import { RefreshTokenEndpoint } from '../swagger/refresh-token.description';
-import { SignInEndpoint } from '../swagger/signIn.description';
-import { SignUpEndpoint } from '../swagger/signup-endpoint.description';
+import { SignInEndpoint } from './swagger/sign-in.description';
+import { RefreshTokenEndpoint } from './swagger/refresh-token.description';
+import { PasswordRecoveryEndpoint } from './swagger/recovery-password.description';
+import { ConfirmPasswordEndpoint } from './swagger/confirm-password-recovery.description';
+import { SignUpEndpoint } from './swagger/sign-up.description';
+import { RegistrationConfirmationEndpoint } from './swagger/registration-confirmation.description';
+import { RegistrationEmailResendingEndpoint } from './swagger/registration-email-resending.description';
+import { GetProfileEndpoint } from './swagger/get-user-profile.description';
+import { LogoutEndpoint } from './swagger/logout.description';
+
 
 @ApiTags(ApiTagsEnum.Auth)
 @Controller(RoutingEnum.auth)
@@ -121,6 +125,7 @@ export class AuthController {
     await this.authenticationApiService.authOperation(command);
   }
 
+  @RegistrationConfirmationEndpoint()
   @UseGuards(CustomThrottlerGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
   @Post(AuthNavigate.RegistrationConfirmation)
@@ -129,6 +134,7 @@ export class AuthController {
     await this.authenticationApiService.authOperation(command);
   }
 
+  @RegistrationEmailResendingEndpoint()
   @UseGuards(CustomThrottlerGuard)
   @Post(AuthNavigate.RegistrationEmailResending)
   @HttpCode(HttpStatus.NO_CONTENT)
@@ -152,6 +158,7 @@ export class AuthController {
     return { email, userName, userId };
   }
 
+  @LogoutEndpoint()
   @UseGuards(RefreshTokenGuard)
   @Post(AuthNavigate.Logout)
   @HttpCode(HttpStatus.NO_CONTENT)
