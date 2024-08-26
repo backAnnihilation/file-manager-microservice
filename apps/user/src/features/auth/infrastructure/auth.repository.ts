@@ -66,6 +66,19 @@ export class AuthRepository {
       return null;
     }
   }
+  async findExistedUserByEmailOrName({
+    userName,
+    email,
+  }): Promise<UserAccount | null> {
+    try {
+      return await this.userAccounts.findFirst({
+        where: { OR: [{ email }, { userName }] },
+      });
+    } catch (error) {
+      console.log(`findByEmailOrName: ${error}`);
+      return null;
+    }
+  }
 
   async findUserByEmail(email: string): Promise<UserAccount | null> {
     try {

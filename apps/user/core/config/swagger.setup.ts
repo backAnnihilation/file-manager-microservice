@@ -4,7 +4,7 @@ import { RoutingEnum } from '../routes/routing';
 
 export function swaggerSetup(app: INestApplication) {
   const config = new DocumentBuilder()
-    .setTitle('Incubator-apprenticeship')
+    .setTitle('Incta-team')
     .setDescription('OpenAPI documentation')
     .setVersion('1.0')
     .addBearerAuth(
@@ -16,18 +16,29 @@ export function swaggerSetup(app: INestApplication) {
       },
       'accessToken',
     )
-    .addCookieAuth('refreshToken', {
-      type: 'apiKey',
-      name: 'refreshToken',
-      in: 'cookie',
-      description:
-        'JWT refreshToken inside cookie. Must be correct, and must not be expired',
-    })
-    // .addTag('hummingbird')
+    .addApiKey(
+      {
+        type: 'apiKey',
+        name: 'refresh-Token',
+        in: 'cookie',
+        description:
+          'JWT refreshToken inside cookie. Must be correct, and must not be expired',
+      },
+      'refreshToken',
+    )
+    .addApiKey(
+      {
+        type: 'apiKey',
+        name: 'captchaToken',
+        in: 'headers',
+        description: 'Google reCAPTCHA validation to prevent bots',
+      },
+      'captchaToken',
+    )
     .build();
   const document = SwaggerModule.createDocument(app, config);
 
-  const pathsToRemove = [RoutingEnum.security, RoutingEnum.admins];
+  const pathsToRemove = [RoutingEnum.admins];
 
   const pathsToDelete = Object.keys(document.paths).filter((path) =>
     pathsToRemove.some((pathToRemove) => path.startsWith(pathToRemove)),

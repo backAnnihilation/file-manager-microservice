@@ -11,11 +11,11 @@ import { SecurityRepository } from '../../../../security/infrastructure/security
 @Injectable()
 export class RefreshTokenStrategy extends PassportStrategy(
   Strategy,
-  StrategyType.RefreshToken,
+  StrategyType.RefreshToken
 ) {
   constructor(
     private securityRepo: SecurityRepository,
-    private configService: ConfigService<EnvironmentVariables>,
+    private configService: ConfigService<EnvironmentVariables>
   ) {
     super({
       jwtFromRequest: ExtractJwt.fromExtractors([cookieExtractor]),

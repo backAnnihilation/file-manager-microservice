@@ -9,6 +9,9 @@
     "prisma:deploy": "cd apps/user && npx prisma migrate deploy",
     "prisma:m": "npx --prefix apps/user migrate dev --name ${migrationName}",
     "prisma:migrate": "node ./apps/user/prisma/tools/add-migration.js",
+    "prisma:deploy": "cd apps/user && npx prisma migrate deploy",
+    "prisma:m": "npx --prefix apps/user migrate dev --name ${migrationName}",
+    "prisma:migrate": "node ./apps/user/prisma/tools/add-migration.js",
     "generate:app": "npx prisma generate --schema=./apps/user/prisma/schema.prisma",
     "build": "nest build",
     "format": "prettier --write \"apps/**/*.ts\" \"libs/**/*.ts\"",
@@ -22,7 +25,7 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./apps/user/test/jest-e2e.json --watchAll"
+    "test:e2e": "jest --config apps/second-app/test/jest-e2e.json --watchAll"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",

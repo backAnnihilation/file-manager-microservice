@@ -30,10 +30,12 @@ model UserSession {
   ip                String
   userAgentInfo     String         
   deviceId          String         @unique
+  deviceId          String         @unique
   refreshToken      String         
   rtIssuedAt        DateTime       
   rtExpirationDate  DateTime       
 
+  userAccount       UserAccount    @relation("UserSessions", fields: [userId], references: [id], onDelete: Cascade)
   userAccount       UserAccount    @relation("UserSessions", fields: [userId], references: [id], onDelete: Cascade)
   userId            String
 }

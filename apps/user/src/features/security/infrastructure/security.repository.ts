@@ -17,9 +17,29 @@ export class SecurityRepository {
       await this.userSessions.create({
         data: sessionDto,
       });
+  private userSessions: Prisma.UserSessionDelegate<DefaultArgs>;
+  constructor(private prisma: DatabaseService) {
+    this.userSessions = this.prisma.userSession;
+  }
+  async createSession(sessionDto: UserSessionDTO): Promise<void> {
+    try {
+      await this.userSessions.create({
+        data: sessionDto,
+      });
     } catch (error) {
       console.error(`
       Database fails operate with create session ${error}`);
+      throw new Error(`Database fails operate with create session ${error}`);
+    }
+  }
+
+  async getSession(userId: string, deviceId: string): Promise<UserSession> {
+    try {
+      return await this.userSessions.findFirst({
+        where: { AND: [{ userId }, { deviceId }] },
+      });
+    } catch (error) {
+      console.error(`Database fails operate with get session ${error}`);
       throw new Error(`Database fails operate with create session ${error}`);
     }
   }
@@ -47,7 +67,15 @@ export class SecurityRepository {
     issuedAt: Date,
     exp: Date,
   ): Promise<void> {
+  ): Promise<void> {
     try {
+      const session = await this.userSessions.findFirst({
+        where: { deviceId },
+      });
+      await this.userSessions.update({
+        where: { id: session.id },
+        data: { rtIssuedAt: issuedAt, rtExpirationDate: exp },
+      });
       const session = await this.userSessions.findFirst({
         where: { deviceId },
       });
@@ -58,9 +86,12 @@ export class SecurityRepository {
     } catch (error) {
       console.error(error);
       throw new Error(error);
+      console.error(error);
+      throw new Error(error);
     }
   }
 
+  async deleteSession(deviceId: string): Promise<void> {
   async deleteSession(deviceId: string): Promise<void> {
     try {
       const session = await this.userSessions.findFirst({
@@ -69,7 +100,7 @@ export class SecurityRepository {
       await this.userSessions.delete({ where: { id: session.id } });
     } catch (error) {
       console.error(
-        `Database fails operate with delete specific session ${error}`,
+        `Database operation failed while deleting session with deviceId ${deviceId}: ${error.message}`,
       );
       throw new Error(error);
     }

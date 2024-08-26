@@ -17,5 +17,7 @@ export const applyAppSettings = (app: INestApplication) => {
   exceptionFilterSetup(app, currentENV);
   app.use(cookieParser());
   currentENV !== Environment.TESTING && app.setGlobalPrefix('api/v1');
+  app.setGlobalPrefix('api/v1');
+  currentENV !== Environment.TESTING && app.setGlobalPrefix('api/v1');
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
 };
