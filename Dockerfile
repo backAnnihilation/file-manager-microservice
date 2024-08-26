@@ -12,9 +12,11 @@ WORKDIR /home/node/dist/app
 COPY --chown=node package*.json ./
 RUN npm install
 
-# Apply Prisma migrations
+# Copy the rest of the application code
 COPY --chown=node . .
-RUN npx prisma migrate deploy --schema=./apps/user/prisma/schema.prisma
+
+# Generate Prisma client
+RUN npx prisma generate --schema=./apps/user/prisma/schema.prisma
 
 # Build the app
 RUN npm run build
@@ -23,5 +25,5 @@ RUN npm run build
 ENV PORT=3498
 EXPOSE ${PORT}
 
-# Start the application
-CMD [ "npm", "start" ]
+# Start the application with Prisma migration
+CMD ["sh", "-c", "npx prisma migrate deploy --schema=./apps/user/prisma/schema.prisma && npm start"]
