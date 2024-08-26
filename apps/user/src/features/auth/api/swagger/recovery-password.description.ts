@@ -1,8 +1,8 @@
 import { applyDecorators, HttpStatus } from '@nestjs/common';
 import { ApiBody, ApiProperty, ApiResponse } from '@nestjs/swagger';
 import { AccessTokenResponseDto } from './shared/accessToken-response.dto';
-import { TooManyRequestsApiResponse } from './shared/too-many-requests-api-response';
-import { CaptchaHeader } from '../../../security/api/swagger/shared/capture-using';
+import { CaptchaHeader } from '../../../security/api/swagger/shared/captcha-using';
+import { TooManyRequestsApiResponse } from '../../../security/api/swagger/shared/too-many-requests-api-response';
 
 export const PasswordRecoveryEndpoint = () =>
   applyDecorators(

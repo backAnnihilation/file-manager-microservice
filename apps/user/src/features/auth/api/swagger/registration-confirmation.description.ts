@@ -5,8 +5,8 @@ import {
   ApiProperty,
   ApiResponse,
 } from '@nestjs/swagger';
-import { TooManyRequestsApiResponse } from './shared/too-many-requests-api-response';
-import { ErrorMessageDto } from './shared/error-message-response';
+import { ErrorMessageDto } from '../../../security/api/swagger/shared/error-message-response';
+import { TooManyRequestsApiResponse } from '../../../security/api/swagger/shared/too-many-requests-api-response';
 
 export const RegistrationConfirmationEndpoint = () =>
   applyDecorators(

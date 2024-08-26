@@ -54,7 +54,7 @@ export class SecurityRepository {
         data: { rtIssuedAt: issuedAt, rtExpirationDate: exp },
       });
     } catch (error) {
-      console.error(error);
+      console.error(`updateIssuedToken`, error);
       throw new Error(error);
     }
   }

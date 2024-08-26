@@ -13,9 +13,9 @@ model UserAccount {
   id                           String         @id @default(uuid())
   userName                     String         @unique
   email                        String         @unique
-  passwordHash                 String
-  confirmationCode             String
-  confirmationExpDate          DateTime
+  passwordHash                 String?
+  confirmationCode             String?
+  confirmationExpDate          DateTime?
   isConfirmed                  Boolean
   passwordRecoveryCode         String?
   passwordRecoveryExpDate      DateTime?
@@ -34,7 +34,6 @@ model UserSession {
   rtIssuedAt        DateTime       
   rtExpirationDate  DateTime       
 
-  userAccount       UserAccount    @relation("UserSessions", fields: [userId], references: [id], onDelete: Cascade)
-  
+  userAccount       UserAccount    @relation("UserSessions", fields: [userId], references: [id])
   userId            String
 }

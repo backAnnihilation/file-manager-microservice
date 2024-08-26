@@ -22,7 +22,7 @@ export class UserService {
 
     if (!userAccount) {
       notice.addError(
-        'user account was not found or recovery code has been expired',
+        'user account was not found or code has been expired',
         this.location,
         GetErrors.NotFound,
       );

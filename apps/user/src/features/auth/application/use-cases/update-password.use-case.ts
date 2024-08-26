@@ -1,22 +1,24 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { BcryptAdapter } from '../../../../../core/adapters/bcrypt.adapter';
-import { LayerNoticeInterceptor } from '../../../../../core/utils/notification';
+import {
+  GetErrors,
+  LayerNoticeInterceptor,
+} from '../../../../../core/utils/notification';
 import { AuthRepository } from '../../infrastructure/auth.repository';
-import { UserService } from '../user.service';
 import { UpdatePasswordCommand } from './commands/update-password.command';
 
 @CommandHandler(UpdatePasswordCommand)
 export class UpdatePasswordUseCase
   implements ICommandHandler<UpdatePasswordCommand>
 {
+  private location = this.constructor.name;
   constructor(
     private authRepo: AuthRepository,
-    private bcryptAdapter: BcryptAdapter,
-    private userService: UserService,
+    private bcryptAdapter: BcryptAdapter
   ) {}
 
   async execute(
-    command: UpdatePasswordCommand,
+    command: UpdatePasswordCommand
   ): Promise<LayerNoticeInterceptor> {
     const notice = new LayerNoticeInterceptor();
     const { recoveryCode, newPassword } = command.updateDto;
@@ -26,11 +28,14 @@ export class UpdatePasswordUseCase
     const userAccount =
       await this.authRepo.findUserByRecoveryCode(recoveryCode);
 
-    const validateNotification = this.userService.validateUserAccount({
-      userAccount,
-    });
-
-    if (validateNotification.hasError) return validateNotification;
+    if (!userAccount) {
+      notice.addError(
+        'User not found due to an incorrect or expired code',
+        this.location,
+        GetErrors.IncorrectModel
+      );
+      return notice;
+    }
 
     await this.authRepo.updateUserPassword({
       userId: userAccount.id,

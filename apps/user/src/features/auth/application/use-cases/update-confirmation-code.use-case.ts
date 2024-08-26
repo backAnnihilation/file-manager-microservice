@@ -13,11 +13,11 @@ export class UpdateConfirmationCodeUseCase
   constructor(
     private authRepo: AuthRepository,
     private eventBus: EventBus,
-    private userService: UserService,
+    private userService: UserService
   ) {}
 
   async execute(
-    command: UpdateConfirmationCodeCommand,
+    command: UpdateConfirmationCodeCommand
   ): Promise<LayerNoticeInterceptor<boolean>> {
     const { expirationDate, recoveryCode } = createRecoveryCode();
     const { email } = command.updateDto;

@@ -17,8 +17,9 @@ export const constantsForDataTesting = {
     expiredAccessToken:
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NWIxMDg5MGQzODQ5NjVkZTAwNzA0N2EiLCJkZXZpY2VJZCI6ImEzOTBkMDcwLTJmYmItNDA2OC04NzkxLTMzZDllMTM4MmIzNSIsImlhdCI6MTcwNjEwMDk2NywiZXhwIjoxNzA2MTA4MTY3fQ.kogQ9UmVq8o4_y86jgypss0Et1pLY5oMIKEDEY7kGlE',
     validUUID: uuidv4(),
-    EMAIL: 'kr4mboy@gmail.com',
-    EMAIL2: 'kr4mboy@gmail.ru',
+    EMAIL: 'test@gmail.com',
+    EMAIL2: 'test@yandex.ru',
+    EMAIL3: 'test@k.io',
     INVALID_EMAIL: 'invalid-email',
     USER_NAME: 'Pythagoras',
     USER_NAME2: 'Protagoras',

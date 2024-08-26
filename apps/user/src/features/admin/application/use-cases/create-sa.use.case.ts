@@ -10,11 +10,11 @@ import { UserModelDTO } from '../dto/create-user.dto';
 export class CreateSAUseCase implements ICommandHandler<CreateSACommand> {
   constructor(
     private bcryptAdapter: BcryptAdapter,
-    private usersRepo: UsersRepository,
+    private usersRepo: UsersRepository
   ) {}
 
   async execute(
-    command: CreateSACommand,
+    command: CreateSACommand
   ): Promise<LayerNoticeInterceptor<ResponseIdType>> {
     let notice = new LayerNoticeInterceptor<ResponseIdType>();
 
@@ -27,7 +27,7 @@ export class CreateSAUseCase implements ICommandHandler<CreateSACommand> {
       userName,
       email,
       passwordHash,
-      isConfirmed,
+      isConfirmed
     );
 
     const savedUser = await this.usersRepo.save(userDto);

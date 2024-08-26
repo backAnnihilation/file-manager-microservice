@@ -18,11 +18,11 @@ export class CreateUserSessionUseCase
   private location = this.constructor.name;
   constructor(
     private securityRepo: SecurityRepository,
-    private authService: AuthService,
+    private authService: AuthService
   ) {}
 
   async execute(
-    command: CreateSessionCommand,
+    command: CreateSessionCommand
   ): Promise<LayerNoticeInterceptor<JwtTokens>> {
     const notice = new LayerNoticeInterceptor<JwtTokens>();
 
@@ -37,7 +37,7 @@ export class CreateUserSessionUseCase
       notice.addError(
         `can't retrieve user payload from token`,
         this.location,
-        GetErrors.DeniedAccess,
+        GetErrors.DeniedAccess
       );
       return notice;
     }
@@ -48,7 +48,7 @@ export class CreateUserSessionUseCase
       clientInfo.ip,
       `Device type: ${deviceType}, Application: ${browser}`,
       userPayload,
-      refreshToken,
+      refreshToken
     );
 
     await this.securityRepo.createSession(sessionDto);

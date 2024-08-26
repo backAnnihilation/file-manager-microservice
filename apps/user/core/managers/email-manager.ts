@@ -7,7 +7,7 @@ export class EmailManager {
 
   async sendEmailMembershipSuccess(
     userEmail: string,
-    userLogin: string,
+    userLogin: string
   ): Promise<void> {
     const notificationData = {
       from: `Cringe Hub👻`,
@@ -22,7 +22,7 @@ export class EmailManager {
 
   async sendEmailRecoveryMessage(
     email: string,
-    recoveryCode: string,
+    recoveryCode: string
   ): Promise<string> {
     const recoveryLink = `https://Incta.team/password-recovery?recoveryCode=${recoveryCode}`;
 
@@ -42,7 +42,7 @@ export class EmailManager {
 
   async sendEmailConfirmationMessage(
     email: string,
-    confirmationCode: string,
+    confirmationCode: string
   ): Promise<string> {
     const confirmationLink = `https://Incta.team/confirm-email?code=${confirmationCode}`;
     const confirmationData = {
@@ -54,6 +54,7 @@ export class EmailManager {
                 </p>`,
       to: email,
     };
+    console.log({ confirmationData });
 
     return this.emailAdapter.sendEmail(confirmationData);
   }

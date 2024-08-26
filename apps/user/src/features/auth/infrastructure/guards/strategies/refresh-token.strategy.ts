@@ -1,10 +1,9 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
-import { Strategy, ExtractJwt } from 'passport-jwt';
-import { EnvironmentVariables } from '../../../../../../core/config/configuration';
-import { SecurityQueryRepo } from '../../../../security/api/query-repositories/security.query.repo';
 import { Request } from 'express';
+import { ExtractJwt, Strategy } from 'passport-jwt';
+import { EnvironmentVariables } from '../../../../../../core/config/configuration';
 import { StrategyType } from '../../../../../../core/infrastructure/guards/models/strategy.enum';
 import { SecurityRepository } from '../../../../security/infrastructure/security.repository';
 

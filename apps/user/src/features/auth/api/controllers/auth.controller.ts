@@ -41,8 +41,6 @@ import { CreateUserDto } from '../models/auth-input.models.ts/user-registration.
 import { UserCredentialsDto } from '../models/auth-input.models.ts/verify-credentials.model';
 import { UserProfileType } from '../models/auth.output.models/auth.output.models';
 import { AuthQueryRepository } from '../query-repositories/auth.query.repo';
-import { PasswordRecoveryEndpoint } from './swagger/recovery-password.description';
-import { ConfirmPasswordEndpoint } from './swagger/confirm-password-recovery.description';
 import { GetProfileEndpoint } from '../swagger/get-user-profile.description';
 import { LogoutEndpoint } from '../swagger/logout.description';
 import { RefreshTokenEndpoint } from '../swagger/refresh-token.description';
@@ -50,6 +48,8 @@ import { RegistrationConfirmationEndpoint } from '../swagger/registration-confir
 import { RegistrationEmailResendingEndpoint } from '../swagger/registration-email-resending.description';
 import { SignInEndpoint } from '../swagger/signIn.description';
 import { SignUpEndpoint } from '../swagger/signup-endpoint.description';
+import { ConfirmPasswordEndpoint } from '../swagger/confirm-password-recovery.description';
+import { PasswordRecoveryEndpoint } from '../swagger/recovery-password.description';
 
 @ApiTags(ApiTagsEnum.Auth)
 @Controller(RoutingEnum.auth)
@@ -75,7 +75,7 @@ export class AuthController {
     });
     const { accessToken, refreshToken } =
       await this.authenticationApiService.authOperation(command);
-
+    
     res.cookie('refreshToken', refreshToken, { httpOnly: true, secure: true });
 
     return { accessToken };

@@ -6,10 +6,10 @@ import {
   ApiResponse,
   ApiSecurity,
 } from '@nestjs/swagger';
-import { SingUpErrorResponse } from './shared/error-message-response';
 import { PasswordDescription } from './shared/password-description';
-import { TooManyRequestsApiResponse } from './shared/too-many-requests-api-response';
-import { CaptchaHeader } from '../../../security/api/swagger/shared/capture-using';
+import { CaptchaHeader } from '../../../security/api/swagger/shared/captcha-using';
+import { TooManyRequestsApiResponse } from '../../../security/api/swagger/shared/too-many-requests-api-response';
+import { SingUpErrorResponse } from '../../../security/api/swagger/shared/error-message-response';
 
 export const SignUpEndpoint = () =>
   applyDecorators(

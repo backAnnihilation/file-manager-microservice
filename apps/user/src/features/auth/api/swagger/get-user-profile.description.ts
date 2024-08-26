@@ -1,6 +1,6 @@
 import { applyDecorators, HttpStatus } from '@nestjs/common';
 import { ApiBearerAuth, ApiProperty, ApiResponse } from '@nestjs/swagger';
-import { UnauthorizedViaTokenApiResponse } from './shared/authorization.response';
+import { UnauthorizedViaTokenApiResponse } from '../../../security/api/swagger/shared/authorization.response';
 
 export const GetProfileEndpoint = () =>
   applyDecorators(

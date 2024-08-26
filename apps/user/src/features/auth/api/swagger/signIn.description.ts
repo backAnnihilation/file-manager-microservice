@@ -1,10 +1,10 @@
 import { applyDecorators, HttpStatus } from '@nestjs/common';
 import { ApiBody, ApiProperty, ApiResponse } from '@nestjs/swagger';
 import { AccessTokenResponseDto } from './shared/accessToken-response.dto';
-import { UnauthorizedViaPasswordApiResponse } from './shared/authorization.response';
-import { ErrorResponseDto } from './shared/error-message-response';
-import { TooManyRequestsApiResponse } from './shared/too-many-requests-api-response';
-import { CaptchaHeader } from '../../../security/api/swagger/shared/capture-using';
+import { CaptchaHeader } from '../../../security/api/swagger/shared/captcha-using';
+import { TooManyRequestsApiResponse } from '../../../security/api/swagger/shared/too-many-requests-api-response';
+import { UnauthorizedViaPasswordApiResponse } from '../../../security/api/swagger/shared/authorization.response';
+import { ErrorResponseDto } from '../../../security/api/swagger/shared/error-message-response';
 
 export const SignInEndpoint = () =>
   applyDecorators(

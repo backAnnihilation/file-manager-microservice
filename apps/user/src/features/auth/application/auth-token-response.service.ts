@@ -23,7 +23,7 @@ export class BaseAuthenticationApiService<TCommand, TResponse> {
     if (notification.hasError) {
       const { error } = handleErrors(
         notification.code,
-        notification.extensions[0],
+        notification.extensions[0]
       );
       throw error;
     }
@@ -48,8 +48,3 @@ export class AuthenticationApiService extends BaseAuthenticationApiService<
     super(commandBus);
   }
 }
-
-/**
- *   "testPathIgnorePatterns": ["<rootDir>/node_modules/', '<rootDir>/dist/"]",
- *   "roots": ["../src"],
- */

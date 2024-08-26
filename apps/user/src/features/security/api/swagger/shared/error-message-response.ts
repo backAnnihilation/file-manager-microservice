@@ -3,7 +3,7 @@ import { ApiProperty } from '@nestjs/swagger';
 export class ErrorMessageDto {
   @ApiProperty({
     description: 'Error message',
-    example: 'Invalid login or password',
+    example: 'Invalid userName or password',
     nullable: true,
   })
   message: string;

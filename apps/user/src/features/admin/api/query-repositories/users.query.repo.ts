@@ -4,13 +4,9 @@ import { DefaultArgs } from '@prisma/client/runtime/library';
 import { DatabaseService } from '../../../../../core/db/prisma/prisma.service';
 import { getQueryPagination } from '../../../../../core/utils/query-pagination';
 import { PaginationViewModel } from '../../../../../core/utils/sorting-base-filter';
-import {
-  SAQueryFilter
-} from '../models/outputSA.models.ts/query-filters';
+import { SAQueryFilter } from '../models/outputSA.models.ts/query-filters';
 import { getSAViewModel } from '../models/user.view.models/saView.model';
-import {
-  SAViewType
-} from '../models/user.view.models/userAdmin.view-type';
+import { SAViewType } from '../models/user.view.models/userAdmin.view-type';
 
 @Injectable()
 export class UsersQueryRepo {
@@ -20,7 +16,7 @@ export class UsersQueryRepo {
   }
 
   async getAllUsers(
-    queryOptions: SAQueryFilter,
+    queryOptions: SAQueryFilter
   ): Promise<PaginationViewModel<SAViewType>> {
     const { searchEmailTerm, searchLoginTerm, banStatus } = queryOptions;
 
@@ -58,13 +54,13 @@ export class UsersQueryRepo {
       users.map(getSAViewModel),
       pageNumber,
       pageSize,
-      usersCount,
+      usersCount
     );
   }
   catch(error) {
     throw new InternalServerErrorException(
       'Database fails operate with find users by sorting model',
-      error,
+      error
     );
   }
 
@@ -110,10 +106,10 @@ export class UsersQueryRepo {
   //   }
   // }
 
-  async getById(userId: string): Promise<SAViewType | null> {
+  async getById(id: string): Promise<SAViewType | null> {
     try {
-      const result = await this.userAccounts.findFirst({
-        where: { id: userId },
+      const result = await this.userAccounts.findUnique({
+        where: { id },
       });
 
       return getSAViewModel(result);

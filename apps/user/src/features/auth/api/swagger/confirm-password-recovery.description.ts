@@ -1,8 +1,7 @@
 import { applyDecorators, HttpStatus } from '@nestjs/common';
 import { ApiBody, ApiProperty, ApiResponse } from '@nestjs/swagger';
-
 import { PasswordDescription } from './shared/password-description';
-import { TooManyRequestsApiResponse } from './shared/too-many-requests-api-response';
+import { TooManyRequestsApiResponse } from '../../../security/api/swagger/shared/too-many-requests-api-response';
 
 export const ConfirmPasswordEndpoint = () =>
   applyDecorators(

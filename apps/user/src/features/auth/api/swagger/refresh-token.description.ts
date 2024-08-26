@@ -1,7 +1,7 @@
 import { applyDecorators, HttpStatus } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiSecurity } from '@nestjs/swagger';
 import { AccessTokenResponseDto } from './shared/accessToken-response.dto';
-import { UnauthorizedViaTokenApiResponse } from './shared/authorization.response';
+import { UnauthorizedViaTokenApiResponse } from '../../../security/api/swagger/shared/authorization.response';
 
 export const RefreshTokenEndpoint = () =>
   applyDecorators(
