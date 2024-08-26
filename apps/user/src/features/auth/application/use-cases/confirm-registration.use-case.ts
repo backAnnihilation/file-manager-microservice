@@ -1,12 +1,10 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { ConfirmEmailCommand } from './commands/confirm-email.command';
-import { AuthRepository } from '../../infrastructure/auth.repository';
 import {
-  GetErrors,
-  LayerNoticeInterceptor,
+  LayerNoticeInterceptor
 } from '../../../../../core/utils/notification';
-import { UserAccount } from '@prisma/client';
+import { AuthRepository } from '../../infrastructure/auth.repository';
 import { UserService, userValidationOptions } from '../user.service';
+import { ConfirmEmailCommand } from './commands/confirm-email.command';
 
 @CommandHandler(ConfirmEmailCommand)
 export class ConfirmRegistrationUseCase

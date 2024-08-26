@@ -31,7 +31,7 @@ export class SecurityQueryRepo {
     deviceId: string,
   ): Promise<SecurityViewDeviceModel | null> {
     try {
-      const sessions = await this.userSessions.findFirst({
+      const sessions = await this.userSessions.findUnique({
         where: {
           deviceId,
         },

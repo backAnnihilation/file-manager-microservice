@@ -54,3 +54,8 @@ export class AuthenticationApiService extends BaseAuthenticationApiService<
     super(commandBus);
   }
 }
+
+/**
+ *   "testPathIgnorePatterns": ["<rootDir>/node_modules/', '<rootDir>/dist/"]",
+ *   "roots": ["../src"],
+ */

@@ -8,8 +8,8 @@ let databaseService: DatabaseService;
 let config: ConfigService<EnvironmentVariables>;
 beforeAll(async () => {
   config = new ConfigService();
-  const dbUrl = config.get('DATABASE_URL_FOR_TESTS');
-
+  const dbUrl = config.get('DATABASE_URL');
+  
   const workerDir = join(__dirname, '..');
 
   execSync('npx prisma migrate dev', {

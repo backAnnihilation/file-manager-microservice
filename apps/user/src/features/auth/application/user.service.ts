@@ -33,7 +33,7 @@ export class UserService {
         notice.addError(
           'user account already confirmed',
           this.location,
-          GetErrors.Forbidden,
+          GetErrors.IncorrectModel,
         );
         return notice;
       }
@@ -47,7 +47,7 @@ export class UserService {
         notice.addError(
           'confirmation code has expired',
           this.location,
-          GetErrors.Forbidden,
+          GetErrors.IncorrectModel,
         );
         return notice;
       }
