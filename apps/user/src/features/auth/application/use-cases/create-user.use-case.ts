@@ -27,20 +27,20 @@ export class CreateUserUseCase implements ICommandHandler<CreateUserCommand> {
     const { email, userName, password } = command.createDto;
     const notice = new LayerNoticeInterceptor<any>();
 
-    const confirmedUser = await this.authRepo.findConfirmedUserByEmailOrName({
+    const existedUser = await this.authRepo.findExistedUserByEmailOrName({
       userName,
       email,
     });
 
-    if (confirmedUser) {
-      if (confirmedUser.email === email) {
+    if (existedUser) {
+      if (existedUser.email === email) {
         notice.addError(
           `User with email ${email} already exists`,
           this.location,
           GetErrors.IncorrectModel,
         );
       }
-      if (confirmedUser.userName === userName) {
+      if (existedUser.userName === userName) {
         notice.addError(
           `User with userName ${userName} already exists`,
           this.location,
