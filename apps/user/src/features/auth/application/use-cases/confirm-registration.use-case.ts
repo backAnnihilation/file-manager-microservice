@@ -6,7 +6,7 @@ import {
   LayerNoticeInterceptor,
 } from '../../../../../core/utils/notification';
 import { UserAccount } from '@prisma/client';
-import { UserService } from '../user.service';
+import { UserService, userValidationOptions } from '../user.service';
 
 @CommandHandler(ConfirmEmailCommand)
 export class ConfirmRegistrationUseCase
@@ -29,6 +29,7 @@ export class ConfirmRegistrationUseCase
 
     const validateNotification = this.userService.validateUserAccount({
       userAccount,
+      ...userValidationOptions,
     });
 
     if (validateNotification.hasError) return validateNotification;

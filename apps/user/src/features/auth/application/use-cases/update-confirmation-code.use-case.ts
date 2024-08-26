@@ -28,8 +28,9 @@ export class UpdateConfirmationCodeUseCase
     const validateNotification = this.userService.validateUserAccount({
       userAccount,
       isExpired: false,
+      isConfirmed: true
     });
-    if (validateNotification) return validateNotification;
+    if (validateNotification.hasError) return validateNotification;
 
     const updatedCode = await this.authRepo.updateConfirmationCode({
       id: userAccount.id,

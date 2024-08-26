@@ -5,33 +5,30 @@ import {
 } from '../../../../core/utils/notification';
 import { UserAccount } from '@prisma/client';
 
+export const userValidationOptions = {
+  isConfirmed: true,
+  isExpired: true,
+};
+
 @Injectable()
 export class UserService {
   private location = this.constructor.name;
   constructor() {}
 
-  validateUserAccount = (
-    validateDto: ValidationFieldsType = {
-      userAccount: null,
-      isConfirmed: true,
-      isExist: true,
-      isExpired: true,
-    },
-  ) => {
-    const { userAccount, isConfirmed, isExist, isExpired } = validateDto;
+  validateUserAccount = (validateDto: ValidationFieldsType) => {
+    const { userAccount, ...restOptions } = validateDto;
+
     const notice = new LayerNoticeInterceptor();
 
-    if (isExist) {
-      if (!userAccount) {
-        notice.addError(
-          'user account was not found',
-          this.location,
-          GetErrors.NotFound,
-        );
-        return notice;
-      }
+    if (!userAccount) {
+      notice.addError(
+        'user account was not found or recovery code has been expired',
+        this.location,
+        GetErrors.NotFound,
+      );
+      return notice;
     }
-    if (isConfirmed) {
+    if (restOptions?.isConfirmed) {
       if (userAccount.isConfirmed) {
         notice.addError(
           'user account already confirmed',
@@ -41,13 +38,14 @@ export class UserService {
         return notice;
       }
     }
-    if (isExpired) {
+    if (restOptions?.isExpired) {
       const isValid = this.checkConfirmationRelevant(
         userAccount.confirmationExpDate,
       );
+
       if (!isValid) {
         notice.addError(
-          'confirmation code expired',
+          'confirmation code has expired',
           this.location,
           GetErrors.Forbidden,
         );
@@ -66,6 +64,5 @@ export class UserService {
 type ValidationFieldsType = {
   userAccount: UserAccount | null;
   isConfirmed?: boolean;
-  isExist?: boolean;
   isExpired?: boolean;
 };

@@ -23,10 +23,10 @@ import { GetUserActiveSessionsEndpoint } from './swagger/get-sessions.descriptio
 import { TerminateOtherUserSessionsEndpoint } from './swagger/terminate-other-sessions.description';
 import { TerminateSpecificSessionEndpoint } from './swagger/terminate-specific-session.description';
 import { ApiTags } from '@nestjs/swagger';
-import { ApiTagsEnum } from '../../../../core/routes/routing';
+import { ApiTagsEnum, RoutingEnum } from '../../../../core/routes/routing';
 
 @ApiTags(ApiTagsEnum.Security)
-@Controller('security/devices')
+@Controller(RoutingEnum.security)
 @UseGuards(RefreshTokenGuard)
 export class SecurityController implements SecurityInterface {
   constructor(

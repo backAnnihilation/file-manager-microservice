@@ -4,6 +4,7 @@ import { DatabaseService } from '../../../../core/db/prisma/prisma.service';
 import { DefaultArgs } from '@prisma/client/runtime/library';
 import { Prisma, UserSession } from '@prisma/client';
 import { UserSessionDTO } from '../../auth/api/models/dtos/user-session.dto';
+import { UserSessionDto } from '../api/models/security-input.models/security-session-info.model';
 
 @Injectable()
 export class SecurityRepository {
@@ -11,18 +12,25 @@ export class SecurityRepository {
   constructor(private prisma: DatabaseService) {
     this.userSessions = this.prisma.userSession;
   }
-  async createSession(
-    sessionDto: UserSessionDTO,
-  ): Promise<OutputId> {
+  async createSession(sessionDto: UserSessionDTO): Promise<void> {
     try {
-      return await this.userSessions.create({
+      await this.userSessions.create({
         data: sessionDto,
-        select: { id: true },
       });
     } catch (error) {
       console.error(`
       Database fails operate with create session ${error}`);
-      return null;
+      throw new Error(`Database fails operate with create session ${error}`);
+    }
+  }
+
+  async getSession(userId: string, deviceId: string): Promise<UserSession> {
+    try {
+      return await this.userSessions.findFirst({
+        where: { AND: [{ userId }, { deviceId }] },
+      });
+    } catch (error) {
+      console.error(`Database fails operate with get session ${error}`);
     }
   }
 
@@ -38,60 +46,44 @@ export class SecurityRepository {
     deviceId: string,
     issuedAt: Date,
     exp: Date,
-  ): Promise<boolean> {
+  ): Promise<void> {
     try {
-      const result = false;
-      // const result = await this.userSessions.update(
-      //   { device_id: deviceId },
-      //   { rt_issued_at: issuedAt, rt_expiration_date: exp },
-      // );
-
-      return result;
+      const session = await this.userSessions.findFirst({
+        where: { deviceId },
+      });
+      await this.userSessions.update({
+        where: { id: session.id },
+        data: { rtIssuedAt: issuedAt, rtExpirationDate: exp },
+      });
     } catch (error) {
-      console.error(
-        `Database fails operate with update token's issued at ${error}`,
-      );
-      return false;
+      console.error(error);
+      throw new Error(error);
     }
   }
 
-  async deleteSpecificSession(deviceId: string): Promise<boolean> {
+  async deleteSession(deviceId: string): Promise<void> {
     try {
-      const result = true;
-      // const sessionToDelete = await this.userSessions.findOneBy({
-      //   device_id: deviceId,
-      // });
-
-      // if (!sessionToDelete) return false;
-
-      // const result = await this.userSessions.remove(sessionToDelete);
-
-      return !!result;
+      const session = await this.userSessions.findFirst({
+        where: { deviceId },
+      });
+      await this.userSessions.delete({ where: { id: session.id } });
     } catch (error) {
       console.error(
         `Database fails operate with delete specific session ${error}`,
       );
-      return false;
+      throw new Error(error);
     }
   }
 
-  async deleteOtherUserSessions(deviceId: string): Promise<boolean> {
-    return true;
-    // try {
-    //   const otherSessions = await this.userSessions.findOneBy({
-    //     device_id: Not(deviceId),
-    //   });
+  async deleteOtherUserSessions(userSessionDto: UserSessionDto): Promise<void> {
+    const { userId, deviceId } = userSessionDto;
 
-    //   if (!otherSessions) return false;
-
-    //   const result = await this.userSessions.remove(otherSessions);
-
-    //   return !!result;
-    // } catch (error) {
-    //   console.error(
-    //     `Database fails operate with delete other sessions ${error}`,
-    //   );
-    //   return false;
-    // }
+    try {
+      await this.userSessions.deleteMany({
+        where: { userId, NOT: { deviceId } },
+      });
+    } catch (error) {
+      throw new Error(error);
+    }
   }
 }

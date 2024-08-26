@@ -7,44 +7,53 @@ import {
 import { UserSessionDTO } from '../../../auth/api/models/dtos/user-session.dto';
 import { SecurityRepository } from '../../infrastructure/security.repository';
 import { CreateSessionCommand } from './commands/create-session.command';
+import { AuthService } from '../../../auth/application/auth.service';
+import { extractDeviceInfo } from '../../../auth/infrastructure/utils/device-info-extractor';
+import { JwtTokens } from '../../../auth/api/models/auth-input.models.ts/jwt.types';
 
 @CommandHandler(CreateSessionCommand)
 export class CreateUserSessionUseCase
   implements ICommandHandler<CreateSessionCommand>
 {
-  constructor(private securityRepo: SecurityRepository) {}
+  private location = this.constructor.name;
+  constructor(
+    private securityRepo: SecurityRepository,
+    private authService: AuthService,
+  ) {}
 
   async execute(
     command: CreateSessionCommand,
-  ): Promise<LayerNoticeInterceptor<OutputId | null>> {
-    const notice = new LayerNoticeInterceptor<OutputId>();
+  ): Promise<LayerNoticeInterceptor<JwtTokens>> {
+    const notice = new LayerNoticeInterceptor<JwtTokens>();
 
-    const {
-      ipAddress,
-      browser,
-      deviceType,
-      refreshToken,
-      userId,
-      userPayload,
-    } = command.inputData;
+    const { userId, clientInfo } = command.inputData;
+
+    const { accessToken, refreshToken } =
+      await this.authService.createTokenPair(userId);
+
+    const userPayload = this.authService.getUserPayloadByToken(refreshToken);
+
+    if (!userPayload) {
+      notice.addError(
+        `can't retrieve user payload from token`,
+        this.location,
+        GetErrors.DeniedAccess,
+      );
+      return notice;
+    }
+
+    const { browser, deviceType } = extractDeviceInfo(clientInfo.userAgentInfo);
 
     const sessionDto = new UserSessionDTO(
-      ipAddress,
+      clientInfo.ip,
       `Device type: ${deviceType}, Application: ${browser}`,
-      userId,
       userPayload,
       refreshToken,
     );
 
-    const result = await this.securityRepo.createSession(sessionDto);
+    await this.securityRepo.createSession(sessionDto);
 
-    if (!result) {
-      notice.addError('Session not created', 'db', GetErrors.NotCreated);
-      return notice;
-    } else {
-      notice.addData({ id: result.id });
-    }
-
+    notice.addData({ accessToken, refreshToken });
     return notice;
   }
 }
