@@ -99,8 +99,5 @@
     "roots": [
       "<rootDir>/apps/"
     ]
-  },
-  "prisma": {
-    "schema": "back-dev/apps/user/prisma/schema.prisma"
   }
 }
