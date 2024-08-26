@@ -45,7 +45,6 @@ export class EmailManager {
     confirmationCode: string,
   ): Promise<string> {
     const confirmationLink = `https://Incta.team/confirm-email?code=${confirmationCode}`;
-
     const confirmationData = {
       from: `Incta team👻`,
       subject: 'Email Confirmation',

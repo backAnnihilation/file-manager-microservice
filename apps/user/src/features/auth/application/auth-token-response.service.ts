@@ -20,12 +20,6 @@ export class BaseAuthenticationApiService<TCommand, TResponse> {
       LayerNoticeInterceptor<TResponse>
     >(command);
 
-    if (!notification) {
-      throw new Error(
-        'Notification is undefined. The command may not have been handled properly.',
-      );
-    }
-
     if (notification.hasError) {
       const { error } = handleErrors(
         notification.code,

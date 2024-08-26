@@ -4,9 +4,16 @@ import {
   GetErrors,
   LayerNoticeInterceptor,
 } from '../../../../../core/utils/notification';
+import {
+  GetErrors,
+  LayerNoticeInterceptor,
+} from '../../../../../core/utils/notification';
 import { UserIdType } from '../../../admin/api/models/outputSA.models.ts/user-models';
 import { UsersRepository } from '../../../admin/infrastructure/users.repo';
 import { CreateUserCommand } from './commands/create-user.command';
+import { UserModelDTO } from '../../../admin/application/dto/create-user.dto';
+import { EmailNotificationEvent } from './events/email-notification-event';
+import { AuthRepository } from '../../infrastructure/auth.repository';
 import { UserModelDTO } from '../../../admin/application/dto/create-user.dto';
 import { EmailNotificationEvent } from './events/email-notification-event';
 import { AuthRepository } from '../../infrastructure/auth.repository';
@@ -14,9 +21,11 @@ import { AuthRepository } from '../../infrastructure/auth.repository';
 @CommandHandler(CreateUserCommand)
 export class CreateUserUseCase implements ICommandHandler<CreateUserCommand> {
   private location = this.constructor.name;
+  private location = this.constructor.name;
   constructor(
     private usersRepo: UsersRepository,
     private bcryptAdapter: BcryptAdapter,
+    private authRepo: AuthRepository,
     private authRepo: AuthRepository,
     private eventBus: EventBus,
   ) {}
@@ -27,20 +36,20 @@ export class CreateUserUseCase implements ICommandHandler<CreateUserCommand> {
     const { email, userName, password } = command.createDto;
     const notice = new LayerNoticeInterceptor<any>();
 
-    const existedUser = await this.authRepo.findExistedUserByEmailOrName({
+    const confirmedUser = await this.authRepo.findConfirmedUserByEmailOrName({
       userName,
       email,
     });
 
-    if (existedUser) {
-      if (existedUser.email === email) {
+    if (confirmedUser) {
+      if (confirmedUser.email === email) {
         notice.addError(
           `User with email ${email} already exists`,
           this.location,
           GetErrors.IncorrectModel,
         );
       }
-      if (existedUser.userName === userName) {
+      if (confirmedUser.userName === userName) {
         notice.addError(
           `User with userName ${userName} already exists`,
           this.location,
@@ -54,9 +63,15 @@ export class CreateUserUseCase implements ICommandHandler<CreateUserCommand> {
 
     const isConfirmed = false;
     const userDto = new UserModelDTO(
+    const isConfirmed = false;
+    const userDto = new UserModelDTO(
       userName,
       email,
       passwordHash,
+      isConfirmed,
+    );
+    const unconfirmedUserTheSameEmail =
+      await this.usersRepo.getUnconfirmedUserByEmailOrName(email, userName);
       isConfirmed,
     );
     const unconfirmedUserTheSameEmail =
@@ -67,7 +82,16 @@ export class CreateUserUseCase implements ICommandHandler<CreateUserCommand> {
     }
 
     const result = await this.usersRepo.save(userDto);
+    if (unconfirmedUserTheSameEmail) {
+      await this.usersRepo.deleteUser(unconfirmedUserTheSameEmail.id);
+    }
 
+    const result = await this.usersRepo.save(userDto);
+
+    const event = new EmailNotificationEvent(email, userDto.confirmationCode);
+    this.eventBus.publish(event);
+
+    notice.addData({ userId: result.id });
     const event = new EmailNotificationEvent(email, userDto.confirmationCode);
     this.eventBus.publish(event);
 

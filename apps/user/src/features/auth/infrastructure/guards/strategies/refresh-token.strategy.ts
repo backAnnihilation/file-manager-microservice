@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy, ExtractJwt } from 'passport-jwt';
 import { EnvironmentVariables } from '../../../../../../core/config/configuration';
+import { SecurityQueryRepo } from '../../../../security/api/query-repositories/security.query.repo';
 import { Request } from 'express';
 import { StrategyType } from '../../../../../../core/infrastructure/guards/models/strategy.enum';
 import { SecurityRepository } from '../../../../security/infrastructure/security.repository';
@@ -10,11 +11,11 @@ import { SecurityRepository } from '../../../../security/infrastructure/security
 @Injectable()
 export class RefreshTokenStrategy extends PassportStrategy(
   Strategy,
-  StrategyType.RefreshToken,
+  StrategyType.RefreshToken
 ) {
   constructor(
     private securityRepo: SecurityRepository,
-    private configService: ConfigService<EnvironmentVariables>,
+    private configService: ConfigService<EnvironmentVariables>
   ) {
     super({
       jwtFromRequest: ExtractJwt.fromExtractors([cookieExtractor]),
