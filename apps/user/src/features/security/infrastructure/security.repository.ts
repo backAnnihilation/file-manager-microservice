@@ -63,17 +63,21 @@ export class SecurityRepository {
   async deleteSession(deviceId: string): Promise<void> {
     try {
       const session = await this.userSessions.findFirst({
-        where: { deviceId },
+        where: { deviceId: deviceId },
       });
-      await this.userSessions.delete({ where: { id: session.id } });
+      if (!session) {
+        throw new Error(`Session with deviceId ${deviceId} not found.`);
+      }
+      await this.userSessions.delete({
+        where: { id: session.id },
+      });
     } catch (error) {
       console.error(
-        `Database fails operate with delete specific session ${error}`,
+        `Database operation failed while deleting session with deviceId ${deviceId}: ${error.message}`,
       );
-      throw new Error(error);
+      throw new Error(error.message || 'Failed to delete session.');
     }
   }
-
   async deleteOtherUserSessions(userSessionDto: UserSessionDto): Promise<void> {
     const { userId, deviceId } = userSessionDto;
 
