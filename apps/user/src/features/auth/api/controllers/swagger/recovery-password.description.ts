@@ -6,8 +6,8 @@ import {
   ApiResponse,
   ApiSecurity,
 } from '@nestjs/swagger';
-import { TooManyRequestsApiResponse } from './shared/too-many-requests-api-response';
-import { CaptchaHeader } from './shared/capture-using';
+import { CaptchaHeader } from '../../../../security/api/swagger/shared/capture-using';
+import { TooManyRequestsApiResponse } from '../../../../security/api/swagger/shared/too-many-requests-api-response';
 
 export const PasswordRecoveryEndpoint = () =>
   applyDecorators(

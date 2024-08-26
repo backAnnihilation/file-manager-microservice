@@ -5,9 +5,8 @@ import {
   ApiProperty,
   ApiResponse,
 } from '@nestjs/swagger';
-
-import { PasswordDescription } from './shared/password-description';
-import { TooManyRequestsApiResponse } from './shared/too-many-requests-api-response';
+import { TooManyRequestsApiResponse } from '../../../../security/api/swagger/shared/too-many-requests-api-response';
+import { PasswordDescription } from '../../swagger/shared/password-description';
 
 export const ConfirmPasswordEndpoint = () =>
   applyDecorators(
@@ -25,7 +24,7 @@ export const ConfirmPasswordEndpoint = () =>
       description:
         'If the inputModel has incorrect value (for incorrect password length) or RecoveryCode is incorrect or expired',
     }),
-    TooManyRequestsApiResponse(),
+    TooManyRequestsApiResponse()
   );
 
 export class ConfirmPasswordDto {

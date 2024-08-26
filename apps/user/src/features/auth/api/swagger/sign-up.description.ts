@@ -9,7 +9,7 @@ import {
 import { SingUpErrorResponse } from './shared/error-message-response';
 import { PasswordDescription } from './shared/password-description';
 import { TooManyRequestsApiResponse } from './shared/too-many-requests-api-response';
-import { CaptchaHeader } from './shared/capture-using';
+import { CaptchaHeader } from '../../../security/api/swagger/shared/capture-using';
 
 export const SignUpEndpoint = () =>
   applyDecorators(
@@ -27,7 +27,7 @@ export const SignUpEndpoint = () =>
     ApiResponse({ status: HttpStatus.BAD_REQUEST, type: SingUpErrorResponse }),
     TooManyRequestsApiResponse(),
     CaptchaHeader(),
-    ApiSecurity('captchaToken'),
+    ApiSecurity('captchaToken')
   );
 
 class SignUpDto {

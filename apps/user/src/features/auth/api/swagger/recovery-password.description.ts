@@ -1,15 +1,15 @@
 import { applyDecorators, HttpStatus } from '@nestjs/common';
 import { ApiBody, ApiProperty, ApiResponse } from '@nestjs/swagger';
 import { AccessTokenResponseDto } from './shared/accessToken-response.dto';
-import { CaptureUsing } from './shared/capture-using';
 import { TooManyRequestsApiResponse } from './shared/too-many-requests-api-response';
+import { CaptchaHeader } from '../../../security/api/swagger/shared/capture-using';
 
 export const PasswordRecoveryEndpoint = () =>
   applyDecorators(
     ApiBody({ type: RecoveryPasswordBodyDto, required: true }),
     ApiResponse({ status: HttpStatus.OK, type: AccessTokenResponseDto }),
     TooManyRequestsApiResponse(),
-    CaptureUsing(),
+    CaptchaHeader()
   );
 
 class RecoveryPasswordBodyDto {

@@ -3,7 +3,6 @@ import { TestingModuleBuilder } from '@nestjs/testing';
 import { DatabaseService } from '../../core/db/prisma/prisma.service';
 import { JwtTokens } from '../../src/features/auth/api/models/auth-input.models.ts/jwt.types';
 import { CaptureGuard } from '../../src/features/auth/infrastructure/guards/validate-capture.guard';
-import { initSettings } from '../tools/initSettings';
 import { UsersTestManager } from '../tools/managers/UsersTestManager';
 import {
   aDescribe,
@@ -17,6 +16,7 @@ import { ErrorField } from '../../core/utils/error-handler';
 import { EmailMockService } from '../tools/mock/email-manager.mock';
 import { wait } from '../tools/utils/delayUtils';
 import { EmailManager } from '../../core/managers/email-manager';
+import { initSettings } from '../tools/initSettings';
 
 const mockedCaptureGuard = {
   canActivate: jest.fn().mockImplementation(() => true),
@@ -33,7 +33,7 @@ aDescribe(skipSettings.for(e2eTestNamesEnum.AUTH))('AuthController', () => {
   beforeAll(async () => {
     const testSettings = await initSettings(
       (moduleBuilder: TestingModuleBuilder) =>
-        moduleBuilder.overrideGuard(CaptureGuard).useValue(mockedCaptureGuard),
+        moduleBuilder.overrideGuard(CaptureGuard).useValue(mockedCaptureGuard)
     );
     app = testSettings.app;
 
@@ -202,7 +202,7 @@ aDescribe(skipSettings.for(e2eTestNamesEnum.AUTH))('AuthController', () => {
 
       const result = await usersTestManager.registration(
         inputData,
-        HttpStatus.BAD_REQUEST,
+        HttpStatus.BAD_REQUEST
       );
 
       const error = constructErrorMessages([ErrorField.Email]);
@@ -220,12 +220,12 @@ aDescribe(skipSettings.for(e2eTestNamesEnum.AUTH))('AuthController', () => {
 
       const result1 = await usersTestManager.registration(
         invalidInputDataShort,
-        HttpStatus.BAD_REQUEST,
+        HttpStatus.BAD_REQUEST
       );
 
       const result2 = await usersTestManager.registration(
         invalidInputDataLong,
-        HttpStatus.BAD_REQUEST,
+        HttpStatus.BAD_REQUEST
       );
 
       const error = constructErrorMessages([ErrorField.Password]);
@@ -244,12 +244,12 @@ aDescribe(skipSettings.for(e2eTestNamesEnum.AUTH))('AuthController', () => {
 
       const result1 = await usersTestManager.registration(
         invalidInputShortName,
-        HttpStatus.BAD_REQUEST,
+        HttpStatus.BAD_REQUEST
       );
 
       const result2 = await usersTestManager.registration(
         invalidInputLongName,
-        HttpStatus.BAD_REQUEST,
+        HttpStatus.BAD_REQUEST
       );
 
       const error = constructErrorMessages([ErrorField.UserName]);
@@ -262,7 +262,7 @@ aDescribe(skipSettings.for(e2eTestNamesEnum.AUTH))('AuthController', () => {
 
       const result = await usersTestManager.registration(
         invalidInputDataShort,
-        HttpStatus.BAD_REQUEST,
+        HttpStatus.BAD_REQUEST
       );
 
       const error = constructErrorMessages([
@@ -288,7 +288,7 @@ aDescribe(skipSettings.for(e2eTestNamesEnum.AUTH))('AuthController', () => {
     it(`/auth/registration-email-resending (POST) - shouldn't passed api with invalid email, 400`, async () => {
       const res = await usersTestManager.registrationEmailResending(
         '@',
-        HttpStatus.BAD_REQUEST,
+        HttpStatus.BAD_REQUEST
       );
 
       const error = constructErrorMessages([ErrorField.Email]);
@@ -298,7 +298,7 @@ aDescribe(skipSettings.for(e2eTestNamesEnum.AUTH))('AuthController', () => {
     it.skip(`/auth/registration-email-resending (POST) - shouldn't passed api with a non-existent email in the system, 400`, async () => {
       const res = await usersTestManager.registrationEmailResending(
         constantsForDataTesting.inputData.EMAIL,
-        HttpStatus.BAD_REQUEST,
+        HttpStatus.BAD_REQUEST
       );
       console.log({ res: res.errorsMessages[0] });
 
@@ -311,7 +311,7 @@ aDescribe(skipSettings.for(e2eTestNamesEnum.AUTH))('AuthController', () => {
 
       const res = await usersTestManager.registrationEmailResending(
         user.email,
-        HttpStatus.BAD_REQUEST,
+        HttpStatus.BAD_REQUEST
       );
 
       const error = constructErrorMessages([ErrorField.Email]);
@@ -352,7 +352,7 @@ aDescribe(skipSettings.for(e2eTestNamesEnum.AUTH))('AuthController', () => {
     it(`/auth/registration-confirmation (POST) - should'nt accept invalid confirmationCode, 400`, async () => {
       await usersTestManager.registrationConfirmation(
         '',
-        HttpStatus.BAD_REQUEST,
+        HttpStatus.BAD_REQUEST
       );
     });
 
@@ -384,7 +384,7 @@ aDescribe(skipSettings.for(e2eTestNamesEnum.AUTH))('AuthController', () => {
 
       const theSameEmailResult = await usersTestManager.registration(
         inputTheSameEmailData,
-        HttpStatus.BAD_REQUEST,
+        HttpStatus.BAD_REQUEST
       );
       const emailError = constructErrorMessages([ErrorField.Email]);
       usersTestManager.checkUserData(theSameEmailResult, emailError);
@@ -395,7 +395,7 @@ aDescribe(skipSettings.for(e2eTestNamesEnum.AUTH))('AuthController', () => {
 
       const theSameUserNameResult = await usersTestManager.registration(
         inputTheSameUserName,
-        HttpStatus.BAD_REQUEST,
+        HttpStatus.BAD_REQUEST
       );
       const userNameError = constructErrorMessages([ErrorField.UserName]);
       usersTestManager.checkUserData(theSameUserNameResult, userNameError);

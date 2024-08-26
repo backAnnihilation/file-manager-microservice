@@ -8,9 +8,9 @@ import {
 } from '@nestjs/swagger';
 import { AccessTokenResponseDto } from './shared/accessToken-response.dto';
 import { UnauthorizedViaPasswordApiResponse } from './shared/authorization.response';
-import { CaptchaHeader, CaptureUsing } from './shared/capture-using';
 import { ErrorResponseDto } from './shared/error-message-response';
 import { TooManyRequestsApiResponse } from './shared/too-many-requests-api-response';
+import { CaptchaHeader } from '../../../security/api/swagger/shared/capture-using';
 
 export const SignInEndpoint = () =>
   applyDecorators(
@@ -24,9 +24,8 @@ export const SignInEndpoint = () =>
     }),
     UnauthorizedViaPasswordApiResponse(),
     TooManyRequestsApiResponse(),
-    CaptureUsing(),
     CaptchaHeader(),
-    ApiSecurity('captchaToken'),
+    ApiSecurity('captchaToken')
   );
 
 class SignInDto {

@@ -56,7 +56,7 @@ import { SignUpEndpoint } from '../swagger/signup-endpoint.description';
 export class AuthController {
   constructor(
     private authQueryRepo: AuthQueryRepository,
-    private authenticationApiService: AuthenticationApiService,
+    private authenticationApiService: AuthenticationApiService
   ) {}
 
   @SignInEndpoint()
@@ -67,7 +67,7 @@ export class AuthController {
     @UserPayload() userInfo: UserSessionDto,
     @GetClientInfo() clientInfo: ClientInfo,
     @Res({ passthrough: true }) res: Response,
-    @Body() body: UserCredentialsDto,
+    @Body() body: UserCredentialsDto
   ) {
     const command = new CreateSessionCommand({
       clientInfo,
@@ -96,7 +96,7 @@ export class AuthController {
   @Post(AuthNavigate.RefreshToken)
   async refreshToken(
     @UserPayload() userInfo: UserSessionDto,
-    @Res({ passthrough: true }) res: Response,
+    @Res({ passthrough: true }) res: Response
   ) {
     const command = new UpdateIssuedTokenCommand(userInfo);
     const { accessToken, refreshToken } =
@@ -110,7 +110,7 @@ export class AuthController {
   @UseGuards(AccessTokenGuard)
   @Get(AuthNavigate.GetProfile)
   async getProfile(
-    @UserPayload() userInfo: UserSessionDto,
+    @UserPayload() userInfo: UserSessionDto
   ): Promise<UserProfileType> {
     const user = await this.authQueryRepo.getById(userInfo.userId);
 
