@@ -41,6 +41,8 @@ import { DeleteActiveSessionUseCase } from './features/security/application/use-
 import { AuthenticationApiService } from './features/auth/application/auth-token-response.service';
 import { PasswordRecoveryUseCase } from './features/auth/application/use-cases/password-recovery.use-case';
 import { DeleteOtherUserSessionsUseCase } from './features/security/application/use-cases/delete-other-user-sessions.use-case';
+import { DropDbSaUseCase } from "./features/admin/application/use-cases/drop-ba.sa.use.case";
+import { DropBbRepository } from "./features/admin/infrastructure/drop.repo";
 
 @Module({
   imports: [
@@ -86,6 +88,8 @@ import { DeleteOtherUserSessionsUseCase } from './features/security/application/
     RefreshTokenStrategy,
     PasswordRecoveryUseCase,
     DeleteOtherUserSessionsUseCase,
+    DropDbSaUseCase,
+    DropBbRepository
   ],
 })
 export class AppModule {}

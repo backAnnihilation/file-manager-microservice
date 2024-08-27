@@ -20,6 +20,7 @@ import { CreateUserDto } from '../models/input-sa.dtos.ts/create-user.model';
 import { SAQueryFilter } from '../models/outputSA.models.ts/query-filters';
 import { SAViewType } from '../models/user.view.models/userAdmin.view-type';
 import { UsersQueryRepo } from '../query-repositories/users.query.repo';
+import { DropDbSaCommand } from "../../application/commands/drop-db-sa.command";
 
 @UseGuards(BasicSAAuthGuard)
 @Controller(RoutingEnum.admins)
@@ -27,7 +28,7 @@ export class SAController {
   constructor(
     private usersQueryRepo: UsersQueryRepo,
     private saCrudApiService: SACudApiService<
-      CreateSACommand | DeleteSACommand
+      CreateSACommand | DeleteSACommand | DropDbSaCommand
     >,
   ) {}
 
@@ -51,5 +52,12 @@ export class SAController {
   async deleteSA(@Param('id') userId: string): Promise<void> {
     const command = new DeleteSACommand(userId);
     return this.saCrudApiService.updateOrDelete(command);
+  }
+
+  @Post('data-base/drop')
+  @HttpCode(HttpStatus.OK)
+  async dropDataBase(): Promise<any> {
+    const command = new DropDbSaCommand();
+    return  await this.saCrudApiService.dropDataBase(command);
   }
 }
