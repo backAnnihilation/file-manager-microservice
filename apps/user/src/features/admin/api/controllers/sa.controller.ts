@@ -21,7 +21,13 @@ import { SAQueryFilter } from '../models/outputSA.models.ts/query-filters';
 import { SAViewType } from '../models/user.view.models/userAdmin.view-type';
 import { UsersQueryRepo } from '../query-repositories/users.query.repo';
 import { DropDbSaCommand } from "../../application/commands/drop-db-sa.command";
+import { ApiTags } from "@nestjs/swagger";
+import { DropDatabaseSaEndpoint } from "./swagger/drop-database-sa.description";
+import { CreateSaUserEndpoint } from "./swagger/create-user-sa.description";
+import { GetAllUsersEndpoint } from "./swagger/get-all-users-sa.description";
+import { DeleteSaUserEndpoint } from "./swagger/delete-user-sa.description";
 
+@ApiTags(RoutingEnum.admins)
 @UseGuards(BasicSAAuthGuard)
 @Controller(RoutingEnum.admins)
 export class SAController {
@@ -32,6 +38,7 @@ export class SAController {
     >,
   ) {}
 
+  @GetAllUsersEndpoint()
   @Get()
   @HttpCode(HttpStatus.OK)
   async getUsers(
@@ -40,6 +47,7 @@ export class SAController {
     return this.usersQueryRepo.getAllUsers(query);
   }
 
+  @CreateSaUserEndpoint()
   @Post()
   @HttpCode(HttpStatus.CREATED)
   async createSA(@Body() body: CreateUserDto): Promise<SAViewType> {
@@ -47,6 +55,7 @@ export class SAController {
     return this.saCrudApiService.create(createCommand);
   }
 
+  @DeleteSaUserEndpoint()
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   async deleteSA(@Param('id') userId: string): Promise<void> {
@@ -54,6 +63,7 @@ export class SAController {
     return this.saCrudApiService.updateOrDelete(command);
   }
 
+  @DropDatabaseSaEndpoint()
   @Post('data-base/drop')
   @HttpCode(HttpStatus.OK)
   async dropDataBase(): Promise<any> {
