@@ -42,14 +42,14 @@ import { UserCredentialsDto } from '../models/auth-input.models.ts/verify-creden
 import { UserProfileType } from '../models/auth.output.models/auth.output.models';
 import { AuthQueryRepository } from '../query-repositories/auth.query.repo';
 import { GetProfileEndpoint } from '../swagger/get-user-profile.description';
-import { LogoutEndpoint } from '../swagger/logout.description';
 import { RefreshTokenEndpoint } from '../swagger/refresh-token.description';
 import { RegistrationConfirmationEndpoint } from '../swagger/registration-confirmation.description';
 import { RegistrationEmailResendingEndpoint } from '../swagger/registration-email-resending.description';
-import { SignInEndpoint } from '../swagger/signIn.description';
-import { SignUpEndpoint } from '../swagger/signup-endpoint.description';
 import { ConfirmPasswordEndpoint } from '../swagger/confirm-password-recovery.description';
 import { PasswordRecoveryEndpoint } from '../swagger/recovery-password.description';
+import { SignInEndpoint } from "../swagger/sign-in.description";
+import { SignUpEndpoint } from "../swagger/sign-up.description";
+import { LogoutEndpoint } from "../swagger/logout-description";
 
 @ApiTags(ApiTagsEnum.Auth)
 @Controller(RoutingEnum.auth)

@@ -5,8 +5,8 @@ import {
   ApiProperty,
   ApiResponse,
 } from '@nestjs/swagger';
-import { ErrorMessageDto } from '../../../security/api/swagger/shared/error-message-response';
-import { TooManyRequestsApiResponse } from '../../../security/api/swagger/shared/too-many-requests-api-response';
+import { TooManyRequestsApiResponse } from './shared/too-many-requests-api-response';
+import { ErrorMessageDto } from './shared/error-message-response';
 
 export const RegistrationConfirmationEndpoint = () =>
   applyDecorators(
@@ -18,7 +18,8 @@ export const RegistrationConfirmationEndpoint = () =>
     ApiBody({ type: RegistrationConfirmationCodeDto, required: true }),
     ApiResponse({
       status: HttpStatus.NO_CONTENT,
-      description: 'Email was verified. Account was activated',
+      description:
+        'Email was verified. Account was activated',
     }),
     ApiResponse({
       status: HttpStatus.BAD_REQUEST,

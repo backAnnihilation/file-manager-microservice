@@ -1,16 +1,35 @@
 import { applyDecorators, HttpStatus } from '@nestjs/common';
-import { ApiBody, ApiProperty, ApiResponse, ApiSecurity } from "@nestjs/swagger";
-import { AccessTokenResponseDto } from './shared/accessToken-response.dto';
-import { CaptchaHeader } from '../../../security/api/swagger/shared/captcha-using';
-import { TooManyRequestsApiResponse } from '../../../security/api/swagger/shared/too-many-requests-api-response';
+import {
+  ApiBody,
+  ApiOperation,
+  ApiProperty,
+  ApiResponse, ApiSecurity,
+} from '@nestjs/swagger';
+import { TooManyRequestsApiResponse } from './shared/too-many-requests-api-response';
+import { CaptchaHeader } from './shared/capture-using';
 
 export const PasswordRecoveryEndpoint = () =>
   applyDecorators(
+    ApiOperation({
+      summary: 'Password recovery via email confirmation',
+      description:
+        'Password recovery via email confirmation. Email should be sent with recoveryCode inside',
+    }),
     ApiBody({ type: RecoveryPasswordBodyDto, required: true }),
-    ApiResponse({ status: HttpStatus.OK, type: AccessTokenResponseDto }),
+    ApiResponse({
+      status: HttpStatus.NO_CONTENT,
+      description:
+        'Even if current email is not registered (for prevent user`s email detection)',
+    }),
+    ApiResponse({
+      status: HttpStatus.BAD_REQUEST,
+      description:
+        'If the inputModel has invalid email (for example 222^gmail.com)',
+    }),
     TooManyRequestsApiResponse(),
     CaptchaHeader(),
-    ApiSecurity('captchaToken'),
+    ApiSecurity('captchaToken')
+
   );
 
 class RecoveryPasswordBodyDto {
