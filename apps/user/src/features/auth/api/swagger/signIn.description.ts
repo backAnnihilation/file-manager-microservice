@@ -1,5 +1,5 @@
 import { applyDecorators, HttpStatus } from '@nestjs/common';
-import { ApiBody, ApiProperty, ApiResponse } from '@nestjs/swagger';
+import { ApiBody, ApiProperty, ApiResponse, ApiSecurity } from "@nestjs/swagger";
 import { AccessTokenResponseDto } from './shared/accessToken-response.dto';
 import { CaptchaHeader } from '../../../security/api/swagger/shared/captcha-using';
 import { TooManyRequestsApiResponse } from '../../../security/api/swagger/shared/too-many-requests-api-response';
@@ -13,7 +13,8 @@ export const SignInEndpoint = () =>
     ApiResponse({ status: HttpStatus.BAD_REQUEST, type: ErrorResponseDto }),
     UnauthorizedViaPasswordApiResponse(),
     TooManyRequestsApiResponse(),
-    CaptchaHeader()
+    CaptchaHeader(),
+    ApiSecurity('captchaToken'),
   );
 
 class SignInDto {

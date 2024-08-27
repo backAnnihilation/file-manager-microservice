@@ -1,8 +1,9 @@
 import { applyDecorators, HttpStatus } from '@nestjs/common';
-import { ApiBody, ApiProperty, ApiResponse } from '@nestjs/swagger';
+import { ApiBody, ApiProperty, ApiResponse, ApiSecurity } from "@nestjs/swagger";
 import { PasswordDescription } from './shared/password-description';
 import { TooManyRequestsApiResponse } from '../../../security/api/swagger/shared/too-many-requests-api-response';
 import { SingUpErrorResponse } from '../../../security/api/swagger/shared/error-message-response';
+import { CaptchaHeader } from "../../../security/api/swagger/shared/captcha-using";
 
 export const SignUpEndpoint = () =>
   applyDecorators(
@@ -13,7 +14,9 @@ export const SignUpEndpoint = () =>
         'Input data is accepted. Email with confirmation code will be send to passed email address',
     }),
     ApiResponse({ status: HttpStatus.BAD_REQUEST, type: SingUpErrorResponse }),
-    TooManyRequestsApiResponse()
+    TooManyRequestsApiResponse(),
+    CaptchaHeader(),
+    ApiSecurity('captchaToken'),
   );
 
 class SignUpDto {
@@ -31,7 +34,7 @@ class SignUpDto {
 
   @ApiProperty({
     required: true,
-    example: 'John Doe',
+    example: 'Batman',
     minLength: 6,
     maxLength: 30,
     description: 'must be unique',
