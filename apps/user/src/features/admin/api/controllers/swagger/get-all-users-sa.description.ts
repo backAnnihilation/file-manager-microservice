@@ -1,12 +1,10 @@
 import { applyDecorators, HttpStatus } from '@nestjs/common';
 import {
   ApiResponse,
-  ApiSecurity,
   ApiProperty,
   ApiOperation,
   getSchemaPath,
   ApiExtraModels,
-  ApiBasicAuth
 } from "@nestjs/swagger";
 import { BasicAuthApi } from "./shared/authorization.response";
 
