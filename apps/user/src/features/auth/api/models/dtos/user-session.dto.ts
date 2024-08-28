@@ -13,10 +13,10 @@ export class UserSessionDTO {
     ipAddress: string,
     userAgentInfo: string,
     userPayload: Payload,
-    refreshToken: string,
+    refreshToken: string
   ) {
     const { deviceId, exp, iat, userId } = userPayload;
-    this.ip = ipAddress;
+    this.ip = ipAddress || '::1';
     this.userAgentInfo = userAgentInfo;
     this.deviceId = deviceId;
     this.userId = userId;

@@ -11,11 +11,11 @@ import { EnvironmentVariables, Environment } from './configuration';
 export const applyAppSettings = (app: INestApplication) => {
   const currentENV = app.get(ConfigService<EnvironmentVariables>).get('ENV');
 
+  currentENV !== Environment.TESTING && app.setGlobalPrefix('api/v1');
   app.enableCors();
   pipesSetup(app);
   swaggerSetup(app);
   exceptionFilterSetup(app, currentENV);
   app.use(cookieParser());
-  currentENV !== Environment.TESTING && app.setGlobalPrefix('api/v1');
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
 };

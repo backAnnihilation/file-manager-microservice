@@ -1,4 +1,4 @@
-import { IsOptional, IsString } from 'class-validator';
+import { IsOptional, IsString } from "class-validator";
 
 export abstract class BaseFilter {
   @IsOptional()
@@ -81,13 +81,13 @@ export class PaginationFilter {
   }
 
   public getSortBy(query: QueryType, sortProperties: string[]): string {
-    let result = 'createdAt';
+    let result = "createdAt";
 
     const querySortBy = query.sortBy;
 
     if (Array.isArray(querySortBy)) {
       for (let i = 0; i < querySortBy.length; i++) {
-        const param = querySortBy[i] + '';
+        const param = querySortBy[i] + "";
 
         if (sortProperties.includes(param)) {
           result = param;
@@ -105,6 +105,6 @@ export class PaginationFilter {
 }
 
 export enum SortDirection {
-  ASC = 'ASC',
-  DESC = 'DESC',
+  ASC = "ASC",
+  DESC = "DESC",
 }

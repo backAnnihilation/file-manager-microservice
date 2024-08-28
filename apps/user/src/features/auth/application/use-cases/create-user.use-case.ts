@@ -1,15 +1,15 @@
-import { CommandHandler, EventBus, ICommandHandler } from '@nestjs/cqrs';
-import { BcryptAdapter } from '../../../../../core/adapters/bcrypt.adapter';
+import { CommandHandler, EventBus, ICommandHandler } from "@nestjs/cqrs";
+import { BcryptAdapter } from "../../../../../core/adapters/bcrypt.adapter";
 import {
   GetErrors,
   LayerNoticeInterceptor,
-} from '../../../../../core/utils/notification';
-import { UserIdType } from '../../../admin/api/models/outputSA.models.ts/user-models';
-import { UsersRepository } from '../../../admin/infrastructure/users.repo';
-import { CreateUserCommand } from './commands/create-user.command';
-import { UserModelDTO } from '../../../admin/application/dto/create-user.dto';
-import { AuthRepository } from '../../infrastructure/auth.repository';
-import { EmailNotificationEvent } from './events/email-notification-event';
+} from "../../../../../core/utils/notification";
+import { UserIdType } from "../../../admin/api/models/outputSA.models.ts/user-models";
+import { UsersRepository } from "../../../admin/infrastructure/users.repo";
+import { CreateUserCommand } from "./commands/create-user.command";
+import { UserModelDTO } from "../../../admin/application/dto/create-user.dto";
+import { AuthRepository } from "../../infrastructure/auth.repository";
+import { EmailNotificationEvent } from "./events/email-notification-event";
 
 @CommandHandler(CreateUserCommand)
 export class CreateUserUseCase implements ICommandHandler<CreateUserCommand> {
@@ -18,11 +18,11 @@ export class CreateUserUseCase implements ICommandHandler<CreateUserCommand> {
     private usersRepo: UsersRepository,
     private bcryptAdapter: BcryptAdapter,
     private authRepo: AuthRepository,
-    private eventBus: EventBus
+    private eventBus: EventBus,
   ) {}
 
   async execute(
-    command: CreateUserCommand
+    command: CreateUserCommand,
   ): Promise<LayerNoticeInterceptor<UserIdType> | null> {
     const { email, userName, password } = command.createDto;
     const notice = new LayerNoticeInterceptor<any>();
@@ -37,14 +37,14 @@ export class CreateUserUseCase implements ICommandHandler<CreateUserCommand> {
         notice.addError(
           `User with email ${email} already exists`,
           this.location,
-          GetErrors.IncorrectModel
+          GetErrors.IncorrectModel,
         );
       }
       if (confirmedUser.userName === userName) {
         notice.addError(
           `User with userName ${userName} already exists`,
           this.location,
-          GetErrors.IncorrectModel
+          GetErrors.IncorrectModel,
         );
       }
       return notice;
@@ -57,7 +57,7 @@ export class CreateUserUseCase implements ICommandHandler<CreateUserCommand> {
       userName,
       email,
       passwordHash,
-      isConfirmed
+      isConfirmed,
     );
 
     const unconfirmedUserTheSameEmail =

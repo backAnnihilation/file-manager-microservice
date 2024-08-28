@@ -1,10 +1,10 @@
-import { applyDecorators, HttpStatus } from '@nestjs/common';
-import { ApiBody, ApiProperty, ApiResponse } from '@nestjs/swagger';
-import { AccessTokenResponseDto } from './shared/accessToken-response.dto';
-import { CaptchaHeader } from '../../../security/api/swagger/shared/captcha-using';
-import { TooManyRequestsApiResponse } from '../../../security/api/swagger/shared/too-many-requests-api-response';
-import { UnauthorizedViaPasswordApiResponse } from '../../../security/api/swagger/shared/authorization.response';
-import { ErrorResponseDto } from '../../../security/api/swagger/shared/error-message-response';
+import { applyDecorators, HttpStatus } from "@nestjs/common";
+import { ApiBody, ApiProperty, ApiResponse } from "@nestjs/swagger";
+import { AccessTokenResponseDto } from "./shared/accessToken-response.dto";
+import { CaptchaHeader } from "../../../security/api/swagger/shared/captcha-using";
+import { TooManyRequestsApiResponse } from "../../../security/api/swagger/shared/too-many-requests-api-response";
+import { UnauthorizedViaPasswordApiResponse } from "../../../security/api/swagger/shared/authorization.response";
+import { ErrorResponseDto } from "../../../security/api/swagger/shared/error-message-response";
 
 export const SignInEndpoint = () =>
   applyDecorators(
@@ -13,23 +13,23 @@ export const SignInEndpoint = () =>
     ApiResponse({ status: HttpStatus.BAD_REQUEST, type: ErrorResponseDto }),
     UnauthorizedViaPasswordApiResponse(),
     TooManyRequestsApiResponse(),
-    CaptchaHeader()
+    CaptchaHeader(),
   );
 
 class SignInDto {
   @ApiProperty({
-    description: 'User email',
-    example: 'example@example.com',
+    description: "User email",
+    example: "example@example.com",
     uniqueItems: true,
-    pattern: '^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$',
+    pattern: "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$",
   })
   email: string;
 
   @ApiProperty({
-    description: 'User password',
-    example: 'password123',
+    description: "User password",
+    example: "password123",
     uniqueItems: true,
-    pattern: '^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d]{8,}$',
+    pattern: "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d]{8,}$",
   })
   password: string;
 }

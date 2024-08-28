@@ -7,7 +7,7 @@ import { EmailDtoType } from '../api/models/auth.output.models/auth.user.types';
 import { CreateTempAccountDto } from '../api/models/temp-account.models.ts/temp-account-models';
 import { UpdatePasswordDto } from '../api/models/auth-input.models.ts/password-recovery.types';
 import { OutputId } from '../../../../core/api/dto/output-id.dto';
-import { Prisma, UserAccount } from '@prisma/client';
+import { Prisma, Provider, UserAccount } from '@prisma/client';
 import { DatabaseService } from '../../../../core/db/prisma/prisma.service';
 import { DefaultArgs } from '@prisma/client/runtime/library';
 
@@ -107,6 +107,35 @@ export class AuthRepository {
         `there were some problems during find user by recovery code, ${e}`
       );
       return null;
+    }
+  }
+
+  async findUserByEmailOrProviderId(
+    email: string,
+    providerId: string
+  ): Promise<UserAccount | null> {
+    try {
+      return await this.userAccounts.findFirst({
+        where: { OR: [{ email }, { providerId }] },
+      });
+    } catch (error) {
+      return null;
+    }
+  }
+
+  async addProviderInfoToUser(
+    userId: string,
+    provider: Provider,
+    providerId: string
+  ) {
+    try {
+      await this.userAccounts.update({
+        where: { id: userId },
+        data: { provider, providerId },
+      });
+    } catch (error) {
+      console.error(`addProviderInfoToUser: ${error}`);
+      throw new Error(error);
     }
   }
 

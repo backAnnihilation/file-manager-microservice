@@ -1,5 +1,5 @@
-import { IsOptional, IsString, Matches } from 'class-validator';
-import { emailMatches } from '../../../../../../core/validation/length-constants';
+import { IsOptional, IsString, Matches } from "class-validator";
+import { emailMatches } from "../../../../../../core/validation/length-constants";
 
 export type PasswordRecoveryType = {
   newPassword: string;

@@ -1,4 +1,4 @@
-import { createParamDecorator, ExecutionContext } from '@nestjs/common';
+import { createParamDecorator, ExecutionContext } from "@nestjs/common";
 
 export const UserPayload = createParamDecorator(
   (data: unknown, context: ExecutionContext) => {
@@ -6,7 +6,7 @@ export const UserPayload = createParamDecorator(
 
     const { userId, deviceId } = request.user;
 
-    if (!userId && !deviceId) throw new Error('Should be used Guard!');
+    if (!userId && !deviceId) throw new Error("Should be used Guard!");
 
     return {
       userId,

@@ -1,12 +1,12 @@
-import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { UserIdType } from '../../../admin/api/models/outputSA.models.ts/user-models';
-import { AuthRepository } from '../../infrastructure/auth.repository';
-import { VerificationCredentialsCommand } from './commands/verification-credentials.command';
-import { BcryptAdapter } from '../../../../../core/adapters/bcrypt.adapter';
+import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
+import { UserIdType } from "../../../admin/api/models/outputSA.models.ts/user-models";
+import { AuthRepository } from "../../infrastructure/auth.repository";
+import { VerificationCredentialsCommand } from "./commands/verification-credentials.command";
+import { BcryptAdapter } from "../../../../../core/adapters/bcrypt.adapter";
 import {
   LayerNoticeInterceptor,
   GetErrors,
-} from '../../../../../core/utils/notification';
+} from "../../../../../core/utils/notification";
 
 @CommandHandler(VerificationCredentialsCommand)
 export class VerificationCredentialsUseCase
@@ -29,7 +29,7 @@ export class VerificationCredentialsUseCase
     const userAccount = await this.authRepo.findUserByEmail(email);
 
     if (!userAccount) {
-      notice.addError('User not found', this.location, GetErrors.NotFound);
+      notice.addError("User not found", this.location, GetErrors.NotFound);
       return notice;
     }
 
@@ -42,7 +42,7 @@ export class VerificationCredentialsUseCase
       notice.addData({ userId: userAccount.id });
     } else {
       notice.addError(
-        'Incorrect password',
+        "Incorrect password",
         this.location,
         GetErrors.IncorrectPassword,
       );

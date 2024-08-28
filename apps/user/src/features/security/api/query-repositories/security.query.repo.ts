@@ -1,9 +1,9 @@
-import { Injectable } from '@nestjs/common';
-import { getSessionViewModel } from '../models/security.view.models/security.view.model';
-import { SecurityViewDeviceModel } from '../models/security.view.models/security.view.types';
-import { DatabaseService } from '../../../../../core/db/prisma/prisma.service';
-import { DefaultArgs } from '@prisma/client/runtime/library';
-import { Prisma } from '@prisma/client';
+import { Injectable } from "@nestjs/common";
+import { getSessionViewModel } from "../models/security.view.models/security.view.model";
+import { SecurityViewDeviceModel } from "../models/security.view.models/security.view.types";
+import { DatabaseService } from "../../../../../core/db/prisma/prisma.service";
+import { DefaultArgs } from "@prisma/client/runtime/library";
+import { Prisma } from "@prisma/client";
 
 @Injectable()
 export class SecurityQueryRepo {

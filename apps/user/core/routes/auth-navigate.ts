@@ -8,4 +8,8 @@ export enum AuthNavigate {
   RegistrationEmailResending = 'registration-email-resending',
   GetProfile = 'me',
   Logout = 'logout',
+  GithubLogin = 'github/login',
+  GithubCallback = 'github/callback',
+  GoogleLogin = 'google/login',
+  GoogleRedirect = 'google/redirect',
 }

@@ -1,10 +1,10 @@
-import { Injectable } from '@nestjs/common';
-import { OutputId } from '../../../../core/api/dto/output-id.dto';
-import { DatabaseService } from '../../../../core/db/prisma/prisma.service';
-import { DefaultArgs } from '@prisma/client/runtime/library';
-import { Prisma, UserSession } from '@prisma/client';
-import { UserSessionDTO } from '../../auth/api/models/dtos/user-session.dto';
-import { UserSessionDto } from '../api/models/security-input.models/security-session-info.model';
+import { Injectable } from "@nestjs/common";
+import { OutputId } from "../../../../core/api/dto/output-id.dto";
+import { DatabaseService } from "../../../../core/db/prisma/prisma.service";
+import { DefaultArgs } from "@prisma/client/runtime/library";
+import { Prisma, UserSession } from "@prisma/client";
+import { UserSessionDTO } from "../../auth/api/models/dtos/user-session.dto";
+import { UserSessionDto } from "../api/models/security-input.models/security-session-info.model";
 
 @Injectable()
 export class SecurityRepository {
@@ -46,7 +46,7 @@ export class SecurityRepository {
   async updateIssuedToken(
     deviceId: string,
     issuedAt: Date,
-    exp: Date
+    exp: Date,
   ): Promise<void> {
     try {
       await this.userSessions.update({
@@ -64,7 +64,7 @@ export class SecurityRepository {
       await this.userSessions.delete({ where: { deviceId } });
     } catch (error) {
       console.error(
-        `Database operation failed while deleting session with deviceId ${deviceId}: ${error.message}`
+        `Database operation failed while deleting session with deviceId ${deviceId}: ${error.message}`,
       );
       throw new Error(error);
     }

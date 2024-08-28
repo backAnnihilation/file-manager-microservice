@@ -1,5 +1,5 @@
-import { UserAccount } from '@prisma/client';
-import { UserAccountViewModel } from './auth.output.models';
+import { UserAccount } from "@prisma/client";
+import { UserAccountViewModel } from "./auth.output.models";
 
 export const getUserAccountViewModel = (
   user: UserAccount,

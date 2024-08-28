@@ -1,4 +1,4 @@
-import { validateOrReject, ValidationError } from 'class-validator';
+import { validateOrReject, ValidationError } from "class-validator";
 
 export class LayerNoticeInterceptor<D = null> {
   public data: D | null = null;

@@ -8,7 +8,7 @@ export type SecurityDeviceModel = {
 
 export type SecurityViewDeviceModel = Omit<
   SecurityDeviceModel,
-  'expirationDate'
+  "expirationDate"
 >;
 
 export type SecurityDeviceType = {

@@ -1,4 +1,4 @@
-import { SAViewType } from '../../../../admin/api/models/user.view.models/userAdmin.view-type';
+import { SAViewType } from "../../../../admin/api/models/user.view.models/userAdmin.view-type";
 
 export type UserType = {
   userName: string;
@@ -8,7 +8,7 @@ export type UserType = {
   passwordHash: string;
 };
 
-export type UserProfileType = Pick<UserType, 'userName' | 'email'> & {
+export type UserProfileType = Pick<UserType, "userName" | "email"> & {
   userId: string;
 };
 

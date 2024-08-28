@@ -2,10 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { v4 as uuidv4 } from 'uuid';
-import {
-  ConfigurationType,
-  EnvironmentVariables,
-} from '../../../../core/config/configuration';
+import { EnvironmentVariables } from '../../../../core/config/configuration';
 import { UserSessionDto } from '../../security/api/models/security-input.models/security-session-info.model';
 import {
   JwtTokens,
@@ -20,7 +17,7 @@ export class AuthService {
   private refreshTokenSecret: string;
   constructor(
     private jwtService: JwtService,
-    private configService: ConfigService<EnvironmentVariables>,
+    private configService: ConfigService<EnvironmentVariables>
   ) {
     this.accessTokenSecret = this.configService.get('ACCESS_TOKEN_SECRET');
     this.refreshTokenSecret = this.configService.get('REFRESH_TOKEN_SECRET');
@@ -35,20 +32,6 @@ export class AuthService {
       accessToken,
       refreshToken,
     };
-  }
-
-  async getUserInfoByToken(
-    inputToken: VerifyTokensType,
-  ): Promise<TokensMeta | null> {
-    try {
-      const decodedData = await this.jwtService.verifyAsync(inputToken.token, {
-        secret: inputToken.secret,
-      });
-      return decodedData as TokensMeta;
-    } catch (err) {
-      console.error(`Troubleshoots with ${inputToken.tokenType}: `, err);
-      return null;
-    }
   }
 
   getUserPayloadByToken(token: string): Payload | null {
@@ -71,7 +54,7 @@ export class AuthService {
   }
 
   private async createNewTokens(
-    payload: UserSessionDto,
+    payload: UserSessionDto
   ): Promise<[accessToken: string, refreshToken: string]> {
     return Promise.all([
       this.jwtService.signAsync(payload, {

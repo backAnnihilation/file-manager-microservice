@@ -1,10 +1,10 @@
-import { Injectable } from '@nestjs/common';
-import { EmailDtoType } from '../models/auth.output.models/auth.user.types';
-import { Prisma } from '@prisma/client';
-import { DatabaseService } from '../../../../../core/db/prisma/prisma.service';
-import { DefaultArgs } from '@prisma/client/runtime/library';
-import { getUserAccountViewModel } from '../models/auth.output.models/auth.view.model';
-import { UserAccountViewModel } from '../models/auth.output.models/auth.output.models';
+import { Injectable } from "@nestjs/common";
+import { EmailDtoType } from "../models/auth.output.models/auth.user.types";
+import { Prisma } from "@prisma/client";
+import { DatabaseService } from "../../../../../core/db/prisma/prisma.service";
+import { DefaultArgs } from "@prisma/client/runtime/library";
+import { getUserAccountViewModel } from "../models/auth.output.models/auth.view.model";
+import { UserAccountViewModel } from "../models/auth.output.models/auth.output.models";
 
 @Injectable()
 export class AuthQueryRepository {
@@ -14,7 +14,7 @@ export class AuthQueryRepository {
   }
 
   async findUserAccountByRecoveryCode(code: string) {
-    return 'viewUserAccount';
+    return "viewUserAccount";
   }
 
   async findUserByEmail(

@@ -42,10 +42,16 @@ export class CreateUserSessionUseCase
       return notice;
     }
 
-    const { browser, deviceType } = extractDeviceInfo(clientInfo.userAgentInfo);
+    let browser = 'unknown',
+      deviceType = 'unknown';
+    if (clientInfo) {
+      const deviceInfo = extractDeviceInfo(clientInfo.userAgentInfo);
+      browser = deviceInfo.browser;
+      deviceType = deviceInfo.deviceType;
+    }
 
     const sessionDto = new UserSessionDTO(
-      clientInfo.ip,
+      clientInfo?.ip,
       `Device type: ${deviceType}, Application: ${browser}`,
       userPayload,
       refreshToken

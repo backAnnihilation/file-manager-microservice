@@ -41,6 +41,10 @@ import { DeleteActiveSessionUseCase } from './features/security/application/use-
 import { AuthenticationApiService } from './features/auth/application/auth-token-response.service';
 import { PasswordRecoveryUseCase } from './features/auth/application/use-cases/password-recovery.use-case';
 import { DeleteOtherUserSessionsUseCase } from './features/security/application/use-cases/delete-other-user-sessions.use-case';
+import { EmailNotificationOauthEventHandler } from './features/auth/application/use-cases/events/handlers/user-oauth-created-notification.event-handler';
+import { CreateOAuthUserUseCase } from './features/auth/application/use-cases/create-oauth-user.use-case';
+import { GoogleStrategy } from './features/auth/infrastructure/guards/strategies/google.strategy';
+import { GithubStrategy } from './features/auth/infrastructure/guards/strategies/github.strategy';
 
 @Module({
   imports: [
@@ -84,8 +88,12 @@ import { DeleteOtherUserSessionsUseCase } from './features/security/application/
     AuthenticationApiService,
     AccessTokenStrategy,
     RefreshTokenStrategy,
+    GithubStrategy,
+    GoogleStrategy,
     PasswordRecoveryUseCase,
     DeleteOtherUserSessionsUseCase,
+    EmailNotificationOauthEventHandler,
+    CreateOAuthUserUseCase,
   ],
 })
 export class AppModule {}

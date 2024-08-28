@@ -1,25 +1,25 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { PassportStrategy } from '@nestjs/passport';
-import { Request } from 'express';
-import { ExtractJwt, Strategy } from 'passport-jwt';
-import { EnvironmentVariables } from '../../../../../../core/config/configuration';
-import { StrategyType } from '../../../../../../core/infrastructure/guards/models/strategy.enum';
-import { SecurityRepository } from '../../../../security/infrastructure/security.repository';
+import { Injectable, UnauthorizedException } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
+import { PassportStrategy } from "@nestjs/passport";
+import { Request } from "express";
+import { ExtractJwt, Strategy } from "passport-jwt";
+import { EnvironmentVariables } from "../../../../../../core/config/configuration";
+import { StrategyType } from "../../../../../../core/infrastructure/guards/models/strategy.enum";
+import { SecurityRepository } from "../../../../security/infrastructure/security.repository";
 
 @Injectable()
 export class RefreshTokenStrategy extends PassportStrategy(
   Strategy,
-  StrategyType.RefreshToken
+  StrategyType.RefreshToken,
 ) {
   constructor(
     private securityRepo: SecurityRepository,
-    private configService: ConfigService<EnvironmentVariables>
+    private configService: ConfigService<EnvironmentVariables>,
   ) {
     super({
       jwtFromRequest: ExtractJwt.fromExtractors([cookieExtractor]),
       ignoreExpiration: false,
-      secretOrKey: configService.get('REFRESH_TOKEN_SECRET'),
+      secretOrKey: configService.get("REFRESH_TOKEN_SECRET"),
     });
   }
 
@@ -33,12 +33,12 @@ export class RefreshTokenStrategy extends PassportStrategy(
     const lastActiveDate = userSession?.rtIssuedAt?.toISOString();
 
     if (!userSession || tokenIssuedAt !== lastActiveDate) {
-      throw new UnauthorizedException('Invalid refresh token');
+      throw new UnauthorizedException("Invalid refresh token");
     }
 
     return { ...payload };
   }
 }
 const cookieExtractor = (request: Request): string => {
-  return request.cookies.refreshToken || request.headers.cookie?.split('=')[1];
+  return request.cookies.refreshToken || request.headers.cookie?.split("=")[1];
 };

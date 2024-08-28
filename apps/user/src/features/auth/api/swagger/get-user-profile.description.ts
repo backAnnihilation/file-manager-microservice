@@ -1,16 +1,16 @@
-import { applyDecorators, HttpStatus } from '@nestjs/common';
-import { ApiBearerAuth, ApiProperty, ApiResponse } from '@nestjs/swagger';
-import { UnauthorizedViaTokenApiResponse } from '../../../security/api/swagger/shared/authorization.response';
+import { applyDecorators, HttpStatus } from "@nestjs/common";
+import { ApiBearerAuth, ApiProperty, ApiResponse } from "@nestjs/swagger";
+import { UnauthorizedViaTokenApiResponse } from "../../../security/api/swagger/shared/authorization.response";
 
 export const GetProfileEndpoint = () =>
   applyDecorators(
     ApiResponse({
       status: HttpStatus.OK,
       type: UserProfileResponseDto,
-      description: 'Success - User profile retrieved successfully',
+      description: "Success - User profile retrieved successfully",
     }),
     UnauthorizedViaTokenApiResponse(),
-    ApiBearerAuth('accessToken'),
+    ApiBearerAuth("accessToken"),
   );
 
 export class UserProfileResponseDto {

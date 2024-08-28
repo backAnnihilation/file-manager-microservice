@@ -1,8 +1,8 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { PassportStrategy } from '@nestjs/passport';
-import { EnvironmentVariable } from '../../../../../../core/config/configuration';
-import { BasicStrategy } from 'passport-http';
+import { Injectable, UnauthorizedException } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
+import { PassportStrategy } from "@nestjs/passport";
+import { EnvironmentVariable } from "../../../../../../core/config/configuration";
+import { BasicStrategy } from "passport-http";
 
 @Injectable()
 export class BasicSAStrategy extends PassportStrategy(BasicStrategy) {
@@ -10,8 +10,8 @@ export class BasicSAStrategy extends PassportStrategy(BasicStrategy) {
   private userName: string;
   constructor(private configService: ConfigService<EnvironmentVariable>) {
     super();
-    this.password = this.configService.get('BASIC_AUTH_PASSWORD');
-    this.userName = this.configService.get('BASIC_AUTH_USERNAME');
+    this.password = this.configService.get("BASIC_AUTH_PASSWORD");
+    this.userName = this.configService.get("BASIC_AUTH_USERNAME");
   }
 
   public validate = async (

@@ -1,9 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable } from "@nestjs/common";
 import {
   GetErrors,
   LayerNoticeInterceptor,
-} from '../../../../core/utils/notification';
-import { UserAccount } from '@prisma/client';
+} from "../../../../core/utils/notification";
+import { UserAccount } from "@prisma/client";
 
 export const userValidationOptions = {
   isConfirmed: true,
@@ -22,7 +22,7 @@ export class UserService {
 
     if (!userAccount) {
       notice.addError(
-        'user account was not found or code has been expired',
+        "user account was not found or code has been expired",
         this.location,
         GetErrors.NotFound,
       );
@@ -31,7 +31,7 @@ export class UserService {
     if (restOptions?.isConfirmed) {
       if (userAccount.isConfirmed) {
         notice.addError(
-          'user account already confirmed',
+          "user account already confirmed",
           this.location,
           GetErrors.IncorrectModel,
         );
@@ -45,7 +45,7 @@ export class UserService {
 
       if (!isValid) {
         notice.addError(
-          'confirmation code has expired',
+          "confirmation code has expired",
           this.location,
           GetErrors.IncorrectModel,
         );

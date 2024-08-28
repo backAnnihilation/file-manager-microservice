@@ -7,16 +7,16 @@ export const extractDeviceInfo = (userAgentInfo: any): DeviceInfo => {
   return userAgentInfo
     ? {
         deviceType: userAgentInfo.isDesktop
-          ? 'Desktop'
+          ? "Desktop"
           : userAgentInfo.isMobile
-            ? 'Mobile'
+            ? "Mobile"
             : userAgentInfo.isTablet
-              ? 'Tablet'
-              : 'Unknown',
-        browser: userAgentInfo.browser || 'Unknown',
+              ? "Tablet"
+              : "Unknown",
+        browser: userAgentInfo.browser || "Unknown",
       }
     : {
-        deviceType: 'Unknown',
-        browser: 'Unknown',
+        deviceType: "Unknown",
+        browser: "Unknown",
       };
 };

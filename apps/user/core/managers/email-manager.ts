@@ -54,8 +54,18 @@ export class EmailManager {
                 </p>`,
       to: email,
     };
-    console.log({ confirmationData });
 
     return this.emailAdapter.sendEmail(confirmationData);
+  }
+
+  async sendEmailRegistrationSuccess(email: string, userName: string) {
+    const mailOptions = {
+      from: 'Incta team👻 <Incta.team@gmail.com>',
+      to: email,
+      subject: 'Registration Successful',
+      message: `<h1>Thank you for registering, ${userName}!</h1>
+             <p>We are excited to have you on board. If you have any questions, feel free to reach out to us.</p>`,
+    };
+    return this.emailAdapter.sendEmail(mailOptions);
   }
 }

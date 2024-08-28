@@ -26,4 +26,4 @@ ENV PORT=3498
 EXPOSE ${PORT}
 
 # Start the application with Prisma migration
-CMD ["sh", "-c", "npx prisma migrate deploy --schema=./apps/user/prisma/schema.prisma && npm start"]
+CMD ["sh", "-c", "npm prisma:generate && npm start"]
