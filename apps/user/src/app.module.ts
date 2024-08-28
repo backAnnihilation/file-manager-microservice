@@ -43,6 +43,8 @@ import { PasswordRecoveryUseCase } from './features/auth/application/use-cases/p
 import { DeleteOtherUserSessionsUseCase } from './features/security/application/use-cases/delete-other-user-sessions.use-case';
 import { DropDbSaUseCase } from "./features/admin/application/use-cases/drop-ba.sa.use.case";
 import { DropBbRepository } from "./features/admin/infrastructure/drop.repo";
+import { GoogleStrategy } from './features/auth/infrastructure/guards/strategies/google.strategy';
+import { GitHubStrategy } from './features/auth/infrastructure/guards/strategies/github.strategy';
 
 @Module({
   imports: [
@@ -89,7 +91,9 @@ import { DropBbRepository } from "./features/admin/infrastructure/drop.repo";
     PasswordRecoveryUseCase,
     DeleteOtherUserSessionsUseCase,
     DropDbSaUseCase,
-    DropBbRepository
+    DropBbRepository,
+    GoogleStrategy,
+    GitHubStrategy,
   ],
 })
 export class AppModule {}

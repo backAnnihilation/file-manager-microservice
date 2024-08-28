@@ -6,6 +6,7 @@ import {
   HttpStatus,
   NotFoundException,
   Post,
+  Req,
   Res,
   UseGuards,
 } from '@nestjs/common';
@@ -50,6 +51,7 @@ import { PasswordRecoveryEndpoint } from '../swagger/recovery-password.descripti
 import { SignInEndpoint } from "../swagger/sign-in.description";
 import { SignUpEndpoint } from "../swagger/sign-up.description";
 import { LogoutEndpoint } from "../swagger/logout-description";
+import { AuthGuard } from '@nestjs/passport';
 
 @ApiTags(ApiTagsEnum.Auth)
 @Controller(RoutingEnum.auth)
@@ -58,6 +60,58 @@ export class AuthController {
     private authQueryRepo: AuthQueryRepository,
     private authenticationApiService: AuthenticationApiService
   ) {}
+
+  @UseGuards(CustomThrottlerGuard)
+  @Get(AuthNavigate.RegistrationGitHub) 
+  // @UseGuards(GoogleGuard)
+  @UseGuards(AuthGuard('github'))
+  async registrationWithGitHub(
+    @Req() req:Request
+  ) { }
+
+  @Get(AuthNavigate.RegistrationGitHubCallback)
+  // @UseGuards(GoogleGuard)
+  @UseGuards(AuthGuard('github'))
+   async gitHubAuthRedirect(@Req() req,
+   @Res(/* { passthrough: true } */) res: Response,
+  ){
+
+    console.log(req.user)
+
+    const email = req.user.email;
+    const userName = req.user.name;
+
+    // console.log(userName )
+    // console.log(email )
+    return {userName, email}
+
+   }
+
+  @UseGuards(CustomThrottlerGuard)
+  @Get(AuthNavigate.RegistrationGoogle) 
+  // @UseGuards(GoogleGuard)
+  @UseGuards(AuthGuard('google'))
+  async registrationWithGoogle(
+    @Req() req:Request
+  ) {}
+
+  @Get(AuthNavigate.RegistrationGoogleCallback)
+  // @UseGuards(GoogleGuard)
+  @UseGuards(AuthGuard('google'))
+   async googleAuthRedirect(@Req() req,
+   @Res({ passthrough: true }) res: Response,
+  ){
+
+    return req.user
+
+    const data = {
+      email:req.user.email,
+      userName: req.user.email,
+      password: "test pass"
+    }
+    return {data}
+
+   }
 
   @SignInEndpoint()
   @UseGuards(CustomThrottlerGuard, LocalAuthGuard, CaptureGuard)
