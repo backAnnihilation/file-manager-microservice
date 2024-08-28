@@ -127,12 +127,7 @@ export class AuthController {
   ){
     const data = {
       email:req.user.email,
-      userName: "Abcdefj",
-      password: "123456@A"
     }
-
-    console.log("clientInfo")
-    console.log( clientInfo)
 
     const command = new CreateUserExternalCommand(data);
     const userInfo = await this.authenticationApiService.authOperation(command);
