@@ -1,5 +1,5 @@
-import { UserSessionDto } from "./security-session-info.model";
-import { SecurityViewDeviceModel } from "../security.view.models/security.view.types";
+import { UserSessionDto } from './security-session-info.model';
+import { SecurityViewDeviceModel } from '../security.view.models/security.view.types';
 
 export interface SecurityInterface {
   getUserActiveSessions(

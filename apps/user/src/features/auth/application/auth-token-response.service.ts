@@ -24,7 +24,7 @@ export class BaseAuthenticationApiService<TCommand, TResponse> {
     if (notification.hasError) {
       const { error } = handleErrors(
         notification.code,
-        notification.extensions[0]
+        notification.extensions[0],
       );
       throw error;
     }

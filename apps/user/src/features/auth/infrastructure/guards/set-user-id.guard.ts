@@ -1,8 +1,8 @@
-import { CanActivate, ExecutionContext, Injectable } from "@nestjs/common";
-import { ConfigService } from "@nestjs/config";
-import { JwtService } from "@nestjs/jwt";
-import { Request } from "express";
-import { EnvironmentVariables } from "../../../../../core/config/configuration";
+import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
+import { Request } from 'express';
+import { EnvironmentVariables } from '../../../../../core/config/configuration';
 
 @Injectable()
 export class SetUserIdGuard implements CanActivate {
@@ -15,7 +15,7 @@ export class SetUserIdGuard implements CanActivate {
     const request = context.switchToHttp().getRequest();
     const accessToken = this.extractTokenFromHeaders(request);
 
-    const accessSecret = this.configService.get("ACCESS_TOKEN_SECRET");
+    const accessSecret = this.configService.get('ACCESS_TOKEN_SECRET');
 
     if (accessToken) {
       try {
@@ -32,7 +32,7 @@ export class SetUserIdGuard implements CanActivate {
   }
 
   private extractTokenFromHeaders(request: Request): string | null {
-    const [type, token] = request.headers.authorization?.split(" ") ?? [];
-    return type === "Bearer" ? token : null;
+    const [type, token] = request.headers.authorization?.split(' ') ?? [];
+    return type === 'Bearer' ? token : null;
   }
 }

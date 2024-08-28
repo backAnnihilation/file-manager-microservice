@@ -2,20 +2,20 @@ import {
   BadRequestException,
   Injectable,
   UnauthorizedException,
-} from "@nestjs/common";
-import { ValidationError, validateOrReject } from "class-validator";
-import { Strategy } from "passport-local";
-import { UserIdType } from "../../../../admin/api/models/outputSA.models.ts/user-models";
-import { CommandBus } from "@nestjs/cqrs";
-import { PassportStrategy } from "@nestjs/passport";
-import { VerificationCredentialsCommand } from "../../../application/use-cases/commands/verification-credentials.command";
-import { UserCredentialsDto } from "../../../api/models/auth-input.models.ts/verify-credentials.model";
-import { LayerNoticeInterceptor } from "../../../../../../core/utils/notification";
+} from '@nestjs/common';
+import { ValidationError, validateOrReject } from 'class-validator';
+import { Strategy } from 'passport-local';
+import { UserIdType } from '../../../../admin/api/models/outputSA.models.ts/user-models';
+import { CommandBus } from '@nestjs/cqrs';
+import { PassportStrategy } from '@nestjs/passport';
+import { VerificationCredentialsCommand } from '../../../application/use-cases/commands/verification-credentials.command';
+import { UserCredentialsDto } from '../../../api/models/auth-input.models.ts/verify-credentials.model';
+import { LayerNoticeInterceptor } from '../../../../../../core/utils/notification';
 
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy) {
   constructor(private commandBus: CommandBus) {
-    super({ usernameField: "email" });
+    super({ usernameField: 'email' });
   }
 
   async validate(email: string, password: string): Promise<UserIdType> {

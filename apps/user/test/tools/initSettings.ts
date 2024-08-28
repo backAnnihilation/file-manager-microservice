@@ -11,13 +11,13 @@ import { EmailManagerMock } from './mock/email-manager.mock';
 import { databaseCleanUp } from './utils/cleanUp';
 
 export const initSettings = async (
-  addSettingsToModuleBuilder?: (moduleBuilder: TestingModuleBuilder) => void
+  addSettingsToModuleBuilder?: (moduleBuilder: TestingModuleBuilder) => void,
 ) => {
   try {
     const testingModuleBuilder: TestingModuleBuilder = Test.createTestingModule(
       {
         imports: [AppModule],
-      }
+      },
     )
       .overrideProvider(DatabaseService)
       .useValue(databaseService)

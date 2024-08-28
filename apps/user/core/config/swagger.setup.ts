@@ -1,39 +1,39 @@
-import { INestApplication } from "@nestjs/common";
-import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
-import { RoutingEnum } from "../routes/routing";
+import { INestApplication } from '@nestjs/common';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { RoutingEnum } from '../routes/routing';
 
 export function swaggerSetup(app: INestApplication) {
   const config = new DocumentBuilder()
-    .setTitle("Incta-team")
-    .setDescription("OpenAPI documentation")
-    .setVersion("1.0")
+    .setTitle('Incta-team')
+    .setDescription('OpenAPI documentation')
+    .setVersion('1.0')
     .addBearerAuth(
       {
-        type: "http",
-        scheme: "bearer",
-        name: "accessToken",
-        description: "JWT access token",
+        type: 'http',
+        scheme: 'bearer',
+        name: 'accessToken',
+        description: 'JWT access token',
       },
-      "accessToken",
+      'accessToken',
     )
     .addApiKey(
       {
-        type: "apiKey",
-        name: "refresh-Token",
-        in: "cookie",
+        type: 'apiKey',
+        name: 'refresh-Token',
+        in: 'cookie',
         description:
-          "JWT refreshToken inside cookie. Must be correct, and must not be expired",
+          'JWT refreshToken inside cookie. Must be correct, and must not be expired',
       },
-      "refreshToken",
+      'refreshToken',
     )
     .addApiKey(
       {
-        type: "apiKey",
-        name: "captchaToken",
-        in: "headers",
-        description: "Google reCAPTCHA validation to prevent bots",
+        type: 'apiKey',
+        name: 'captchaToken',
+        in: 'headers',
+        description: 'Google reCAPTCHA validation to prevent bots',
       },
-      "captchaToken",
+      'captchaToken',
     )
     .build();
   const document = SwaggerModule.createDocument(app, config);
@@ -46,5 +46,5 @@ export function swaggerSetup(app: INestApplication) {
 
   pathsToDelete.forEach((path) => delete document.paths[path]);
 
-  SwaggerModule.setup("api/v1", app, document);
+  SwaggerModule.setup('api/v1', app, document);
 }

@@ -3,9 +3,9 @@ import {
   Injectable,
   Logger,
   UnauthorizedException,
-} from "@nestjs/common";
-import { AuthGuard } from "@nestjs/passport";
-import { StrategyType } from "../../../../../core/infrastructure/guards/models/strategy.enum";
+} from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+import { StrategyType } from '../../../../../core/infrastructure/guards/models/strategy.enum';
 
 @Injectable()
 export class AccessTokenGuard extends AuthGuard(StrategyType.AccessToken) {

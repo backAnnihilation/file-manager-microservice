@@ -4,8 +4,8 @@ import {
   frequentLength,
   emailMatches,
   stringMatch,
-} from "../../../../../../core/validation/length-constants";
-import { iSValidField } from "../../../../../../core/validation/validate-input-fields";
+} from '../../../../../../core/validation/length-constants';
+import { iSValidField } from '../../../../../../core/validation/validate-input-fields';
 
 export class CreateUserDto {
   /**

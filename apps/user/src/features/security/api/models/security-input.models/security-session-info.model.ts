@@ -1,4 +1,4 @@
-import { IsUUID, IsNotEmpty, IsOptional, IsDate } from "class-validator";
+import { IsUUID, IsNotEmpty, IsOptional, IsDate } from 'class-validator';
 
 export class UserSessionDto {
   @IsUUID()

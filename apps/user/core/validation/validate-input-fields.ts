@@ -1,6 +1,6 @@
-import { applyDecorators } from "@nestjs/common";
-import { Transform, TransformFnParams } from "class-transformer";
-import { IsNotEmpty, IsString, Length, Matches } from "class-validator";
+import { applyDecorators } from '@nestjs/common';
+import { Transform, TransformFnParams } from 'class-transformer';
+import { IsNotEmpty, IsString, Length, Matches } from 'class-validator';
 
 export const iSValidField = ({ min, max }, regexOption?: RegExp) => {
   const decorators = [

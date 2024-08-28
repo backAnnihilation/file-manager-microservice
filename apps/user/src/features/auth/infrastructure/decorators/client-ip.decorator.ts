@@ -1,4 +1,4 @@
-import { createParamDecorator, ExecutionContext } from "@nestjs/common";
+import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 
 export const GetClientInfo = createParamDecorator(
   (data: unknown, context: ExecutionContext) => {
@@ -6,9 +6,9 @@ export const GetClientInfo = createParamDecorator(
     const userAgentInfo = request.useragent;
 
     const forwardedIpsStr =
-      request.headers["x-forwarded-for"] || request.socket.remoteAddress || "";
+      request.headers['x-forwarded-for'] || request.socket.remoteAddress || '';
 
-    const ip = forwardedIpsStr.split(",")[0];
+    const ip = forwardedIpsStr.split(',')[0];
 
     return { ip, userAgentInfo };
   },

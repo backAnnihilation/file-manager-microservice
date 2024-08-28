@@ -36,7 +36,7 @@ export class AuthRepository {
   }
 
   async findUserAccountByConfirmationCode(
-    confirmationCode: string
+    confirmationCode: string,
   ): Promise<UserAccount | null> {
     try {
       const result = await this.userAccounts.findFirst({
@@ -48,7 +48,7 @@ export class AuthRepository {
       return result;
     } catch (e) {
       console.error(
-        `there were some problems during find user's account by confirmation code, ${e}`
+        `there were some problems during find user's account by confirmation code, ${e}`,
       );
       return null;
     }
@@ -104,7 +104,7 @@ export class AuthRepository {
       });
     } catch (e) {
       console.error(
-        `there were some problems during find user by recovery code, ${e}`
+        `there were some problems during find user by recovery code, ${e}`,
       );
       return null;
     }
@@ -112,7 +112,7 @@ export class AuthRepository {
 
   async findUserByEmailOrProviderId(
     email: string,
-    providerId: string
+    providerId: string,
   ): Promise<UserAccount | null> {
     try {
       return await this.userAccounts.findFirst({
@@ -126,7 +126,7 @@ export class AuthRepository {
   async addProviderInfoToUser(
     userId: string,
     provider: Provider,
-    providerId: string
+    providerId: string,
   ) {
     try {
       await this.userAccounts.update({
@@ -149,14 +149,14 @@ export class AuthRepository {
       return !!result;
     } catch (error) {
       console.error(
-        `there were some problems during update user's confirmation code: ${error}`
+        `there were some problems during update user's confirmation code: ${error}`,
       );
       return false;
     }
   }
 
   async updateConfirmationCode(
-    confirmationData: UpdateConfirmationCodeDto
+    confirmationData: UpdateConfirmationCodeDto,
   ): Promise<boolean> {
     try {
       const { id, expirationDate, recoveryCode } = confirmationData;
@@ -172,7 +172,7 @@ export class AuthRepository {
       return !!result;
     } catch (error) {
       console.error(
-        `Database fails operate during update confirmation code operation ${error}`
+        `Database fails operate during update confirmation code operation ${error}`,
       );
       return false;
     }
@@ -180,7 +180,7 @@ export class AuthRepository {
 
   async updateRecoveryCode(
     email: string,
-    recoveryData: UserRecoveryType
+    recoveryData: UserRecoveryType,
   ): Promise<void> {
     try {
       await this.userAccounts.update({
@@ -192,7 +192,7 @@ export class AuthRepository {
       });
     } catch (error) {
       console.error(
-        `Database fails operate during update recovery code operation ${error}`
+        `Database fails operate during update recovery code operation ${error}`,
       );
       throw new Error(error);
     }
@@ -212,7 +212,7 @@ export class AuthRepository {
       });
     } catch (error) {
       console.error(
-        `Database fails operate with update user password ${error}`
+        `Database fails operate with update user password ${error}`,
       );
       throw new Error(error);
     }

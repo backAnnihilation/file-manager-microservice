@@ -19,7 +19,7 @@ export class UsersTestManager extends BaseTestManager {
   protected usersRepo: Prisma.UserAccountDelegate<DefaultArgs>;
   constructor(
     protected readonly app: INestApplication,
-    private prisma: PrismaClient
+    private prisma: PrismaClient,
   ) {
     super(app);
     this.routing = new AuthUsersRouting();
@@ -50,7 +50,7 @@ export class UsersTestManager extends BaseTestManager {
 
   async createSA(
     inputData: AuthUserType,
-    expectedStatus = HttpStatus.CREATED
+    expectedStatus = HttpStatus.CREATED,
   ): Promise<AuthUserType> {
     let admin: AuthUserType;
     await request(this.application)
@@ -58,7 +58,7 @@ export class UsersTestManager extends BaseTestManager {
       .auth(
         this.constants.basicUser,
         this.constants.basicPass,
-        this.constants.authBasic
+        this.constants.authBasic,
       )
       .send(inputData)
       .expect(({ body }: SuperTestBody<SAViewType>) => {
@@ -71,7 +71,7 @@ export class UsersTestManager extends BaseTestManager {
   }
 
   async createUsers(
-    numberOfUsers = 3
+    numberOfUsers = 3,
   ): Promise<{ users: AuthUserType[]; accessTokens: string[] }> {
     const users: AuthUserType[] = [];
     const accessTokens: string[] = [];
@@ -95,7 +95,7 @@ export class UsersTestManager extends BaseTestManager {
 
   async registration(
     inputData: AuthUserType,
-    expectedStatus = HttpStatus.NO_CONTENT
+    expectedStatus = HttpStatus.NO_CONTENT,
   ) {
     const response = await request(this.application)
       .post(this.routing.registration())
@@ -107,7 +107,7 @@ export class UsersTestManager extends BaseTestManager {
 
   async registrationEmailResending(
     email: string,
-    expectedStatus = HttpStatus.NO_CONTENT
+    expectedStatus = HttpStatus.NO_CONTENT,
   ) {
     const response = await request(this.application)
       .post(this.routing.registrationEmailResending())
@@ -119,7 +119,7 @@ export class UsersTestManager extends BaseTestManager {
 
   async registrationConfirmation(
     code: string | null,
-    expectedStatus = HttpStatus.NO_CONTENT
+    expectedStatus = HttpStatus.NO_CONTENT,
   ) {
     await request(this.application)
       .post(this.routing.registrationConfirmation())
@@ -129,7 +129,7 @@ export class UsersTestManager extends BaseTestManager {
 
   async passwordRecovery(
     email: string,
-    expectedStatus = HttpStatus.NO_CONTENT
+    expectedStatus = HttpStatus.NO_CONTENT,
   ) {
     await request(this.application)
       .post(this.routing.passwordRecovery())
@@ -138,7 +138,7 @@ export class UsersTestManager extends BaseTestManager {
   }
   async confirmPassword(
     data: Partial<RecoveryPassDto>,
-    expectedStatus = HttpStatus.NO_CONTENT
+    expectedStatus = HttpStatus.NO_CONTENT,
   ) {
     await request(this.application)
       .post(this.routing.confirmPassword())
@@ -148,7 +148,7 @@ export class UsersTestManager extends BaseTestManager {
 
   async signIn(
     user: Partial<AuthUserType>,
-    expectedStatus = HttpStatus.OK
+    expectedStatus = HttpStatus.OK,
   ): Promise<JwtTokens | any> {
     const res = await request(this.application)
       .post(this.routing.login())
@@ -169,7 +169,7 @@ export class UsersTestManager extends BaseTestManager {
 
   async refreshToken(
     refreshToken: string,
-    expectedStatus = HttpStatus.OK
+    expectedStatus = HttpStatus.OK,
   ): Promise<JwtTokens | any> {
     const response = await request(this.application)
       .post(this.routing.refreshToken())
@@ -196,7 +196,7 @@ export class UsersTestManager extends BaseTestManager {
   async me(
     accessToken: string,
     user: AuthUserType = null,
-    expectedStatus = HttpStatus.OK
+    expectedStatus = HttpStatus.OK,
   ) {
     let userProfile: UserProfileType;
     await request(this.application)

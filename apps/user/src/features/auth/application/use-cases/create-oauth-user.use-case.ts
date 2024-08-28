@@ -30,18 +30,18 @@ export class CreateOAuthUserUseCase
     private usersRepo: UsersRepository,
     private authRepo: AuthRepository,
     private eventBus: EventBus,
-    private commandBus: CommandBus
+    private commandBus: CommandBus,
   ) {}
 
   async execute(
-    command: CreateOAuthUserCommand
+    command: CreateOAuthUserCommand,
   ): Promise<LayerNoticeInterceptor<JwtTokens>> {
     const { email, ...providerInfo } = command.createDto;
     const notice = new LayerNoticeInterceptor<JwtTokens>();
 
     const existedUser = await this.authRepo.findUserByEmailOrProviderId(
       email,
-      providerInfo.providerId
+      providerInfo.providerId,
     );
 
     if (existedUser)
@@ -53,7 +53,7 @@ export class CreateOAuthUserUseCase
   private async handleExistingUser(
     user: UserAccount,
     providerInfo: ProviderInfo,
-    notice: LayerNoticeInterceptor<JwtTokens>
+    notice: LayerNoticeInterceptor<JwtTokens>,
   ): Promise<LayerNoticeInterceptor<JwtTokens>> {
     const command = new CreateSessionCommand({ userId: user.id });
     const notification = await this.commandBus.execute(command);
@@ -62,7 +62,7 @@ export class CreateOAuthUserUseCase
       await this.authRepo.addProviderInfoToUser(
         user.id,
         providerInfo.provider,
-        providerInfo.providerId
+        providerInfo.providerId,
       );
     }
 
@@ -72,17 +72,17 @@ export class CreateOAuthUserUseCase
 
   private async handleNewUser(
     command: CreateOAuthUserCommand,
-    notice: LayerNoticeInterceptor<JwtTokens>
+    notice: LayerNoticeInterceptor<JwtTokens>,
   ): Promise<LayerNoticeInterceptor<JwtTokens>> {
     const userDto = new UserProviderDTO(command);
 
     const savedUser = await this.usersRepo.save(userDto);
     const notification = await this.commandBus.execute(
-      new CreateSessionCommand({ userId: savedUser.id })
+      new CreateSessionCommand({ userId: savedUser.id }),
     );
     const { accessToken, refreshToken } = notification.data;
     this.eventBus.publish(
-      new EmailNotificationOauthEvent(savedUser.email, savedUser.userName)
+      new EmailNotificationOauthEvent(savedUser.email, savedUser.userName),
     );
     notice.addData({ accessToken, refreshToken });
     return notice;

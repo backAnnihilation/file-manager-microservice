@@ -1,12 +1,12 @@
-import { Injectable, InternalServerErrorException } from "@nestjs/common";
-import { Prisma } from "@prisma/client";
-import { DefaultArgs } from "@prisma/client/runtime/library";
-import { DatabaseService } from "../../../../../core/db/prisma/prisma.service";
-import { getQueryPagination } from "../../../../../core/utils/query-pagination";
-import { PaginationViewModel } from "../../../../../core/utils/sorting-base-filter";
-import { SAQueryFilter } from "../models/outputSA.models.ts/query-filters";
-import { getSAViewModel } from "../models/user.view.models/saView.model";
-import { SAViewType } from "../models/user.view.models/userAdmin.view-type";
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
+import { DefaultArgs } from '@prisma/client/runtime/library';
+import { DatabaseService } from '../../../../../core/db/prisma/prisma.service';
+import { getQueryPagination } from '../../../../../core/utils/query-pagination';
+import { PaginationViewModel } from '../../../../../core/utils/sorting-base-filter';
+import { SAQueryFilter } from '../models/outputSA.models.ts/query-filters';
+import { getSAViewModel } from '../models/user.view.models/saView.model';
+import { SAViewType } from '../models/user.view.models/userAdmin.view-type';
 
 @Injectable()
 export class UsersQueryRepo {
@@ -24,8 +24,8 @@ export class UsersQueryRepo {
       getQueryPagination(queryOptions);
 
     const [login, email] = [
-      `%${searchLoginTerm || ""}%`,
-      `%${searchEmailTerm || ""}%`,
+      `%${searchLoginTerm || ''}%`,
+      `%${searchEmailTerm || ''}%`,
     ];
 
     // const queryBuilder = this.userAccounts
@@ -59,7 +59,7 @@ export class UsersQueryRepo {
   }
   catch(error) {
     throw new InternalServerErrorException(
-      "Database fails operate with find users by sorting model",
+      'Database fails operate with find users by sorting model',
       error,
     );
   }
@@ -114,7 +114,7 @@ export class UsersQueryRepo {
 
       return getSAViewModel(result);
     } catch (error) {
-      console.error("Database fails operate with find user", error);
+      console.error('Database fails operate with find user', error);
       return null;
     }
   }

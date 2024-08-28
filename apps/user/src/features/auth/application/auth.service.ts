@@ -17,7 +17,7 @@ export class AuthService {
   private refreshTokenSecret: string;
   constructor(
     private jwtService: JwtService,
-    private configService: ConfigService<EnvironmentVariables>
+    private configService: ConfigService<EnvironmentVariables>,
   ) {
     this.accessTokenSecret = this.configService.get('ACCESS_TOKEN_SECRET');
     this.refreshTokenSecret = this.configService.get('REFRESH_TOKEN_SECRET');
@@ -54,7 +54,7 @@ export class AuthService {
   }
 
   private async createNewTokens(
-    payload: UserSessionDto
+    payload: UserSessionDto,
   ): Promise<[accessToken: string, refreshToken: string]> {
     return Promise.all([
       this.jwtService.signAsync(payload, {

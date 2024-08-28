@@ -4,8 +4,8 @@ import {
   ExceptionFilter,
   HttpException,
   HttpStatus,
-} from "@nestjs/common";
-import { Request, Response } from "express";
+} from '@nestjs/common';
+import { Request, Response } from 'express';
 
 type ErrorResponse = {
   errorsMessages: ErrorsMessageType[];
@@ -46,7 +46,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
       }
 
       const envCondition =
-        this.currentENV === "DEVELOPMENT" || this.currentENV === "TESTING";
+        this.currentENV === 'DEVELOPMENT' || this.currentENV === 'TESTING';
 
       const errorResponse = !envCondition
         ? devErrorResponse

@@ -1,8 +1,8 @@
-import { BaseFilter } from "./sorting-base-filter";
+import { BaseFilter } from './sorting-base-filter';
 
 enum SortDirections {
-  ASC = "ASC",
-  DESC = "DESC",
+  ASC = 'ASC',
+  DESC = 'DESC',
 }
 
 export type PaginationType = {
@@ -18,8 +18,8 @@ export const getQueryPagination = <T extends BaseFilter>(
   inputData: T,
 ): PaginationType => {
   const sortDirection =
-    inputData?.sortDirection === SortDirections.ASC ? "ASC" : "DESC";
-  const sortBy = inputData?.sortBy || "created_at";
+    inputData?.sortDirection === SortDirections.ASC ? 'ASC' : 'DESC';
+  const sortBy = inputData?.sortBy || 'created_at';
 
   const parsedPageNumber = parseInt(inputData.pageNumber, 10);
   const pageNumber = !isNaN(parsedPageNumber)

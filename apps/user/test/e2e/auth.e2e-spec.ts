@@ -39,7 +39,7 @@ aDescribe(skipSettings.for(e2eTestNamesEnum.AUTH))('AuthController', () => {
   beforeAll(async () => {
     const testSettings = await initSettings(
       (moduleBuilder: TestingModuleBuilder) =>
-        moduleBuilder.overrideGuard(CaptureGuard).useValue(mockedCaptureGuard)
+        moduleBuilder.overrideGuard(CaptureGuard).useValue(mockedCaptureGuard),
     );
     app = testSettings.app;
 
@@ -108,7 +108,7 @@ aDescribe(skipSettings.for(e2eTestNamesEnum.AUTH))('AuthController', () => {
 
       const result = await usersTestManager.registration(
         inputData,
-        HttpStatus.BAD_REQUEST
+        HttpStatus.BAD_REQUEST,
       );
 
       const error = constructErrorMessages([ErrorField.Email]);
@@ -126,12 +126,12 @@ aDescribe(skipSettings.for(e2eTestNamesEnum.AUTH))('AuthController', () => {
 
       const result1 = await usersTestManager.registration(
         invalidInputDataShort,
-        HttpStatus.BAD_REQUEST
+        HttpStatus.BAD_REQUEST,
       );
 
       const result2 = await usersTestManager.registration(
         invalidInputDataLong,
-        HttpStatus.BAD_REQUEST
+        HttpStatus.BAD_REQUEST,
       );
 
       const error = constructErrorMessages([ErrorField.Password]);
@@ -150,12 +150,12 @@ aDescribe(skipSettings.for(e2eTestNamesEnum.AUTH))('AuthController', () => {
 
       const result1 = await usersTestManager.registration(
         invalidInputShortName,
-        HttpStatus.BAD_REQUEST
+        HttpStatus.BAD_REQUEST,
       );
 
       const result2 = await usersTestManager.registration(
         invalidInputLongName,
-        HttpStatus.BAD_REQUEST
+        HttpStatus.BAD_REQUEST,
       );
 
       const error = constructErrorMessages([ErrorField.UserName]);
@@ -168,7 +168,7 @@ aDescribe(skipSettings.for(e2eTestNamesEnum.AUTH))('AuthController', () => {
 
       const result = await usersTestManager.registration(
         invalidInputDataShort,
-        HttpStatus.BAD_REQUEST
+        HttpStatus.BAD_REQUEST,
       );
 
       const error = constructErrorMessages([
@@ -194,7 +194,7 @@ aDescribe(skipSettings.for(e2eTestNamesEnum.AUTH))('AuthController', () => {
     it(`/auth/registration-email-resending (POST) - shouldn't passed api with invalid email, 400`, async () => {
       const res = await usersTestManager.registrationEmailResending(
         '@',
-        HttpStatus.BAD_REQUEST
+        HttpStatus.BAD_REQUEST,
       );
 
       const error = constructErrorMessages([ErrorField.Email]);
@@ -204,7 +204,7 @@ aDescribe(skipSettings.for(e2eTestNamesEnum.AUTH))('AuthController', () => {
     it(`/auth/registration-email-resending (POST) - shouldn't passed api with a non-existent email in the system, 400`, async () => {
       await usersTestManager.registrationEmailResending(
         constantsForDataTesting.inputData.EMAIL,
-        HttpStatus.BAD_REQUEST
+        HttpStatus.BAD_REQUEST,
       );
     });
 
@@ -213,7 +213,7 @@ aDescribe(skipSettings.for(e2eTestNamesEnum.AUTH))('AuthController', () => {
 
       await usersTestManager.registrationEmailResending(
         user.email,
-        HttpStatus.BAD_REQUEST
+        HttpStatus.BAD_REQUEST,
       );
     });
 
@@ -250,7 +250,7 @@ aDescribe(skipSettings.for(e2eTestNamesEnum.AUTH))('AuthController', () => {
     it(`/auth/registration-confirmation (POST) - should'nt accept invalid confirmationCode, 400`, async () => {
       await usersTestManager.registrationConfirmation(
         '',
-        HttpStatus.BAD_REQUEST
+        HttpStatus.BAD_REQUEST,
       );
     });
 
@@ -282,7 +282,7 @@ aDescribe(skipSettings.for(e2eTestNamesEnum.AUTH))('AuthController', () => {
 
       const theSameEmailResult = await usersTestManager.registration(
         inputTheSameEmailData,
-        HttpStatus.BAD_REQUEST
+        HttpStatus.BAD_REQUEST,
       );
 
       const inputTheSameUserName = usersTestManager.createInputData({
@@ -291,7 +291,7 @@ aDescribe(skipSettings.for(e2eTestNamesEnum.AUTH))('AuthController', () => {
 
       const theSameUserNameResult = await usersTestManager.registration(
         inputTheSameUserName,
-        HttpStatus.BAD_REQUEST
+        HttpStatus.BAD_REQUEST,
       );
     });
   });
@@ -317,16 +317,16 @@ aDescribe(skipSettings.for(e2eTestNamesEnum.AUTH))('AuthController', () => {
         Promise.all([
           jwtService.sign(
             { userId: admin.id, deviceId: uuidv4() },
-            { secret: config.get('ACCESS_TOKEN_SECRET'), expiresIn: '1s' }
+            { secret: config.get('ACCESS_TOKEN_SECRET'), expiresIn: '1s' },
           ),
           jwtService.sign(
             { userId: admin.id, deviceId: uuidv4() },
-            { secret: config.get('REFRESH_TOKEN_SECRET'), expiresIn: '1s' }
+            { secret: config.get('REFRESH_TOKEN_SECRET'), expiresIn: '1s' },
           ),
         ]).then(([accessToken, refreshToken]) => ({
           accessToken,
           refreshToken,
-        }))
+        })),
       );
 
       const { accessToken, refreshToken } =
@@ -335,7 +335,7 @@ aDescribe(skipSettings.for(e2eTestNamesEnum.AUTH))('AuthController', () => {
       await wait(2);
       await usersTestManager.refreshToken(
         refreshToken,
-        HttpStatus.UNAUTHORIZED
+        HttpStatus.UNAUTHORIZED,
       );
       await usersTestManager.me(accessToken, null, HttpStatus.UNAUTHORIZED);
       await usersTestManager.logout(refreshToken, HttpStatus.UNAUTHORIZED);
@@ -348,7 +348,7 @@ aDescribe(skipSettings.for(e2eTestNamesEnum.AUTH))('AuthController', () => {
       await usersTestManager.me(
         expiredAccessToken,
         null,
-        HttpStatus.UNAUTHORIZED
+        HttpStatus.UNAUTHORIZED,
       );
     });
   });
@@ -365,7 +365,7 @@ aDescribe(skipSettings.for(e2eTestNamesEnum.AUTH))('AuthController', () => {
     it(`shouldn't send password recovery code; cause email isn't registered`, async () => {
       await usersTestManager.passwordRecovery(
         constantsForDataTesting.inputData.EMAIL2,
-        HttpStatus.NOT_FOUND
+        HttpStatus.NOT_FOUND,
       );
       await usersTestManager.passwordRecovery('', HttpStatus.BAD_REQUEST);
     });
@@ -391,14 +391,14 @@ aDescribe(skipSettings.for(e2eTestNamesEnum.AUTH))('AuthController', () => {
     it(`shouldn't confirm password; invalid code, 400`, async () => {
       await usersTestManager.confirmPassword(
         { newPassword: 'newPassword', recoveryCode: '' },
-        HttpStatus.BAD_REQUEST
+        HttpStatus.BAD_REQUEST,
       );
       await usersTestManager.confirmPassword(
         {
           newPassword: 'newPassword',
           recoveryCode: constantsForDataTesting.inputData.validUUID,
         },
-        HttpStatus.BAD_REQUEST
+        HttpStatus.BAD_REQUEST,
       );
     });
     it(`should confirm new password`, async () => {

@@ -1,10 +1,10 @@
-import { Injectable } from "@nestjs/common";
-import { OutputId } from "../../../../core/api/dto/output-id.dto";
-import { DatabaseService } from "../../../../core/db/prisma/prisma.service";
-import { DefaultArgs } from "@prisma/client/runtime/library";
-import { Prisma, UserSession } from "@prisma/client";
-import { UserSessionDTO } from "../../auth/api/models/dtos/user-session.dto";
-import { UserSessionDto } from "../api/models/security-input.models/security-session-info.model";
+import { Injectable } from '@nestjs/common';
+import { OutputId } from '../../../../core/api/dto/output-id.dto';
+import { DatabaseService } from '../../../../core/db/prisma/prisma.service';
+import { DefaultArgs } from '@prisma/client/runtime/library';
+import { Prisma, UserSession } from '@prisma/client';
+import { UserSessionDTO } from '../../auth/api/models/dtos/user-session.dto';
+import { UserSessionDto } from '../api/models/security-input.models/security-session-info.model';
 
 @Injectable()
 export class SecurityRepository {

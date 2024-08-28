@@ -1,11 +1,11 @@
-import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
-import { BcryptAdapter } from "../../../../../core/adapters/bcrypt.adapter";
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { BcryptAdapter } from '../../../../../core/adapters/bcrypt.adapter';
 import {
   GetErrors,
   LayerNoticeInterceptor,
-} from "../../../../../core/utils/notification";
-import { AuthRepository } from "../../infrastructure/auth.repository";
-import { UpdatePasswordCommand } from "./commands/update-password.command";
+} from '../../../../../core/utils/notification';
+import { AuthRepository } from '../../infrastructure/auth.repository';
+import { UpdatePasswordCommand } from './commands/update-password.command';
 
 @CommandHandler(UpdatePasswordCommand)
 export class UpdatePasswordUseCase
@@ -30,7 +30,7 @@ export class UpdatePasswordUseCase
 
     if (!userAccount) {
       notice.addError(
-        "User not found due to an incorrect or expired code",
+        'User not found due to an incorrect or expired code',
         this.location,
         GetErrors.IncorrectModel,
       );

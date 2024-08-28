@@ -10,7 +10,7 @@ export class EmailNotificationOauthEventHandler
   async handle(event: EmailNotificationOauthEvent) {
     await this.emailManager.sendEmailRegistrationSuccess(
       event.email,
-      event.userName
+      event.userName,
     );
   }
 }

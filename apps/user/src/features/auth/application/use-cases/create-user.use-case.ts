@@ -1,15 +1,15 @@
-import { CommandHandler, EventBus, ICommandHandler } from "@nestjs/cqrs";
-import { BcryptAdapter } from "../../../../../core/adapters/bcrypt.adapter";
+import { CommandHandler, EventBus, ICommandHandler } from '@nestjs/cqrs';
+import { BcryptAdapter } from '../../../../../core/adapters/bcrypt.adapter';
 import {
   GetErrors,
   LayerNoticeInterceptor,
-} from "../../../../../core/utils/notification";
-import { UserIdType } from "../../../admin/api/models/outputSA.models.ts/user-models";
-import { UsersRepository } from "../../../admin/infrastructure/users.repo";
-import { CreateUserCommand } from "./commands/create-user.command";
-import { UserModelDTO } from "../../../admin/application/dto/create-user.dto";
-import { AuthRepository } from "../../infrastructure/auth.repository";
-import { EmailNotificationEvent } from "./events/email-notification-event";
+} from '../../../../../core/utils/notification';
+import { UserIdType } from '../../../admin/api/models/outputSA.models.ts/user-models';
+import { UsersRepository } from '../../../admin/infrastructure/users.repo';
+import { CreateUserCommand } from './commands/create-user.command';
+import { UserModelDTO } from '../../../admin/application/dto/create-user.dto';
+import { AuthRepository } from '../../infrastructure/auth.repository';
+import { EmailNotificationEvent } from './events/email-notification-event';
 
 @CommandHandler(CreateUserCommand)
 export class CreateUserUseCase implements ICommandHandler<CreateUserCommand> {

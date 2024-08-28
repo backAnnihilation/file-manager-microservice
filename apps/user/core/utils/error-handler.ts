@@ -6,21 +6,21 @@ export type ErrorsMessages = {
 export type ErrorType = { errorsMessages: ErrorsMessages[] };
 
 export enum ErrorField {
-  Email = "email",
-  Code = "code",
-  Confirmation = "confirmation",
-  UserName = "userName",
-  Title = "title",
-  Name = "name",
-  Login = "login",
-  ShortDescription = "shortDescription",
-  Description = "description",
-  BlogId = "blogId",
-  Content = "content",
-  PostId = "postId",
-  LoginOrEmail = "loginOrEmail",
-  WebsiteUrl = "websiteUrl",
-  Password = "password",
+  Email = 'email',
+  Code = 'code',
+  Confirmation = 'confirmation',
+  UserName = 'userName',
+  Title = 'title',
+  Name = 'name',
+  Login = 'login',
+  ShortDescription = 'shortDescription',
+  Description = 'description',
+  BlogId = 'blogId',
+  Content = 'content',
+  PostId = 'postId',
+  LoginOrEmail = 'loginOrEmail',
+  WebsiteUrl = 'websiteUrl',
+  Password = 'password',
 }
 
 export type ErrorsMessagesTypes = keyof typeof ErrorField;

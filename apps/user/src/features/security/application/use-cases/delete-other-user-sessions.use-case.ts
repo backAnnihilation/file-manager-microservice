@@ -1,8 +1,8 @@
-import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 
-import { SecurityRepository } from "../../infrastructure/security.repository";
-import { DeleteOtherUserSessionsCommand } from "./commands/delete-other-user-sessions.command";
-import { LayerNoticeInterceptor } from "../../../../../core/utils/notification";
+import { SecurityRepository } from '../../infrastructure/security.repository';
+import { DeleteOtherUserSessionsCommand } from './commands/delete-other-user-sessions.command';
+import { LayerNoticeInterceptor } from '../../../../../core/utils/notification';
 
 @CommandHandler(DeleteOtherUserSessionsCommand)
 export class DeleteOtherUserSessionsUseCase

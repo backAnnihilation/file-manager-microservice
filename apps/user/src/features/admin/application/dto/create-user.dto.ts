@@ -11,7 +11,7 @@ export class UserModelDTO {
     public userName: string,
     public email: string,
     public passwordHash: string,
-    isConfirmed = false
+    isConfirmed = false,
   ) {
     this.confirmationCode = uuidv4();
     this.confirmationExpDate = add(new Date(), {
@@ -31,7 +31,6 @@ export class UserProviderDTO {
   providerId: string;
   constructor(command: CreateOAuthUserCommand) {
     const { email, userName, provider, providerId } = command.createDto;
-    console.log({ cmd: command.createDto });
 
     this.isConfirmed = true;
     this.email = email;

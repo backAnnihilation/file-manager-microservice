@@ -9,5 +9,5 @@ export const UserOauthProvider = createParamDecorator(
     if (!user) throw new Error('Should be used OauthGuard!');
 
     return user;
-  }
+  },
 );

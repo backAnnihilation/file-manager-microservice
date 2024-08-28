@@ -46,5 +46,3 @@ export class BaseCUDApiService<TCommand, TViewModel> {
     }
   }
 }
-
-

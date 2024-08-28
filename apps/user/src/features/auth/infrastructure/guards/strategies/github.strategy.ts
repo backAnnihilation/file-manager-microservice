@@ -8,7 +8,7 @@ import { Profile, Strategy } from 'passport-github2';
 @Injectable()
 export class GithubStrategy extends PassportStrategy(
   Strategy,
-  StrategyType.Github
+  StrategyType.Github,
 ) {
   constructor(private configService: ConfigService<EnvironmentVariables>) {
     super({
@@ -22,10 +22,10 @@ export class GithubStrategy extends PassportStrategy(
   async validate(
     _accessToken: string,
     _refreshToken: string,
-    profile: Profile
+    profile: Profile,
   ) {
     const { id: providerId, emails, displayName, photos, provider } = profile;
-    
+
     const user = {
       providerId,
       userName: displayName,

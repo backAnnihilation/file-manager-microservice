@@ -3,14 +3,14 @@ import {
   HttpException,
   HttpStatus,
   Injectable,
-} from "@nestjs/common";
+} from '@nestjs/common';
 import {
   ThrottlerGenerateKeyFunction,
   ThrottlerGetTrackerFunction,
   ThrottlerGuard,
   ThrottlerOptions,
-} from "@nestjs/throttler";
-import { ThrottlerRequest } from "@nestjs/throttler/dist/throttler.guard.interface";
+} from '@nestjs/throttler';
+import { ThrottlerRequest } from '@nestjs/throttler/dist/throttler.guard.interface';
 
 @Injectable()
 export class CustomThrottlerGuard extends ThrottlerGuard {
@@ -23,7 +23,7 @@ export class CustomThrottlerGuard extends ThrottlerGuard {
     const { req, res } = this.getRequestResponse(context);
 
     const tracker = await this.getTracker(req);
-    const key = this.generateKey(context, tracker, "ip");
+    const key = this.generateKey(context, tracker, 'ip');
 
     const { totalHits, timeToExpire } = await this.storageService.increment(
       key,
@@ -34,13 +34,13 @@ export class CustomThrottlerGuard extends ThrottlerGuard {
     );
 
     if (totalHits > limit) {
-      res.header("Retry-After", timeToExpire);
+      res.header('Retry-After', timeToExpire);
 
       throw new HttpException(
         {
           statusCode: HttpStatus.TOO_MANY_REQUESTS,
-          error: "Too Many Requests",
-          message: "Rate limit exceeded.",
+          error: 'Too Many Requests',
+          message: 'Rate limit exceeded.',
         },
         HttpStatus.TOO_MANY_REQUESTS,
       );

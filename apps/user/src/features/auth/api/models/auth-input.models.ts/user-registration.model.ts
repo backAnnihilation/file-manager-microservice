@@ -1,4 +1,4 @@
-import { IsOptional } from "class-validator";
+import { IsOptional } from 'class-validator';
 import {
   emailMatches,
   frequentLength,
@@ -6,8 +6,8 @@ import {
   passwordMatch,
   stringMatch,
   userNameLength,
-} from "../../../../../../core/validation/length-constants";
-import { iSValidField } from "../../../../../../core/validation/validate-input-fields";
+} from '../../../../../../core/validation/length-constants';
+import { iSValidField } from '../../../../../../core/validation/validate-input-fields';
 
 export class CreateUserDto {
   /**

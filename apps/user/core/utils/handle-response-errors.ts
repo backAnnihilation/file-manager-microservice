@@ -3,8 +3,8 @@ import {
   NotFoundException,
   BadRequestException,
   ForbiddenException,
-} from "@nestjs/common";
-import { LayerInterceptorExtension, GetErrors } from "./notification";
+} from '@nestjs/common';
+import { LayerInterceptorExtension, GetErrors } from './notification';
 
 // toDo refactor -> make more flexible
 export const handleErrors = (
@@ -60,7 +60,7 @@ export const handleErrors = (
       };
     default:
       return {
-        message: "An unexpected error occurred",
+        message: 'An unexpected error occurred',
         error: new InternalServerErrorException(errorObject),
       };
   }

@@ -8,7 +8,7 @@ import { StrategyType } from '../../../../../../core/infrastructure/guards/model
 @Injectable()
 export class GoogleStrategy extends PassportStrategy(
   Strategy,
-  StrategyType.Google
+  StrategyType.Google,
 ) {
   constructor(private configService: ConfigService<EnvironmentVariables>) {
     super({
@@ -23,7 +23,7 @@ export class GoogleStrategy extends PassportStrategy(
     _accessToken: string,
     _refreshToken: string,
     profile: Profile,
-    done: VerifyCallback
+    done: VerifyCallback,
   ) {
     const { id: providerId, emails, displayName, photos, provider } = profile;
 
