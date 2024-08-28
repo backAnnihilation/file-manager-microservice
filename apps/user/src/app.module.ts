@@ -45,6 +45,7 @@ import { DropDbSaUseCase } from "./features/admin/application/use-cases/drop-ba.
 import { DropBbRepository } from "./features/admin/infrastructure/drop.repo";
 import { GoogleStrategy } from './features/auth/infrastructure/guards/strategies/google.strategy';
 import { GitHubStrategy } from './features/auth/infrastructure/guards/strategies/github.strategy';
+import { CreateUserExternalUseCase } from './features/auth/application/use-cases/create-userexternal.use-case';
 
 @Module({
   imports: [
@@ -76,6 +77,7 @@ import { GitHubStrategy } from './features/auth/infrastructure/guards/strategies
     VerificationCredentialsUseCase,
     CreateUserSessionUseCase,
     CreateUserUseCase,
+    CreateUserExternalUseCase,
     AuthRepository,
     SecurityRepository,
     UpdateIssuedTokenUseCase,

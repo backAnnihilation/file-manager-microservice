@@ -52,6 +52,7 @@ import { SignInEndpoint } from "../swagger/sign-in.description";
 import { SignUpEndpoint } from "../swagger/sign-up.description";
 import { LogoutEndpoint } from "../swagger/logout-description";
 import { AuthGuard } from '@nestjs/passport';
+import { CreateUserExternalCommand } from '../../application/use-cases/commands/create-userexternal.command';
 
 @ApiTags(ApiTagsEnum.Auth)
 @Controller(RoutingEnum.auth)
@@ -73,7 +74,8 @@ export class AuthController {
   // @UseGuards(GoogleGuard)
   @UseGuards(AuthGuard('github'))
    async gitHubAuthRedirect(@Req() req,
-   @Res(/* { passthrough: true } */) res: Response,
+   @Res() res: Response,
+   @GetClientInfo() clientInfo: ClientInfo,
   ){
 
     console.log(req.user)
@@ -81,10 +83,30 @@ export class AuthController {
     const email = req.user.email;
     const userName = req.user.name;
 
-    // console.log(userName )
-    // console.log(email )
-    return {userName, email}
+    // if (!email || !userName ){
+    //   let errors: ErrorType;
+    //   errors = makeErrorsMessages('google');
+    //   res.status(HttpStatus.BAD_REQUEST).send(errors!);
+    //   return;
+    // }
+    // const foundUser = await this.authQueryRepo.findByEmailAndName({
+    //   userName,
+    //   email,
+    // });
 
+    // if (foundUser) {
+    //   let errors: ErrorType;
+    //   if (foundUser.accountData.email === email) {
+    //     errors = makeErrorsMessages('google');
+    //   }
+    //   res.status(HttpStatus.BAD_REQUEST).send(errors!);
+    //   return;
+    // }
+
+    console.log(userName )
+    console.log(email )
+    return {userName, email}
+    // confirmUser ????
    }
 
   @UseGuards(CustomThrottlerGuard)
@@ -98,21 +120,42 @@ export class AuthController {
   @Get(AuthNavigate.RegistrationGoogleCallback)
   // @UseGuards(GoogleGuard)
   @UseGuards(AuthGuard('google'))
-   async googleAuthRedirect(@Req() req,
-   @Res({ passthrough: true }) res: Response,
+   async googleAuthRedirect(
+    @GetClientInfo() clientInfo: ClientInfo,
+    @Req() req,
+    @Res({ passthrough: true }) res: Response,
   ){
-
-    return req.user
-
     const data = {
       email:req.user.email,
-      userName: req.user.email,
-      password: "test pass"
+      userName: "Abcdefj",
+      password: "123456@A"
     }
-    return {data}
 
+    console.log("clientInfo")
+    console.log( clientInfo)
+
+    const command = new CreateUserExternalCommand(data);
+    const userInfo = await this.authenticationApiService.authOperation(command);
+
+    const command2 = new CreateSessionCommand({
+      clientInfo,
+      // @ts-ignore
+      userId: userInfo.userId,
+    });
+    const { accessToken, refreshToken } =
+      await this.authenticationApiService.authOperation(command2);
+    
+    res.cookie('refreshToken', refreshToken, { httpOnly: true, secure: true });
+
+    return { accessToken };
    }
 
+
+
+
+
+
+   
   @SignInEndpoint()
   @UseGuards(CustomThrottlerGuard, LocalAuthGuard, CaptureGuard)
   @HttpCode(HttpStatus.OK)
