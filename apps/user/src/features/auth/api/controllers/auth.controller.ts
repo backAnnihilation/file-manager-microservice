@@ -78,35 +78,7 @@ export class AuthController {
    @GetClientInfo() clientInfo: ClientInfo,
   ){
 
-    console.log(req.user)
-
-    const email = req.user.email;
-    const userName = req.user.name;
-
-    // if (!email || !userName ){
-    //   let errors: ErrorType;
-    //   errors = makeErrorsMessages('google');
-    //   res.status(HttpStatus.BAD_REQUEST).send(errors!);
-    //   return;
-    // }
-    // const foundUser = await this.authQueryRepo.findByEmailAndName({
-    //   userName,
-    //   email,
-    // });
-
-    // if (foundUser) {
-    //   let errors: ErrorType;
-    //   if (foundUser.accountData.email === email) {
-    //     errors = makeErrorsMessages('google');
-    //   }
-    //   res.status(HttpStatus.BAD_REQUEST).send(errors!);
-    //   return;
-    // }
-
-    console.log(userName )
-    console.log(email )
-    return {userName, email}
-    // confirmUser ????
+  // сюда вставить код как в авторизации гитхаб 
    }
 
   @UseGuards(CustomThrottlerGuard)
