@@ -10,7 +10,7 @@ import {
   Res,
   UseGuards,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiExcludeEndpoint, ApiTags } from "@nestjs/swagger";
 import { Response } from 'express';
 import { CustomThrottlerGuard } from '../../../../../core/infrastructure/guards/custom-throttler.guard';
 import { AuthNavigate } from '../../../../../core/routes/auth-navigate';
@@ -53,6 +53,8 @@ import { SignUpEndpoint } from "../swagger/sign-up.description";
 import { LogoutEndpoint } from "../swagger/logout-description";
 import { AuthGuard } from '@nestjs/passport';
 import { CreateUserExternalCommand } from '../../application/use-cases/commands/create-userexternal.command';
+import { GoogleAuthEndpoint } from "../swagger/google.description";
+import { GithubAuthEndpoint } from "../swagger/github.description";
 
 @ApiTags(ApiTagsEnum.Auth)
 @Controller(RoutingEnum.auth)
@@ -62,88 +64,6 @@ export class AuthController {
     private authenticationApiService: AuthenticationApiService
   ) {}
 
-  @UseGuards(CustomThrottlerGuard)
-  @Get(AuthNavigate.RegistrationGitHub) 
-  // @UseGuards(GoogleGuard)
-  @UseGuards(AuthGuard('github'))
-  async registrationWithGitHub(
-    @Req() req:Request
-  ) { }
-
-  @Get(AuthNavigate.RegistrationGitHubCallback)
-  // @UseGuards(GoogleGuard)
-  @UseGuards(AuthGuard('github'))
-   async gitHubAuthRedirect(@Req() req,
-   @Res() res: Response,
-   @GetClientInfo() clientInfo: ClientInfo,
-  ){
-
-    const data = {
-      email:req.user.email,
-      password:'123456',
-      userName:'123456'
-    }
-
-    const command = new CreateUserExternalCommand(data);
-    const userInfo = await this.authenticationApiService.authOperation(command);
-
-    const command2 = new CreateSessionCommand({
-      clientInfo,
-      // @ts-ignore
-      userId: userInfo.userId,
-    });
-    const { accessToken, refreshToken } =
-      await this.authenticationApiService.authOperation(command2);
-
-    res.cookie('refreshToken', refreshToken, { httpOnly: true, secure: true });
-
-    return { accessToken };
-  }
-
-  @UseGuards(CustomThrottlerGuard)
-  @Get(AuthNavigate.RegistrationGoogle) 
-  // @UseGuards(GoogleGuard)
-  @UseGuards(AuthGuard('google'))
-  async registrationWithGoogle(
-    @Req() req:Request
-  ) {}
-
-  @Get(AuthNavigate.RegistrationGoogleCallback)
-  // @UseGuards(GoogleGuard)
-  @UseGuards(AuthGuard('google'))
-   async googleAuthRedirect(
-    @GetClientInfo() clientInfo: ClientInfo,
-    @Req() req,
-    @Res({ passthrough: true }) res: Response,
-  ){
-    const data = {
-      email:req.user.email,
-      password:'123456',
-      userName:'123456'
-    }
-
-    const command = new CreateUserExternalCommand(data);
-    const userInfo = await this.authenticationApiService.authOperation(command);
-
-    const command2 = new CreateSessionCommand({
-      clientInfo,
-      // @ts-ignore
-      userId: userInfo.userId,
-    });
-    const { accessToken, refreshToken } =
-      await this.authenticationApiService.authOperation(command2);
-    
-    res.cookie('refreshToken', refreshToken, { httpOnly: true, secure: true });
-
-    return { accessToken };
-   }
-
-
-
-
-
-
-   
   @SignInEndpoint()
   @UseGuards(CustomThrottlerGuard, LocalAuthGuard, CaptureGuard)
   @HttpCode(HttpStatus.OK)
@@ -174,6 +94,92 @@ export class AuthController {
     const command = new CreateUserCommand(data);
     await this.authenticationApiService.authOperation(command);
   }
+
+  @GoogleAuthEndpoint()
+  @UseGuards(CustomThrottlerGuard)
+  @Get(AuthNavigate.RegistrationGoogle)
+  // @UseGuards(GoogleGuard)
+  @UseGuards(AuthGuard('google'))
+  async registrationWithGoogle(
+    @Req() req:Request
+  ) {}
+
+  @ApiExcludeEndpoint()
+  @Get(AuthNavigate.RegistrationGoogleCallback)
+  // @UseGuards(GoogleGuard)
+  @UseGuards(AuthGuard('google'))
+  async googleAuthRedirect(
+    @GetClientInfo() clientInfo: ClientInfo,
+    @Req() req,
+    @Res({ passthrough: true }) res: Response,
+  ){
+    function extractEmailName(email: string): string {
+      return email.split('@')[0];
+    }
+    const data = {
+      email:req.user.email,
+      password:'123456',
+      userName:'google_' + extractEmailName(req.user.email)
+    }
+
+    const command = new CreateUserExternalCommand(data);
+    const userInfo = await this.authenticationApiService.authOperation(command);
+
+    const command2 = new CreateSessionCommand({
+      clientInfo,
+      // @ts-ignore
+      userId: userInfo.userId,
+    });
+    const { accessToken, refreshToken } =
+      await this.authenticationApiService.authOperation(command2);
+
+    res.cookie('refreshToken', refreshToken, { httpOnly: true, secure: true });
+
+    return { accessToken };
+  }
+
+  @GithubAuthEndpoint()
+  @UseGuards(CustomThrottlerGuard)
+  @Get(AuthNavigate.RegistrationGitHub)
+  // @UseGuards(GoogleGuard)
+  @UseGuards(AuthGuard('github'))
+  async registrationWithGitHub(
+    @Req() req:Request
+  ) { }
+
+  @ApiExcludeEndpoint()
+  @Get(AuthNavigate.RegistrationGitHubCallback)
+  // @UseGuards(GoogleGuard)
+  @UseGuards(AuthGuard('github'))
+  async gitHubAuthRedirect(@Req() req,
+                           @Res() res: Response,
+                           @GetClientInfo() clientInfo: ClientInfo,
+  ){
+    function extractEmailName(email: string): string {
+      return email.split('@')[0];
+    }
+    const data = {
+      email:req.user.email,
+      password:'123456',
+      userName:'github_' + extractEmailName(req.user.email)
+    }
+
+    const command = new CreateUserExternalCommand(data);
+    const userInfo = await this.authenticationApiService.authOperation(command);
+
+    const command2 = new CreateSessionCommand({
+      clientInfo,
+      // @ts-ignore
+      userId: userInfo.userId,
+    });
+    const { accessToken, refreshToken } =
+      await this.authenticationApiService.authOperation(command2);
+
+    res.cookie('refreshToken', refreshToken, { httpOnly: true, secure: true });
+
+    return { accessToken };
+  }
+
 
   @RefreshTokenEndpoint()
   @UseGuards(RefreshTokenGuard)

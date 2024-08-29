@@ -33,10 +33,7 @@ export class CreateUserExternalUseCase implements ICommandHandler<CreateUserExte
       userName,
       email,
     });
-    
 
-    console.log("existedUser")
-    console.log(existedUser)
 
      if (existedUser) {
       notice.addData({ userId: existedUser.id });
