@@ -12,10 +12,13 @@ import { BaseTestManager } from './BaseTestManager';
 import { SAUsersRouting } from '../routes/sa-users.routing';
 import { RecoveryPassDto } from '../../../src/features/auth/api/models/auth-input.models.ts/recovery.model';
 import { SAViewType } from '../../../src/features/admin/api/models/user.view.models/userAdmin.view-type';
+import { SecurityRouting } from '../routes/security.routing';
+import { SecurityViewDeviceModel } from '../../../src/features/security/api/models/security.view.models/security.view.types';
 
 export class UsersTestManager extends BaseTestManager {
   protected readonly routing: AuthUsersRouting;
   protected readonly saRouting: SAUsersRouting;
+  protected readonly securityRouting: SecurityRouting;
   protected usersRepo: Prisma.UserAccountDelegate<DefaultArgs>;
   constructor(
     protected readonly app: INestApplication,
@@ -24,6 +27,7 @@ export class UsersTestManager extends BaseTestManager {
     super(app);
     this.routing = new AuthUsersRouting();
     this.saRouting = new SAUsersRouting();
+    this.securityRouting = new SecurityRouting();
     this.usersRepo = this.prisma.userAccount;
   }
 
@@ -220,7 +224,55 @@ export class UsersTestManager extends BaseTestManager {
   async logout(refreshToken: string, expectedStatus = HttpStatus.NO_CONTENT) {
     await request(this.application)
       .post(this.routing.logout())
-      .set('Cookie', `${refreshToken}`)
+      .set('Cookie', refreshToken)
+      .expect(expectedStatus);
+  }
+
+  async login(
+    deviceId: number,
+    auth: AuthUserType,
+    expectedStatus = HttpStatus.OK,
+  ) {
+    await request(this.application)
+      .post(this.routing.login())
+      .set('user-agent', `device-${deviceId + 1}`)
+      .send({ email: auth.email, password: auth.password })
+      .expect(expectedStatus);
+  }
+
+  async getUserActiveSessions(
+    refreshToken: string,
+    expectedStatus = HttpStatus.OK,
+  ): Promise<SecurityViewDeviceModel[]> {
+    let userSessions: SecurityViewDeviceModel[];
+    await request(this.application)
+      .get(this.securityRouting.getUserSessions())
+      .set('Cookie', refreshToken)
+      .expect(expectedStatus)
+      .expect(({ body }: SuperTestBody<SecurityViewDeviceModel[]>) => {
+        userSessions = body;
+      });
+    return userSessions;
+  }
+
+  async deleteSpecificSession(
+    refreshToken: string,
+    deviceId: string,
+    expectedStatus = HttpStatus.NO_CONTENT,
+  ) {
+    await request(this.application)
+      .delete(this.securityRouting.removeSession(deviceId))
+      .set('Cookie', refreshToken)
+      .expect(expectedStatus);
+  }
+
+  async deleteSessionsExceptCurrent(
+    refreshToken: string,
+    expectedStatus = HttpStatus.NO_CONTENT,
+  ) {
+    await request(this.application)
+      .delete(this.securityRouting.removeOtherSessions())
+      .set('Cookie', refreshToken)
       .expect(expectedStatus);
   }
 
