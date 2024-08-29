@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { DefaultArgs } from '@prisma/client/runtime/library';
 import { DatabaseService } from '../../../../../core/db/prisma/prisma.service';
@@ -18,50 +18,39 @@ export class UsersQueryRepo {
   async getAllUsers(
     queryOptions: SAQueryFilter,
   ): Promise<PaginationViewModel<SAViewType>> {
-    const { searchEmailTerm, searchLoginTerm, banStatus } = queryOptions;
+    const { searchEmailTerm, searchNameTerm } = queryOptions;
 
     const { pageNumber, pageSize, skip, sortBy, sortDirection } =
       getQueryPagination(queryOptions);
 
-    const [login, email] = [
-      `%${searchLoginTerm || ''}%`,
+    const [name, email] = [
+      `%${searchNameTerm || ''}%`,
       `%${searchEmailTerm || ''}%`,
     ];
 
-    // const queryBuilder = this.userAccounts
-    //   .createQueryBuilder('user')
-    //   .leftJoinAndSelect('user.userBan', 'ban')
-    //   .where('(user.login ILIKE :login', { login })
-    //   .orWhere('user.email ILIKE :email)', { email });
+    try {
+      const users = await this.userAccounts.findMany({
+        where: {
+          OR: [
+            { userName: { contains: name, mode: 'insensitive' } },
+            { email: { contains: email, mode: 'insensitive' } },
+          ],
+        },
+        skip,
+        take: pageSize,
+        orderBy: { [sortBy]: sortDirection },
+      });
+      const usersCount = await this.userAccounts.count();
 
-    // if (banStatus === BanStatus.banned) {
-    //   queryBuilder.andWhere('(ban.isBanned = true)');
-    // } else if (banStatus === BanStatus.notBanned) {
-    //   queryBuilder.andWhere('(ban IS NULL OR ban.isBanned = false)');
-    // }
-
-    // queryBuilder
-    //   .orderBy('user.' + sortBy, sortDirection)
-    //   .skip(skip)
-    //   .take(pageSize);
-
-    // const [users, usersCount] = await queryBuilder.getManyAndCount();
-
-    const users = await this.userAccounts.findMany();
-    const usersCount = await this.userAccounts.count();
-
-    return new PaginationViewModel<SAViewType>(
-      users.map(getSAViewModel),
-      pageNumber,
-      pageSize,
-      usersCount,
-    );
-  }
-  catch(error) {
-    throw new InternalServerErrorException(
-      'Database fails operate with find users by sorting model',
-      error,
-    );
+      return new PaginationViewModel<SAViewType>(
+        users.map(getSAViewModel),
+        pageNumber,
+        pageSize,
+        usersCount,
+      );
+    } catch (error) {
+      console.error(`get all users: ${error}`);
+    }
   }
 
   // async getBannedUsersForBlog(

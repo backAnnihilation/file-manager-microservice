@@ -3,13 +3,10 @@ import {
   UpdateConfirmationCodeDto,
   UserRecoveryType,
 } from '../api/models/auth.output.models/auth.output.models';
-import { EmailDtoType } from '../api/models/auth.output.models/auth.user.types';
-import { CreateTempAccountDto } from '../api/models/temp-account.models.ts/temp-account-models';
-import { UpdatePasswordDto } from '../api/models/auth-input.models.ts/password-recovery.types';
-import { OutputId } from '../../../../core/api/dto/output-id.dto';
 import { Prisma, Provider, UserAccount } from '@prisma/client';
-import { DatabaseService } from '../../../../core/db/prisma/prisma.service';
 import { DefaultArgs } from '@prisma/client/runtime/library';
+import { DatabaseService } from '../../../../core/db/prisma/prisma.service';
+import { UpdatePasswordDto } from '../api/models/auth-input.models.ts/password-recovery.types';
 
 type BanInfoType = {
   isBanned: boolean;
@@ -198,7 +195,7 @@ export class AuthRepository {
     }
   }
 
-  async updateUserPassword(updateData: UpdatePasswordDto): Promise<void> {
+  async updatePassword(updateData: UpdatePasswordDto): Promise<void> {
     try {
       const { passwordHash, userId } = updateData;
 

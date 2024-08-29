@@ -20,7 +20,7 @@ export class SAQueryFilter extends BaseFilter {
   sortDirection: any;
 
   searchEmailTerm: string;
-  searchLoginTerm: string;
+  searchNameTerm: string;
 
   @IsOptional()
   @IsEnum(BanStatus)

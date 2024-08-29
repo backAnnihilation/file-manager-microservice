@@ -16,22 +16,6 @@ export abstract class BaseFilter {
   @IsOptional()
   @IsString()
   abstract pageNumber: string;
-
-  @IsOptional()
-  @IsString()
-  searchNameTerm?: string;
-
-  @IsOptional()
-  @IsString()
-  searchEmailTerm?: string;
-
-  @IsOptional()
-  @IsString()
-  searchLoginTerm?: string;
-
-  @IsOptional()
-  @IsString()
-  searchContentTerm?: string;
 }
 
 export type PaginationResponseModel<T> = Promise<PaginationViewModel<T>>;

@@ -35,14 +35,6 @@ export class SecurityRepository {
     }
   }
 
-  // async deleteRefreshTokensBannedUser(userId: string, manager: EntityManager) {
-  //   try {
-  //     await manager.delete(UserSession, { userAccount: { id: userId } });
-  //   } catch (error) {
-  //     throw new Error(`Database fails during delete operation ${error}`);
-  //   }
-  // }
-
   async updateIssuedToken(
     deviceId: string,
     issuedAt: Date,
@@ -78,6 +70,20 @@ export class SecurityRepository {
         where: { userId, NOT: { deviceId } },
       });
     } catch (error) {
+      console.error(
+        `Database fails operate with delete other sessions ${error}`,
+      );
+      throw new Error(error);
+    }
+  }
+
+  async deleteActiveSessions(userId: string): Promise<void> {
+    try {
+      await this.userSessions.deleteMany({ where: { userId } });
+    } catch (error) {
+      console.error(
+        `Database fails operate with delete active sessions ${error}`,
+      );
       throw new Error(error);
     }
   }

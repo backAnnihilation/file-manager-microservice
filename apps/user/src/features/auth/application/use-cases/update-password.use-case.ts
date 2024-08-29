@@ -1,4 +1,4 @@
-import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { CommandBus, CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { BcryptAdapter } from '../../../../../core/adapters/bcrypt.adapter';
 import {
   GetErrors,
@@ -6,6 +6,8 @@ import {
 } from '../../../../../core/utils/notification';
 import { AuthRepository } from '../../infrastructure/auth.repository';
 import { UpdatePasswordCommand } from './commands/update-password.command';
+import { DeleteOtherUserSessionsCommand } from '../../../security/application/use-cases/commands/delete-other-user-sessions.command';
+import { SecurityRepository } from '../../../security/infrastructure/security.repository';
 
 @CommandHandler(UpdatePasswordCommand)
 export class UpdatePasswordUseCase
@@ -15,6 +17,7 @@ export class UpdatePasswordUseCase
   constructor(
     private authRepo: AuthRepository,
     private bcryptAdapter: BcryptAdapter,
+    private securityRepo: SecurityRepository,
   ) {}
 
   async execute(
@@ -37,10 +40,12 @@ export class UpdatePasswordUseCase
       return notice;
     }
 
-    await this.authRepo.updateUserPassword({
+    await this.authRepo.updatePassword({
       userId: userAccount.id,
       passwordHash,
     });
+
+    await this.securityRepo.deleteActiveSessions(userAccount.id);
 
     return notice;
   }

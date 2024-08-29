@@ -7,10 +7,11 @@ import {
   HttpStatus,
   NotFoundException,
   Param,
-  UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
+import { ApiTags } from '@nestjs/swagger';
+import { ApiTagsEnum, RoutingEnum } from '../../../../core/routes/routing';
 import { UserPayload } from '../../auth/infrastructure/decorators/user-payload.decorator';
 import { RefreshTokenGuard } from '../../auth/infrastructure/guards/refreshToken.guard';
 import { DeleteActiveSessionCommand } from '../application/use-cases/commands/delete-active-session.command';
@@ -19,8 +20,6 @@ import { UserSessionDto } from './models/security-input.models/security-session-
 import { SecurityInterface } from './models/security-input.models/security.interface';
 import { SecurityViewDeviceModel } from './models/security.view.models/security.view.types';
 import { SecurityQueryRepo } from './query-repositories/security.query.repo';
-import { ApiTags } from '@nestjs/swagger';
-import { ApiTagsEnum, RoutingEnum } from '../../../../core/routes/routing';
 import { GetUserActiveSessionsEndpoint } from './swagger/get-sessions.description';
 import { TerminateOtherUserSessionsEndpoint } from './swagger/terminate-other-sessions.description';
 import { DeleteSessionEndpoint } from './swagger/terminate-specific-session.description';
@@ -39,16 +38,7 @@ export class SecurityController implements SecurityInterface {
   async getUserActiveSessions(
     @UserPayload() userInfo: UserSessionDto,
   ): Promise<SecurityViewDeviceModel[]> {
-    const { userId } = userInfo;
-
-    const securityData =
-      await this.securityQueryRepo.getUserActiveSessions(userId);
-
-    if (!securityData) {
-      throw new UnauthorizedException();
-    }
-
-    return securityData;
+    return this.securityQueryRepo.getUserActiveSessions(userInfo.userId);
   }
 
   @TerminateOtherUserSessionsEndpoint()
@@ -77,8 +67,8 @@ export class SecurityController implements SecurityInterface {
       userInfo.userId,
     );
 
-    if (!sessions!.some((s) => s.deviceId === deviceId)) {
-      throw new ForbiddenException('do not have permission');
+    if (sessions.every((s) => s.deviceId !== deviceId)) {
+      throw new ForbiddenException('do not have permissions');
     }
 
     const command = new DeleteActiveSessionCommand(userInfo);

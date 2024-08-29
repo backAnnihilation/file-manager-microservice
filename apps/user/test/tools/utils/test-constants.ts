@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 
-export const constantsForDataTesting = {
+export const constantsTesting = {
   inputData: {
     length01: '01',
     length02: '02',
@@ -25,7 +25,7 @@ export const constantsForDataTesting = {
     USER_NAME2: 'Protagoras',
     USER_NAME3: 'Socrates',
     USER_NAME4: 'Aristotle',
-    PASSWORD: 'password',
+    PASSWORD: 'securePassword',
   },
   auth: {
     authBearer: { type: 'bearer' } as { type: 'bearer' },
@@ -35,8 +35,8 @@ export const constantsForDataTesting = {
   },
 };
 
-export type ConstantsTestType = keyof typeof constantsForDataTesting;
-export type AuthConstantsType = typeof constantsForDataTesting.auth;
+export type ConstantsTestType = keyof typeof constantsTesting;
+export type AuthConstantsType = typeof constantsTesting.auth;
 export const feedbacksConstants = {
   createdContent: [
     'content include discussion about nature',
