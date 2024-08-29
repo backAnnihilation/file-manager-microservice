@@ -11,6 +11,7 @@ import { DeleteActiveSessionCommand } from '../../security/application/use-cases
 import { PasswordRecoveryCommand } from './use-cases/commands/password-recovery.command';
 import { UpdatePasswordCommand } from './use-cases/commands/update-password.command';
 import { CreateUserCommand } from './use-cases/commands/create-user.command';
+import { CreateUserExternalCommand } from "./use-cases/commands/create-userexternal.command";
 
 export class BaseAuthenticationApiService<TCommand, TResponse> {
   constructor(private readonly commandBus: CommandBus) {}
@@ -41,7 +42,8 @@ export class AuthenticationApiService extends BaseAuthenticationApiService<
   | DeleteActiveSessionCommand
   | PasswordRecoveryCommand
   | UpdatePasswordCommand
-  | CreateUserCommand,
+  | CreateUserCommand
+  | CreateUserExternalCommand,
   JwtTokens
 > {
   constructor(commandBus: CommandBus) {
