@@ -78,8 +78,27 @@ export class AuthController {
    @GetClientInfo() clientInfo: ClientInfo,
   ){
 
-  // сюда вставить код как в авторизации гитхаб 
-   }
+    const data = {
+      email:req.user.email,
+      password:'123456',
+      userName:'123456'
+    }
+
+    const command = new CreateUserExternalCommand(data);
+    const userInfo = await this.authenticationApiService.authOperation(command);
+
+    const command2 = new CreateSessionCommand({
+      clientInfo,
+      // @ts-ignore
+      userId: userInfo.userId,
+    });
+    const { accessToken, refreshToken } =
+      await this.authenticationApiService.authOperation(command2);
+
+    res.cookie('refreshToken', refreshToken, { httpOnly: true, secure: true });
+
+    return { accessToken };
+  }
 
   @UseGuards(CustomThrottlerGuard)
   @Get(AuthNavigate.RegistrationGoogle) 
@@ -99,6 +118,8 @@ export class AuthController {
   ){
     const data = {
       email:req.user.email,
+      password:'123456',
+      userName:'123456'
     }
 
     const command = new CreateUserExternalCommand(data);
