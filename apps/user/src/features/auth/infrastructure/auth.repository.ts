@@ -15,21 +15,8 @@ type BanInfoType = {
 @Injectable()
 export class AuthRepository {
   private userAccounts: Prisma.UserAccountDelegate<DefaultArgs>;
-  private userBans: any;
   constructor(private readonly prisma: DatabaseService) {
     this.userAccounts = this.prisma.userAccount;
-  }
-
-  async getUserBanInfo(userId: string): Promise<BanInfoType> {
-    try {
-      const result = await this.userBans.findOne({
-        where: { user: { id: userId } },
-      });
-
-      if (!result) return null;
-
-      return { isBanned: result.isBanned };
-    } catch (error) {}
   }
 
   async findUserAccountByConfirmationCode(
