@@ -27,7 +27,7 @@ export class CreateUserUseCase implements ICommandHandler<CreateUserCommand> {
     const { email, userName, password } = command.createDto;
     const notice = new LayerNoticeInterceptor<any>();
 
-    const existedUser = await this.authRepo.findExistedUserByEmailOrName({
+    const existedUser = await this.authRepo.findExistedUserByEmailOrNameForRegistration({
       userName,
       email,
     });

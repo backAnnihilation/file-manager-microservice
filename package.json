@@ -12,6 +12,7 @@
     "generate:app": "npx prisma generate --schema=./apps/user/prisma/schema.prisma",
     "build": "nest build",
     "format": "prettier --write \"apps/**/*.ts\" \"libs/**/*.ts\"",
+
     "start": "nest start",
     "start:dev": "nest start --watch",
     "start:user": "nest start --project user --watch",
