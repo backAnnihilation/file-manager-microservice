@@ -10,6 +10,7 @@ import { EnvironmentVariables, Environment } from './configuration';
 
 export const applyAppSettings = (app: INestApplication) => {
   const currentENV = app.get(ConfigService<EnvironmentVariables>).get('ENV');
+  console.log({ currentENV });
 
   currentENV !== Environment.TESTING && app.setGlobalPrefix('api/v1');
   app.enableCors();

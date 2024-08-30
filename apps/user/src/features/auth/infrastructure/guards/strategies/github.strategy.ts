@@ -4,13 +4,14 @@ import { PassportStrategy } from '@nestjs/passport';
 import { EnvironmentVariables } from '../../../../../../core/config/configuration';
 import { StrategyType } from '../../../../../../core/infrastructure/guards/models/strategy.enum';
 import { Profile, Strategy } from 'passport-github2';
+import { sanitizedDisplayName } from '../../utils/sanitized-display-name';
 
 @Injectable()
 export class GithubStrategy extends PassportStrategy(
   Strategy,
   StrategyType.Github,
 ) {
-  constructor(private configService: ConfigService<EnvironmentVariables>) {
+  constructor(configService: ConfigService<EnvironmentVariables>) {
     super({
       clientID: configService.get('OAUTH_GITHUB_CLIENT_ID'),
       clientSecret: configService.get('OAUTH_GITHUB_CLIENT_SECRET'),
@@ -26,9 +27,11 @@ export class GithubStrategy extends PassportStrategy(
   ) {
     const { id: providerId, emails, displayName, photos, provider } = profile;
 
+    const userName = sanitizedDisplayName(displayName);
+
     const user = {
       providerId,
-      userName: displayName,
+      userName,
       email: emails[0].value,
       provider: provider,
       displayName: displayName,

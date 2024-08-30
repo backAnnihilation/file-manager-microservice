@@ -1,7 +1,7 @@
 import {
   passwordLength,
   frequentLength,
-} from '../../../../../../core/validation/length-constants';
+} from '../../../../../../core/validation/validate-input-constants';
 import { iSValidField } from '../../../../../../core/validation/validate-input-fields';
 
 export class RecoveryPassDto {

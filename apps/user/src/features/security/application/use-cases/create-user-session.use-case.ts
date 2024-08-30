@@ -8,7 +8,7 @@ import { UserSessionDTO } from '../../../auth/api/models/dtos/user-session.dto';
 import { SecurityRepository } from '../../infrastructure/security.repository';
 import { CreateSessionCommand } from './commands/create-session.command';
 import { AuthService } from '../../../auth/application/auth.service';
-import { extractDeviceInfo } from '../../../auth/infrastructure/utils/device-info-extractor';
+import { extractDeviceInfo } from '../../infrastructure/utils/device-info-extractor';
 import { JwtTokens } from '../../../auth/api/models/auth-input.models.ts/jwt.types';
 
 @CommandHandler(CreateSessionCommand)

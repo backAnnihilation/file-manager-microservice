@@ -1,7 +1,7 @@
 import {
   frequentLength,
   passwordLength,
-} from '../../../../../../core/validation/length-constants';
+} from '../../../../../../core/validation/validate-input-constants';
 import { IsString } from 'class-validator';
 import { iSValidField } from '../../../../../../core/validation/validate-input-fields';
 

@@ -50,6 +50,16 @@ import { SignInEndpoint } from '../swagger/signIn.description';
 import { SignUpEndpoint } from '../swagger/signup-endpoint.description';
 import { ConfirmPasswordEndpoint } from '../swagger/confirm-password-recovery.description';
 import { PasswordRecoveryEndpoint } from '../swagger/recovery-password.description';
+import { GithubStrategy } from '../../infrastructure/guards/strategies/github.strategy';
+import { GoogleStrategy } from '../../infrastructure/guards/strategies/google.strategy';
+import { UserOauthProvider } from '../../infrastructure/decorators/user-oauth.decorator';
+import {
+  IGithubProvider,
+  IGoogleProvider,
+} from '../models/auth-input.models.ts/provider-user-info';
+import { CreateOAuthUserCommand } from '../../application/use-cases/create-oauth-user.use-case';
+import { GoogleOauthGuard } from '../../infrastructure/guards/google-oauth.guard';
+import { GithubOauthGuard } from '../../infrastructure/guards/github-oauth.guard';
 
 @ApiTags(ApiTagsEnum.Auth)
 @Controller(RoutingEnum.auth)
@@ -164,5 +174,39 @@ export class AuthController {
   async registrationEmailResending(@Body() data: InputEmailDto) {
     const command = new UpdateConfirmationCodeCommand(data);
     await this.authenticationApiService.authOperation(command);
+  }
+
+  @Get(AuthNavigate.GithubLogin)
+  @UseGuards(GithubOauthGuard)
+  githubAuth() {}
+
+  @Get(AuthNavigate.GithubCallback)
+  @UseGuards(GithubOauthGuard)
+  async githubLogin(
+    @Res({ passthrough: true }) res: Response,
+    @UserOauthProvider() provider: IGithubProvider,
+  ) {
+    const command = new CreateOAuthUserCommand(provider);
+    const { accessToken, refreshToken } =
+      await this.authenticationApiService.authOperation(command);
+    res.cookie('refreshToken', refreshToken, { httpOnly: true, secure: true });
+    return { accessToken };
+  }
+
+  @Get(AuthNavigate.GoogleLogin)
+  @UseGuards(GoogleOauthGuard)
+  googleAuth() {}
+
+  @Get(AuthNavigate.GoogleRedirect)
+  @UseGuards(GoogleOauthGuard)
+  async googleLogin(
+    @Res({ passthrough: true }) res: Response,
+    @UserOauthProvider() provider: IGoogleProvider,
+  ) {
+    const command = new CreateOAuthUserCommand(provider);
+    const { accessToken, refreshToken } =
+      await this.authenticationApiService.authOperation(command);
+    res.cookie('refreshToken', refreshToken, { httpOnly: true, secure: true });
+    return { accessToken };
   }
 }

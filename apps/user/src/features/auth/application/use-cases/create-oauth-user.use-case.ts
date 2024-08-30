@@ -11,14 +11,14 @@ import { UsersRepository } from '../../../admin/infrastructure/users.repo';
 import { CreateSessionCommand } from '../../../security/application/use-cases/commands/create-session.command';
 import { JwtTokens } from '../../api/models/auth-input.models.ts/jwt.types';
 import {
-  IGithubUserInput,
-  IGoogleUserInput,
+  IGithubProvider,
+  IGoogleProvider,
 } from '../../api/models/auth-input.models.ts/provider-user-info';
 import { AuthRepository } from '../../infrastructure/auth.repository';
 import { EmailNotificationOauthEvent } from './events/email-notification-oauth-event';
 
 export class CreateOAuthUserCommand {
-  constructor(public createDto: IGoogleUserInput | IGithubUserInput) {}
+  constructor(public createDto: IGoogleProvider | IGithubProvider) {}
 }
 
 @CommandHandler(CreateOAuthUserCommand)

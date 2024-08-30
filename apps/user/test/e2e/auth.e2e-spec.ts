@@ -577,5 +577,4 @@ aDescribe(skipSettings.for(e2eTestNamesEnum.AUTH))('AuthController', () => {
       });
     });
   });
-  describe('', () => {});
 });

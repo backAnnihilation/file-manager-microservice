@@ -5,13 +5,13 @@ interface IBaseUserProvider {
   provider: Provider;
 }
 
-export interface IGoogleUserInput extends IBaseUserProvider {
+export interface IGoogleProvider extends IBaseUserProvider {
   email: string;
   userName: string;
   avatar?: string;
 }
 
-export interface IGithubUserInput extends IBaseUserProvider {
+export interface IGithubProvider extends IBaseUserProvider {
   email?: string;
   userName?: string;
 }

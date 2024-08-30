@@ -4,13 +4,14 @@ import { PassportStrategy } from '@nestjs/passport';
 import { Profile, Strategy, VerifyCallback } from 'passport-google-oauth20';
 import { EnvironmentVariables } from '../../../../../../core/config/configuration';
 import { StrategyType } from '../../../../../../core/infrastructure/guards/models/strategy.enum';
+import { sanitizedDisplayName } from '../../utils/sanitized-display-name';
 
 @Injectable()
 export class GoogleStrategy extends PassportStrategy(
   Strategy,
   StrategyType.Google,
 ) {
-  constructor(private configService: ConfigService<EnvironmentVariables>) {
+  constructor(configService: ConfigService<EnvironmentVariables>) {
     super({
       clientID: configService.get('OAUTH_GOOGLE_CLIENT_ID'),
       clientSecret: configService.get('OAUTH_GOOGLE_CLIENT_SECRET'),
@@ -33,10 +34,10 @@ export class GoogleStrategy extends PassportStrategy(
     if (!email || !photo) {
       return done(new Error('No provider info'), null);
     }
-
+    const userName = sanitizedDisplayName(displayName);
     const usersProvider = {
       email,
-      userName: displayName,
+      userName,
       avatar: photo,
       providerId,
       provider,

@@ -6,7 +6,7 @@ import {
   passwordMatch,
   stringMatch,
   userNameLength,
-} from '../../../../../../core/validation/length-constants';
+} from '../../../../../../core/validation/validate-input-constants';
 import { iSValidField } from '../../../../../../core/validation/validate-input-fields';
 
 export class CreateUserDto {

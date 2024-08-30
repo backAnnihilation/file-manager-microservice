@@ -1,4 +1,4 @@
-import { frequentLength } from '../../../../../../core/validation/length-constants';
+import { frequentLength } from '../../../../../../core/validation/validate-input-constants';
 import { iSValidField } from '../../../../../../core/validation/validate-input-fields';
 
 export class RegistrationCodeDto {
