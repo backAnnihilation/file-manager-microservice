@@ -1,4 +1,4 @@
-import { RoutingEnum } from '../../../core/routes/routing';
+import { RoutingEnum } from '../../../../../libs/shared/routing';
 
 export class AuthUsersRouting {
   constructor(private readonly baseUrl = RoutingEnum.auth) {}

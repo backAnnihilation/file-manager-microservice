@@ -1,9 +1,9 @@
+import { IsString } from 'class-validator';
 import {
   frequentLength,
   passwordLength,
-} from '../../../../../../core/validation/validate-input-constants';
-import { IsString } from 'class-validator';
-import { iSValidField } from '../../../../../../core/validation/validate-input-fields';
+} from '../../../../../../../../libs/shared/validation/input-constants';
+import { iSValidField } from '../../../../../../../../libs/shared/validation/validate-input-fields';
 
 export class UserCredentialsDto {
   /**

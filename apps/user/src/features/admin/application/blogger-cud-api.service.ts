@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
-import { UsersQueryRepo } from '../api/query-repositories/users.query.repo';
+import { UsersQueryRepo } from '../api/query-repositories/user-account.query.repo';
 import {
   BaseCUDApiService,
   BaseViewModel,

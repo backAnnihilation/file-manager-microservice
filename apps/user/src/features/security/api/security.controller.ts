@@ -11,7 +11,6 @@ import {
 } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 import { ApiTags } from '@nestjs/swagger';
-import { ApiTagsEnum, RoutingEnum } from '../../../../core/routes/routing';
 import { UserPayload } from '../../auth/infrastructure/decorators/user-payload.decorator';
 import { RefreshTokenGuard } from '../../auth/infrastructure/guards/refreshToken.guard';
 import { DeleteActiveSessionCommand } from '../application/use-cases/commands/delete-active-session.command';
@@ -23,6 +22,7 @@ import { SecurityQueryRepo } from './query-repositories/security.query.repo';
 import { GetUserActiveSessionsEndpoint } from './swagger/get-sessions.description';
 import { TerminateOtherUserSessionsEndpoint } from './swagger/terminate-other-sessions.description';
 import { DeleteSessionEndpoint } from './swagger/terminate-specific-session.description';
+import { ApiTagsEnum, RoutingEnum } from '../../../../../../libs/shared/routing';
 
 @ApiTags(ApiTagsEnum.Security)
 @Controller(RoutingEnum.security)

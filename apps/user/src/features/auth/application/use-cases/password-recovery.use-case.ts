@@ -1,12 +1,12 @@
 import { CommandHandler, EventBus, ICommandHandler } from '@nestjs/cqrs';
-import {
-  GetErrors,
-  LayerNoticeInterceptor,
-} from '../../../../../core/utils/notification';
 import { AuthRepository } from '../../infrastructure/auth.repository';
 import { createRecoveryCode } from '../helpers/create-recovery-message.helper';
 import { PasswordRecoveryCommand } from './commands/password-recovery.command';
 import { SendRecoveryMessageEvent } from './send-recovery-msg.event';
+import {
+  LayerNoticeInterceptor,
+  GetErrors,
+} from '../../../../../../../libs/shared/notification';
 
 @CommandHandler(PasswordRecoveryCommand)
 export class PasswordRecoveryUseCase

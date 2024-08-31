@@ -1,5 +1,5 @@
 import { IsEnum, IsOptional } from 'class-validator';
-import { BaseFilter } from '../../../../../../core/utils/sorting-base-filter';
+import { BaseFilter } from '../../../../../../../../libs/shared/sorting-base-filter';
 
 export enum BanStatus {
   all = 'all',

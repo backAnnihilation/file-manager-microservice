@@ -31,6 +31,7 @@ model UserAccount {
 
 
   userSessions                 UserSession[]  @relation("UserSessions")
+  userProfile                  UserProfile?
 }
 
 model UserSession {
@@ -40,8 +41,25 @@ model UserSession {
   deviceId          String         @unique
   refreshToken      String         
   rtIssuedAt        DateTime       
-  rtExpirationDate  DateTime       
+  rtExpirationDate  DateTime  
+  createdAt         DateTime       @default(now())
+     
 
   userAccount       UserAccount    @relation("UserSessions", fields: [userId], references: [id])
   userId            String
+}
+
+model UserProfile {
+  id                String         @id @default(uuid())
+  userName          String         @unique
+  firstName         String        
+  lastName          String
+  birthDate         DateTime
+  country           String?
+  city              String?
+  about             String? 
+  createdAt         DateTime       @default(now())
+
+  userAccount       UserAccount    @relation(fields: [userId], references: [id])
+  userId            String         @unique
 }

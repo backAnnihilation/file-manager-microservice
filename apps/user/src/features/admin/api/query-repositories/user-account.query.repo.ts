@@ -2,11 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { DefaultArgs } from '@prisma/client/runtime/library';
 import { DatabaseService } from '../../../../../core/db/prisma/prisma.service';
-import { getQueryPagination } from '../../../../../core/utils/query-pagination';
-import { PaginationViewModel } from '../../../../../core/utils/sorting-base-filter';
 import { SAQueryFilter } from '../models/outputSA.models.ts/query-filters';
 import { getSAViewModel } from '../models/user.view.models/saView.model';
 import { SAViewType } from '../models/user.view.models/userAdmin.view-type';
+import { getQueryPagination } from '../../../../../../../libs/shared/query-pagination';
+import { PaginationViewModel } from '../../../../../../../libs/shared/sorting-base-filter';
 
 @Injectable()
 export class UsersQueryRepo {
@@ -52,48 +52,6 @@ export class UsersQueryRepo {
       console.error(`get all users: ${error}`);
     }
   }
-
-  // async getBannedUsersForBlog(
-  //   blogId: string,
-  //   queryOptions: BloggerBannedUsersQueryFilter,
-  // ): Promise<PaginationViewModel<BloggerBannedUsersViewType>> {
-  //   const { searchLoginTerm } = queryOptions;
-  //   const { pageNumber, pageSize, skip, sortBy, sortDirection } =
-  //     getQueryPagination(queryOptions);
-
-  //   const [login] = [`%${searchLoginTerm || ''}%`];
-
-  //   const queryBuilder = this.userAccounts.createQueryBuilder('user');
-
-  //   queryBuilder
-  //     .select('user.login', 'login')
-  //     .addSelect('user.id', 'id')
-  //     .where('user.login ILIKE :login', { login })
-  //     .leftJoin('user.bloggerBans', 'bb')
-  //     .addSelect('bb.banDate', 'banDate')
-  //     .addSelect('bb.banReason', 'banReason')
-  //     .andWhere(
-  //       'user.id IN (SELECT "userId" FROM user_blogger_bans WHERE "isBanned" = true AND "blogId" = :blogId)',
-  //       { blogId },
-  //     )
-  //     .orderBy('user.' + sortBy, sortDirection)
-  //     .limit(pageSize)
-  //     .offset(skip);
-
-  //   try {
-  //     const users = await queryBuilder.getRawMany();
-  //     const usersCount = await queryBuilder.getCount();
-
-  //     return new PaginationViewModel<BloggerBannedUsersViewType>(
-  //       users.map(getBloggerBannedUsersView),
-  //       pageNumber,
-  //       pageSize,
-  //       usersCount,
-  //     );
-  //   } catch (error) {
-  //     console.error(`get blogger banned users: ${error}`);
-  //   }
-  // }
 
   async getById(id: string): Promise<SAViewType | null> {
     try {

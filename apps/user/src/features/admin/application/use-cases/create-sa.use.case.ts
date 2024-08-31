@@ -1,10 +1,10 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { BcryptAdapter } from '../../../../../core/adapters/bcrypt.adapter';
-import { LayerNoticeInterceptor } from '../../../../../core/utils/notification';
 import { ResponseIdType } from '../../api/models/outputSA.models.ts/user-models';
 import { UsersRepository } from '../../infrastructure/users.repo';
 import { CreateSACommand } from '../commands/create-sa.command';
 import { UserModelDTO } from '../dto/create-user.dto';
+import { LayerNoticeInterceptor } from '../../../../../../../libs/shared/notification';
 
 @CommandHandler(CreateSACommand)
 export class CreateSAUseCase implements ICommandHandler<CreateSACommand> {

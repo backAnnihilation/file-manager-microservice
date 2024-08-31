@@ -10,7 +10,7 @@ import { CommandBus } from '@nestjs/cqrs';
 import { PassportStrategy } from '@nestjs/passport';
 import { VerificationCredentialsCommand } from '../../../application/use-cases/commands/verification-credentials.command';
 import { UserCredentialsDto } from '../../../api/models/auth-input.models.ts/verify-credentials.model';
-import { LayerNoticeInterceptor } from '../../../../../../core/utils/notification';
+import { LayerNoticeInterceptor } from '../../../../../../../../libs/shared/notification';
 
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy) {

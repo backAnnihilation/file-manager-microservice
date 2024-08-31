@@ -1,33 +1,37 @@
 import { HttpStatus, INestApplication } from '@nestjs/common';
-import { Prisma, PrismaClient } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import { DefaultArgs } from '@prisma/client/runtime/library';
 import * as request from 'supertest';
-import { RoutingEnum } from '../../../core/routes/routing';
+import { DatabaseService } from '../../../core/db/prisma/prisma.service';
+import { SAViewType } from '../../../src/features/admin/api/models/user.view.models/userAdmin.view-type';
 import { JwtTokens } from '../../../src/features/auth/api/models/auth-input.models.ts/jwt.types';
+import { RecoveryPassDto } from '../../../src/features/auth/api/models/auth-input.models.ts/recovery.model';
 import { UserProfileType } from '../../../src/features/auth/api/models/auth.output.models/auth.output.models';
 import { AuthUserType } from '../../../src/features/auth/api/models/auth.output.models/auth.user.types';
+import { SecurityViewDeviceModel } from '../../../src/features/security/api/models/security.view.models/security.view.types';
+import { UpdateProfileInputModel } from '../../../src/features/user/api/models/input/update-profile.model';
 import { SuperTestBody } from '../models/body.response.model';
 import { AuthUsersRouting } from '../routes/auth-users.routing';
-import { BaseTestManager } from './BaseTestManager';
+import { ProfileRouting } from '../routes/profile-user.routing';
 import { SAUsersRouting } from '../routes/sa-users.routing';
-import { RecoveryPassDto } from '../../../src/features/auth/api/models/auth-input.models.ts/recovery.model';
-import { SAViewType } from '../../../src/features/admin/api/models/user.view.models/userAdmin.view-type';
 import { SecurityRouting } from '../routes/security.routing';
-import { SecurityViewDeviceModel } from '../../../src/features/security/api/models/security.view.models/security.view.types';
+import { BaseTestManager } from './BaseTestManager';
 
 export class UsersTestManager extends BaseTestManager {
   protected readonly routing: AuthUsersRouting;
   protected readonly saRouting: SAUsersRouting;
   protected readonly securityRouting: SecurityRouting;
+  protected readonly profileRouting: ProfileRouting;
   protected usersRepo: Prisma.UserAccountDelegate<DefaultArgs>;
   constructor(
     protected readonly app: INestApplication,
-    private prisma: PrismaClient,
+    private prisma: DatabaseService,
   ) {
     super(app);
     this.routing = new AuthUsersRouting();
     this.saRouting = new SAUsersRouting();
     this.securityRouting = new SecurityRouting();
+    this.profileRouting = new ProfileRouting();
     this.usersRepo = this.prisma.userAccount;
   }
 
@@ -193,8 +197,8 @@ export class UsersTestManager extends BaseTestManager {
     return response.body;
   }
 
-  checkUserData(responseModel: any, expectedResult: any) {
-    expect(responseModel).toEqual(expectedResult);
+  private extractRefreshToken(response: any) {
+    return response.headers['set-cookie'][0].split(';')[0];
   }
 
   async me(
@@ -228,7 +232,7 @@ export class UsersTestManager extends BaseTestManager {
       .expect(expectedStatus);
   }
 
-  async login(
+  async loginThroughSetDeviceId(
     deviceId: number,
     auth: AuthUserType,
     expectedStatus = HttpStatus.OK,
@@ -276,7 +280,15 @@ export class UsersTestManager extends BaseTestManager {
       .expect(expectedStatus);
   }
 
-  private extractRefreshToken(response: any) {
-    return response.headers['set-cookie'][0].split(';')[0];
+  async updateProfile(
+    accessToken: string,
+    profileDto: UpdateProfileInputModel,
+    expectedStatus = HttpStatus.NO_CONTENT,
+  ) {
+    await request(this.application)
+      .put(this.profileRouting.updateProfile())
+      .auth(accessToken, this.constants.authBearer)
+      .send(profileDto)
+      .expect(expectedStatus);
   }
 }

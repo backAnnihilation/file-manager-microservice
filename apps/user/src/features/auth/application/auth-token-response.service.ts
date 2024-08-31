@@ -1,7 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
-import { handleErrors } from '../../../../core/utils/handle-response-errors';
-import { LayerNoticeInterceptor } from '../../../../core/utils/notification';
 import { CreateSessionCommand } from '../../security/application/use-cases/commands/create-session.command';
 import { JwtTokens } from '../api/models/auth-input.models.ts/jwt.types';
 import { UpdateIssuedTokenCommand } from './use-cases/commands/update-Issued-token.command';
@@ -12,6 +10,8 @@ import { PasswordRecoveryCommand } from './use-cases/commands/password-recovery.
 import { UpdatePasswordCommand } from './use-cases/commands/update-password.command';
 import { CreateUserCommand } from './use-cases/commands/create-user.command';
 import { CreateOAuthUserCommand } from './use-cases/create-oauth-user.use-case';
+import { handleErrors } from '../../../../../../libs/shared/handle-response-errors';
+import { LayerNoticeInterceptor } from '../../../../../../libs/shared/notification';
 
 export class BaseAuthenticationApiService<TCommand, TResponse> {
   constructor(private readonly commandBus: CommandBus) {}

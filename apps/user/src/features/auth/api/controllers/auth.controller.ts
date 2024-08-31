@@ -13,7 +13,6 @@ import { ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
 import { CustomThrottlerGuard } from '../../../../../core/infrastructure/guards/custom-throttler.guard';
 import { AuthNavigate } from '../../../../../core/routes/auth-navigate';
-import { ApiTagsEnum, RoutingEnum } from '../../../../../core/routes/routing';
 import { UserSessionDto } from '../../../security/api/models/security-input.models/security-session-info.model';
 import { CreateSessionCommand } from '../../../security/application/use-cases/commands/create-session.command';
 import { DeleteActiveSessionCommand } from '../../../security/application/use-cases/commands/delete-active-session.command';
@@ -24,9 +23,13 @@ import { PasswordRecoveryCommand } from '../../application/use-cases/commands/pa
 import { UpdateConfirmationCodeCommand } from '../../application/use-cases/commands/update-confirmation-code.command';
 import { UpdateIssuedTokenCommand } from '../../application/use-cases/commands/update-Issued-token.command';
 import { UpdatePasswordCommand } from '../../application/use-cases/commands/update-password.command';
+import { CreateOAuthUserCommand } from '../../application/use-cases/create-oauth-user.use-case';
 import { GetClientInfo } from '../../infrastructure/decorators/client-ip.decorator';
+import { UserOauthProvider } from '../../infrastructure/decorators/user-oauth.decorator';
 import { UserPayload } from '../../infrastructure/decorators/user-payload.decorator';
 import { AccessTokenGuard } from '../../infrastructure/guards/accessToken.guard';
+import { GithubOauthGuard } from '../../infrastructure/guards/github-oauth.guard';
+import { GoogleOauthGuard } from '../../infrastructure/guards/google-oauth.guard';
 import { LocalAuthGuard } from '../../infrastructure/guards/local-auth.guard';
 import { RefreshTokenGuard } from '../../infrastructure/guards/refreshToken.guard';
 import { CaptureGuard } from '../../infrastructure/guards/validate-capture.guard';
@@ -35,31 +38,26 @@ import {
   InputEmailDto,
   RecoveryPasswordDto,
 } from '../models/auth-input.models.ts/password-recovery.types';
+import {
+  IGithubProvider,
+  IGoogleProvider,
+} from '../models/auth-input.models.ts/provider-user-info';
 import { RecoveryPassDto } from '../models/auth-input.models.ts/recovery.model';
 import { RegistrationCodeDto } from '../models/auth-input.models.ts/registration-code.model';
 import { CreateUserDto } from '../models/auth-input.models.ts/user-registration.model';
 import { UserCredentialsDto } from '../models/auth-input.models.ts/verify-credentials.model';
 import { UserProfileType } from '../models/auth.output.models/auth.output.models';
 import { AuthQueryRepository } from '../query-repositories/auth.query.repo';
+import { ConfirmPasswordEndpoint } from '../swagger/confirm-password-recovery.description';
 import { GetProfileEndpoint } from '../swagger/get-user-profile.description';
 import { LogoutEndpoint } from '../swagger/logout.description';
+import { PasswordRecoveryEndpoint } from '../swagger/recovery-password.description';
 import { RefreshTokenEndpoint } from '../swagger/refresh-token.description';
 import { RegistrationConfirmationEndpoint } from '../swagger/registration-confirmation.description';
 import { RegistrationEmailResendingEndpoint } from '../swagger/registration-email-resending.description';
 import { SignInEndpoint } from '../swagger/signIn.description';
 import { SignUpEndpoint } from '../swagger/signup-endpoint.description';
-import { ConfirmPasswordEndpoint } from '../swagger/confirm-password-recovery.description';
-import { PasswordRecoveryEndpoint } from '../swagger/recovery-password.description';
-import { GithubStrategy } from '../../infrastructure/guards/strategies/github.strategy';
-import { GoogleStrategy } from '../../infrastructure/guards/strategies/google.strategy';
-import { UserOauthProvider } from '../../infrastructure/decorators/user-oauth.decorator';
-import {
-  IGithubProvider,
-  IGoogleProvider,
-} from '../models/auth-input.models.ts/provider-user-info';
-import { CreateOAuthUserCommand } from '../../application/use-cases/create-oauth-user.use-case';
-import { GoogleOauthGuard } from '../../infrastructure/guards/google-oauth.guard';
-import { GithubOauthGuard } from '../../infrastructure/guards/github-oauth.guard';
+import { ApiTagsEnum, RoutingEnum } from '../../../../../../../libs/shared/routing';
 
 @ApiTags(ApiTagsEnum.Auth)
 @Controller(RoutingEnum.auth)

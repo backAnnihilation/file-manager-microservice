@@ -4,7 +4,7 @@ import { UpdateConfirmationCodeCommand } from './commands/update-confirmation-co
 import { EmailNotificationEvent } from './events/email-notification-event';
 import { createRecoveryCode } from '../helpers/create-recovery-message.helper';
 import { UserService } from '../user.service';
-import { LayerNoticeInterceptor } from '../../../../../core/utils/notification';
+import { LayerNoticeInterceptor } from '../../../../../../../libs/shared/notification';
 
 @CommandHandler(UpdateConfirmationCodeCommand)
 export class UpdateConfirmationCodeUseCase

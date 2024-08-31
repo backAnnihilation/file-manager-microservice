@@ -6,7 +6,8 @@ import * as cookieParser from 'cookie-parser';
 import { INestApplication } from '@nestjs/common';
 import { exceptionFilterSetup } from './exception-filter.setup';
 import { ConfigService } from '@nestjs/config';
-import { EnvironmentVariables, Environment } from './configuration';
+import { EnvironmentVariables } from './configuration';
+import { Environment } from '../../../../libs/shared/environment.enum';
 
 export const applyAppSettings = (app: INestApplication) => {
   const currentENV = app.get(ConfigService<EnvironmentVariables>).get('ENV');

@@ -27,7 +27,7 @@ import { mockedCaptureGuard } from '../tools/mock/capture-guard.mock';
 aDescribe(skipSettings.for(e2eTestNamesEnum.AUTH))('AuthController', () => {
   let app: INestApplication;
   let usersTestManager: UsersTestManager;
-  let dbService: DatabaseService;
+  let databaseService: DatabaseService;
   let emailMockManager: EmailManagerMock;
   let emailManager: EmailManager;
   let authService: AuthService;
@@ -45,7 +45,6 @@ aDescribe(skipSettings.for(e2eTestNamesEnum.AUTH))('AuthController', () => {
     emailManager = app.get(EmailManager);
     authService = app.get(AuthService);
     usersTestManager = testSettings.usersTestManager;
-    dbService = testSettings.databaseService;
     jwtService = app.get(JwtService);
   });
 
@@ -110,7 +109,7 @@ aDescribe(skipSettings.for(e2eTestNamesEnum.AUTH))('AuthController', () => {
         );
 
         const error = constructErrorMessages([ErrorField.Email]);
-        usersTestManager.checkUserData(result, error);
+        usersTestManager.assertMatch(result, error);
       });
 
       it(`/auth/registration (POST) - shouldn't pass registration with bad password (length: 6 - 20), 400`, async () => {
@@ -133,8 +132,8 @@ aDescribe(skipSettings.for(e2eTestNamesEnum.AUTH))('AuthController', () => {
         );
 
         const error = constructErrorMessages([ErrorField.Password]);
-        usersTestManager.checkUserData(result1, error);
-        usersTestManager.checkUserData(result2, error);
+        usersTestManager.assertMatch(result1, error);
+        usersTestManager.assertMatch(result2, error);
       });
 
       it(`/auth/registration (POST) - shouldn't pass registration with bad userName (length: 6 - 30), 400`, async () => {
@@ -157,8 +156,8 @@ aDescribe(skipSettings.for(e2eTestNamesEnum.AUTH))('AuthController', () => {
         );
 
         const error = constructErrorMessages([ErrorField.UserName]);
-        usersTestManager.checkUserData(result1, error);
-        usersTestManager.checkUserData(result2, error);
+        usersTestManager.assertMatch(result1, error);
+        usersTestManager.assertMatch(result2, error);
       });
 
       it(`/auth/registration (POST) - shouldn't pass registration with bad fields, 400`, async () => {
@@ -174,7 +173,7 @@ aDescribe(skipSettings.for(e2eTestNamesEnum.AUTH))('AuthController', () => {
           ErrorField.Password,
           ErrorField.Email,
         ]);
-        usersTestManager.checkUserData(result, error);
+        usersTestManager.assertMatch(result, error);
       });
     });
     describe('registration-email-resending', () => {
@@ -196,7 +195,7 @@ aDescribe(skipSettings.for(e2eTestNamesEnum.AUTH))('AuthController', () => {
         );
 
         const error = constructErrorMessages([ErrorField.Email]);
-        usersTestManager.checkUserData(res, error);
+        usersTestManager.assertMatch(res, error);
       });
 
       it(`/auth/registration-email-resending (POST) - shouldn't passed api with a non-existent email in the system, 400`, async () => {
@@ -238,10 +237,11 @@ aDescribe(skipSettings.for(e2eTestNamesEnum.AUTH))('AuthController', () => {
 
         const userProfileInfo = await usersTestManager.me(accessToken);
 
-        const { confirmationCode } = await dbService.userAccount.findUnique({
-          where: { id: userProfileInfo.userId },
-          select: { confirmationCode: true },
-        });
+        const { confirmationCode } =
+          await databaseService.userAccount.findUnique({
+            where: { id: userProfileInfo.userId },
+            select: { confirmationCode: true },
+          });
         expect(confirmationCode).toBeTruthy();
 
         expect.setState({ userProfileInfo, confirmationCode });
@@ -258,7 +258,7 @@ aDescribe(skipSettings.for(e2eTestNamesEnum.AUTH))('AuthController', () => {
         const { userProfileInfo, confirmationCode } = expect.getState();
 
         const { isConfirmed: beforeConfirmed } =
-          await dbService.userAccount.findUnique({
+          await databaseService.userAccount.findUnique({
             where: { id: userProfileInfo.userId },
             select: { isConfirmed: true },
           });
@@ -267,7 +267,7 @@ aDescribe(skipSettings.for(e2eTestNamesEnum.AUTH))('AuthController', () => {
         await usersTestManager.registrationConfirmation(confirmationCode);
 
         const { isConfirmed: afterConfirmed } =
-          await dbService.userAccount.findUnique({
+          await databaseService.userAccount.findUnique({
             where: { id: userProfileInfo.userId },
             select: { isConfirmed: true },
           });
@@ -425,7 +425,9 @@ aDescribe(skipSettings.for(e2eTestNamesEnum.AUTH))('AuthController', () => {
         });
 
         const userSessionsCountAfterChangePassword = (
-          await dbService.userSession.findMany({ where: { userId: user.id } })
+          await databaseService.userSession.findMany({
+            where: { userId: user.id },
+          })
         ).length;
 
         expect(userSessionsCountAfterChangePassword).toBe(0);
@@ -480,7 +482,7 @@ aDescribe(skipSettings.for(e2eTestNamesEnum.AUTH))('AuthController', () => {
           await usersTestManager.signIn(inputData);
         const token = refreshToken.replace('refreshToken=', '');
         const deviceId = (
-          await dbService.userSession.findFirst({
+          await databaseService.userSession.findFirst({
             where: { refreshToken: token },
           })
         ).deviceId;
@@ -514,7 +516,7 @@ aDescribe(skipSettings.for(e2eTestNamesEnum.AUTH))('AuthController', () => {
           '',
         );
         const secondUserDeviceId = (
-          await dbService.userSession.findFirst({
+          await databaseService.userSession.findFirst({
             where: { refreshToken: token },
           })
         ).deviceId;
@@ -540,14 +542,16 @@ aDescribe(skipSettings.for(e2eTestNamesEnum.AUTH))('AuthController', () => {
       it(`(DELETE) /security/devices should delete otherUserSessions`, async () => {
         const { accessToken, refreshToken, deviceId } = expect.getState();
         const { userId } = await usersTestManager.me(accessToken);
-        const firstUserSessionsBefore = await dbService.userSession.findMany({
-          where: { userId },
-        });
+        const firstUserSessionsBefore =
+          await databaseService.userSession.findMany({
+            where: { userId },
+          });
         expect(firstUserSessionsBefore.length).toBeGreaterThan(1);
         await usersTestManager.deleteSessionsExceptCurrent(refreshToken);
-        const userSessionsAfterDelete = await dbService.userSession.findMany({
-          where: { userId },
-        });
+        const userSessionsAfterDelete =
+          await databaseService.userSession.findMany({
+            where: { userId },
+          });
 
         expect(userSessionsAfterDelete.length).toBe(1);
         expect(userSessionsAfterDelete[0].deviceId).toBe(deviceId);

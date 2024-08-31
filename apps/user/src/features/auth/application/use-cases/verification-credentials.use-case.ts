@@ -6,7 +6,7 @@ import { BcryptAdapter } from '../../../../../core/adapters/bcrypt.adapter';
 import {
   LayerNoticeInterceptor,
   GetErrors,
-} from '../../../../../core/utils/notification';
+} from '../../../../../../../libs/shared/notification';
 
 @CommandHandler(VerificationCredentialsCommand)
 export class VerificationCredentialsUseCase
