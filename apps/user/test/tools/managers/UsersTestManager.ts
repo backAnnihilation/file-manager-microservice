@@ -9,13 +9,15 @@ import { RecoveryPassDto } from '../../../src/features/auth/api/models/auth-inpu
 import { UserProfileType } from '../../../src/features/auth/api/models/auth.output.models/auth.output.models';
 import { AuthUserType } from '../../../src/features/auth/api/models/auth.output.models/auth.user.types';
 import { SecurityViewDeviceModel } from '../../../src/features/security/api/models/security.view.models/security.view.types';
-import { UpdateProfileInputModel } from '../../../src/features/user/api/models/input/update-profile.model';
+import { FillOutProfileInputModel } from '../../../src/features/user/api/models/input/fill-out-profile.model';
 import { SuperTestBody } from '../models/body.response.model';
 import { AuthUsersRouting } from '../routes/auth-users.routing';
 import { ProfileRouting } from '../routes/profile-user.routing';
 import { SAUsersRouting } from '../routes/sa-users.routing';
 import { SecurityRouting } from '../routes/security.routing';
 import { BaseTestManager } from './BaseTestManager';
+import { UserProfileViewModel } from '../../../src/features/user/api/models/output/profile.view.model';
+import { EditProfileInputModel } from '../../../src/features/user/api/models/input/edit-profile.model';
 
 export class UsersTestManager extends BaseTestManager {
   protected readonly routing: AuthUsersRouting;
@@ -280,13 +282,30 @@ export class UsersTestManager extends BaseTestManager {
       .expect(expectedStatus);
   }
 
-  async updateProfile(
+  async fillOutProfile(
     accessToken: string,
-    profileDto: UpdateProfileInputModel,
+    profileDto: FillOutProfileInputModel,
+    expectedStatus = HttpStatus.CREATED,
+  ) {
+    let profile: UserProfileViewModel;
+    await request(this.application)
+      .post(this.profileRouting.fillOutProfile())
+      .auth(accessToken, this.constants.authBearer)
+      .send(profileDto)
+      .expect(expectedStatus)
+      .expect(({ body }: SuperTestBody<UserProfileViewModel>) => {
+        profile = body;
+      });
+    return profile;
+  }
+
+  async editProfile(
+    accessToken: string,
+    profileDto: EditProfileInputModel,
     expectedStatus = HttpStatus.NO_CONTENT,
   ) {
     await request(this.application)
-      .put(this.profileRouting.updateProfile())
+      .put(this.profileRouting.editProfile())
       .auth(accessToken, this.constants.authBearer)
       .send(profileDto)
       .expect(expectedStatus);

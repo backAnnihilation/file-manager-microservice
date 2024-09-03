@@ -21,29 +21,3 @@ export const iSValidField = ({ min, max }, regexOption?: RegExp) => {
 
 export const Trim = () =>
   Transform(({ value }: TransformFnParams) => value?.trim());
-
-// export const ValidateSortBy = (entity: SortByType = 'default') =>
-//   Transform(({ value }: TransformFnParams) => {
-//     const isValidValue = sortingConstraints[entity].includes(value);
-
-//     return !isValidValue ? convertSortBy.createdAt : convertSortBy[value];
-//   });
-
-// export const ValidSortDirection = () =>
-//   Transform(({ value }: TransformFnParams): SortDirections => {
-//     const values = Object.values(SortDirections);
-//     const lowerValue = value.toLowerCase();
-
-//     return value && values.includes(lowerValue)
-//       ? lowerValue
-//       : SortDirections.Desc;
-//   });
-
-// export const ValidateAndConvertStatuses = () =>
-//   Transform(({ value }: TransformFnParams) => {
-//     const isValidStatus = publishedStatuses[value];
-
-//     return !isValidStatus
-//       ? convertPublishedStatus.all
-//       : convertPublishedStatus[value];
-//   });

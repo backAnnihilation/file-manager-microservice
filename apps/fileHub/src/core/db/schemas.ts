@@ -1,8 +1,11 @@
-import { UserProfile, UserProfileSchema } from './domain/user-profile.schema';
+import {
+  FileMeta,
+  FileMetaSchema,
+} from '../../features/profile/domain/entities/file-meta.schema';
 
 export const schemas = [
   {
-    name: UserProfile.name,
-    schema: UserProfileSchema,
+    name: FileMeta.name,
+    schema: FileMetaSchema,
   },
 ];

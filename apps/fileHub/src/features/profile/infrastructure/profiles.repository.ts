@@ -1,29 +1,27 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import {
-  UserProfile,
-  UserProfileDocument,
-  UserProfileModel,
-} from '../../../core/db/domain/user-profile.schema';
+  FileMeta,
+  FileMetaDocument,
+  FileMetaModel,
+} from '../domain/entities/file-meta.schema';
 
 @Injectable()
-export class ProfilesRepository {
-  constructor(
-    @InjectModel(UserProfile.name) private profileModel: UserProfileModel,
-  ) {}
+export class FilesRepository {
+  constructor(@InjectModel(FileMeta.name) private fileModel: FileMetaModel) {}
 
-  async save(profileDto: UserProfileDocument): Promise<UserProfileDocument> {
+  async save(fileDto: FileMetaDocument): Promise<FileMetaDocument> {
     try {
-      return await profileDto.save();
+      return await fileDto.save();
     } catch (error) {
       console.log(`failed save profile`);
       throw new Error(error);
     }
   }
 
-  async getById(profileId: string): Promise<any> {
+  async getById(fileId: string): Promise<any> {
     try {
-      const result = await this.profileModel.findById(profileId).lean();
+      const result = await this.fileModel.findById(fileId).lean();
 
       if (!result) return null;
 
@@ -33,36 +31,4 @@ export class ProfilesRepository {
       return null;
     }
   }
-
-  // async updateBlog(
-  //   blogId: string,
-  //   updateData: UpdateBlogModel,
-  // ): Promise<boolean> {
-  //   try {
-  //     const result = await this.BlogModel.updateOne(
-  //       { _id: new ObjectId(blogId) },
-  //       {
-  //         $set: {
-  //           name: updateData.name,
-  //           description: updateData.description,
-  //           websiteUrl: updateData.websiteUrl,
-  //         },
-  //       },
-  //     );
-  //     return result.matchedCount === 1;
-  //   } catch (e) {
-  //     console.error(`Database fails operate during the upgrade blog`, e);
-  //     return false;
-  //   }
-  // }
-
-  // async deleteBlog(blogId: string): Promise<BlogDBType> {
-  //   try {
-  //     return this.BlogModel.findByIdAndDelete(new ObjectId(blogId)).lean();
-  //   } catch (error) {
-  //     throw new InternalServerErrorException(
-  //       'Database fails operate during removal operation',
-  //     );
-  //   }
-  // }
 }

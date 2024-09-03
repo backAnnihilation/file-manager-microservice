@@ -1,3 +1,3 @@
 export enum ProfileNavigate {
-  UpdateProfile = 'update',
+  UploadProfilePhoto = ':id/upload',
 }

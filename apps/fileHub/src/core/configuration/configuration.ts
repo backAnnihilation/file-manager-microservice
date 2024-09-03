@@ -7,6 +7,17 @@ import {
   validateSync,
 } from 'class-validator';
 import { Environment } from '../../../../../libs/shared/environment.enum';
+import { registerAs } from '@nestjs/config';
+
+export type AwsConfigType = { aws: ReturnType<typeof awsConfig> };
+export const awsConfig = registerAs('aws', () => ({
+  region: process.env.AWS_REGION,
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  publicBucketName: process.env.AWS_PUBLIC_BUCKET_NAME,
+  privateBucketName: process.env.AWS_PRIVATE_BUCKET_NAME,
+  accessPoint: process.env.AWS_ACCESS_POINT,
+}));
 
 export class EnvironmentVariables {
   @IsNumber()
@@ -18,6 +29,22 @@ export class EnvironmentVariables {
   @IsOptional()
   @IsString()
   DATABASE_LOCAL_URL: string;
+
+  @IsOptional()
+  API_KEY: string;
+
+  @IsOptional()
+  AWS_REGION: string;
+  @IsOptional()
+  AWS_ACCESS_KEY_ID: string;
+  @IsOptional()
+  AWS_SECRET_ACCESS_KEY: string;
+  @IsOptional()
+  AWS_PUBLIC_BUCKET_NAME: string;
+  @IsOptional()
+  AWS_PRIVATE_BUCKET_NAME: string;
+  @IsOptional()
+  AWS_ACCESS_POINT: string;
 
   @IsEnum(Environment)
   ENV: Environment;

@@ -1,4 +1,4 @@
-import { IsOptional } from 'class-validator';
+import { IsEnum, IsOptional } from 'class-validator';
 import {
   aboutLength,
   frequentLength,
@@ -9,16 +9,18 @@ import {
 } from '../../../../../../../../libs/shared/validation/input-constants';
 import { iSValidField } from '../../../../../../../../libs/shared/validation/validate-input-fields';
 import { IsDateFormat } from '../../../infrastructure/validation/date-format-validate';
+import { isValidAge } from '../../../infrastructure/validation/user-age-validate';
+import { Gender } from '../enum/profile.enums';
 
-export class UpdateProfileInputModel {
+export class FillOutProfileInputModel {
   @iSValidField(nameInitials, nameInitialsMatch)
   firstName: string;
 
   @iSValidField(passwordLength, nameInitialsMatch)
   lastName: string;
 
-  @IsOptional()
   @IsDateFormat()
+  @isValidAge()
   dateOfBirth: string;
 
   @IsOptional()
@@ -26,8 +28,9 @@ export class UpdateProfileInputModel {
   country?: string;
 
   @IsOptional()
+  @IsEnum(Gender)
   @iSValidField(frequentLength)
-  gender?: string;
+  gender?: Gender;
 
   @IsOptional()
   @iSValidField(frequentLength)
@@ -38,6 +41,6 @@ export class UpdateProfileInputModel {
   about?: string;
 }
 
-export interface IUpdateProfileCommand extends UpdateProfileInputModel {
+export interface IFillOutProfileCommand extends FillOutProfileInputModel {
   userId: string;
 }

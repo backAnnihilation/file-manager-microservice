@@ -19,7 +19,37 @@ export class ProfilesRepository {
     }
   }
 
-  async getById(id: string): Promise<any> {
+  async getByUserId(userId: string): Promise<UserProfile | null> {
+    try {
+      const result = await this.userProfiles.findUnique({
+        where: { userId },
+      });
+
+      if (!result) return null;
+
+      return result;
+    } catch (error) {
+      console.error(`getByUserId ${error}`);
+      return null;
+    }
+  }
+
+  async update(
+    profileId: string,
+    updatedFields: Prisma.UserProfileUpdateInput,
+  ): Promise<UserProfile> {
+    try {
+      return await this.userProfiles.update({
+        where: { id: profileId },
+        data: updatedFields,
+      });
+    } catch (error) {
+      console.error(`update ${error}`);
+      throw new Error(error);
+    }
+  }
+
+  async getById(id: string): Promise<UserProfile | null> {
     try {
       const result = await this.userProfiles.findUnique({ where: { id } });
 

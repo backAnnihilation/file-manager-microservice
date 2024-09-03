@@ -26,6 +26,10 @@ export const constantsTesting = {
     USER_NAME3: 'Socrates',
     USER_NAME4: 'Aristotle',
     PASSWORD: 'securePassword',
+    city: 'Rome',
+    country: 'Italy',
+    about:
+      'My interests include science and science-based tools for everyday life',
   },
   auth: {
     authBearer: { type: 'bearer' } as { type: 'bearer' },
@@ -36,6 +40,7 @@ export const constantsTesting = {
 };
 
 export type ConstantsTestType = keyof typeof constantsTesting;
+export type InputConstantsType = typeof constantsTesting.inputData;
 export type AuthConstantsType = typeof constantsTesting.auth;
 export const feedbacksConstants = {
   createdContent: [

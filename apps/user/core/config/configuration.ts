@@ -1,5 +1,11 @@
 import { plainToInstance } from 'class-transformer';
-import { IsEnum, IsNumber, IsString, validateSync } from 'class-validator';
+import {
+  IsEnum,
+  IsNumber,
+  IsOptional,
+  IsString,
+  validateSync,
+} from 'class-validator';
 import { Environment } from '../../../../libs/shared/environment.enum';
 
 export class EnvironmentVariables {
@@ -52,6 +58,12 @@ export class EnvironmentVariables {
 
   @IsString()
   CAPTURE_SITE_KEY: string;
+
+  @IsOptional()
+  FILES_SERVICE_URL: string;
+
+  @IsOptional()
+  API_KEY: string;
 
   @IsEnum(Environment)
   ENV: Environment;

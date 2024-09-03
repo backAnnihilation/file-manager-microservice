@@ -15,7 +15,7 @@ export const getConnection = async (
   setTimeout(() => {
     console.log(
       `${COLORS.warning}Connecting to MongoDB ${
-        isTesting ? 'successfully locally' : 'successfully in the cluster'
+        isTesting ? 'locally' : 'remote'
       }`,
     );
   }, 50);

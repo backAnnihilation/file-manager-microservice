@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma, UserAccount } from '@prisma/client';
 import { DefaultArgs } from '@prisma/client/runtime/library';
-import { DatabaseService } from '../../../../core/db/prisma/prisma.service';
 import { BaseRepository } from '../../../../core/db/base.repository';
+import { DatabaseService } from '../../../../core/db/prisma/prisma.service';
 
 @Injectable()
 export class UsersRepository extends BaseRepository {
@@ -40,6 +40,16 @@ export class UsersRepository extends BaseRepository {
       return await this.userAccounts.findUnique({ where: { id } });
     } catch (error) {
       console.log(`error in getUserById: ${error}`);
+      return null;
+    }
+  }
+
+  async getUserByNameOrEmail(name: string, email: string) {
+    try {
+      return await this.userAccounts.findFirst({
+        where: { OR: [{ email }, { userName: name }] },
+      });
+    } catch (error) {
       return null;
     }
   }

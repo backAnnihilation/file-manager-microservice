@@ -1,12 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ProfileController } from './profile.controller';
+import { UserProfilesController } from './profiles.controller';
 
-describe('ProfileController', () => {
-  let profileController: ProfileController;
+describe('UserProfilesController', () => {
+  let userProfilesController: UserProfilesController;
 
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
-      controllers: [ProfileController],
+      controllers: [UserProfilesController],
       providers: [],
     }).compile();
   });

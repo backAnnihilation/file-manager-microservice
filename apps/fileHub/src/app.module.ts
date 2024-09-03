@@ -1,12 +1,16 @@
 import { Module } from '@nestjs/common';
-import { ProfileController } from './features/profile/api/profile.controller';
-import { ConfigurationModule } from './core/configuration/app-config.module';
 import { CqrsModule } from '@nestjs/cqrs';
-import { DatabaseModule } from './core/db/database.module';
 import { MongooseModule } from '@nestjs/mongoose';
+import { ConfigurationModule } from './core/configuration/app-config.module';
+import { DatabaseModule } from './core/db/database.module';
 import { schemas } from './core/db/schemas';
-import { ProfilesRepository } from './features/profile/infrastructure/profiles.repository';
-import { UpdateProfileUseCase } from './features/profile/application/use-cases/update-profile.use-case';
+import { UploadFileUseCase } from './features/profile/application/use-cases/upload-file.use-case';
+import { FilesRepository } from './features/profile/infrastructure/profiles.repository';
+import { FilesController } from './features/profile/api/files.controller';
+import { ApiKeyGuard } from './features/profile/infrastructure/guards/api-key.guard';
+import { ScheduleModule } from '@nestjs/schedule';
+import { FilesScheduleService } from './features/profile/application/services/file-metadata.schedule.service';
+import { FilesStorageAdapter } from './core/adapters/local-files-storage.adapter';
 
 @Module({
   imports: [
@@ -14,8 +18,18 @@ import { UpdateProfileUseCase } from './features/profile/application/use-cases/u
     CqrsModule,
     DatabaseModule,
     MongooseModule.forFeature(schemas),
+    ScheduleModule.forRoot(),
   ],
-  controllers: [ProfileController],
-  providers: [UpdateProfileUseCase, ProfilesRepository],
+  controllers: [FilesController],
+  providers: [
+    FilesRepository,
+    UploadFileUseCase,
+    ApiKeyGuard,
+    FilesScheduleService,
+    {
+      provide: FilesStorageAdapter,
+      useClass: FilesScheduleService,
+    },
+  ],
 })
 export class AppModule {}

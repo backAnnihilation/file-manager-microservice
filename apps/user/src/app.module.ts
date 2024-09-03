@@ -9,7 +9,7 @@ import { AuthController } from './features/auth/api/controllers/auth.controller'
 import { PrismaModule } from '../core/db/prisma/prisma.module';
 import { SAController } from './features/admin/api/controllers/sa.controller';
 import { providers } from '../core/settings/app-providers';
-import { UserController } from './features/user/api/user.controller';
+import { UserProfilesController } from './features/user/api/profiles.controller';
 
 @Module({
   imports: [
@@ -24,7 +24,7 @@ import { UserController } from './features/user/api/user.controller';
     SecurityController,
     AuthController,
     SAController,
-    UserController,
+    UserProfilesController,
   ],
   providers,
 })

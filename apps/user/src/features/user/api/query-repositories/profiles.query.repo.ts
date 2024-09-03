@@ -16,12 +16,10 @@ export class ProfilesQueryRepo {
 
   async getById(id: string): Promise<UserProfileViewModel | null> {
     try {
-      const result = await this.profiles.findUnique({
-        where: { id },
-        include: { userAccount: { select: { userName: true } } },
-      });
+      const result = await this.profiles.findUnique({ where: { id } });
+      
       if (!result) return null;
-
+      
       return getUserProfileViewModel(result);
     } catch (error) {
       console.error('Database fails operate with find user profile', error);

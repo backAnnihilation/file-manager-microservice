@@ -1,5 +1,5 @@
 import { convertTime } from '../../../../../core/utils/convert-string-to-date';
-import { UpdateProfileInputModel } from '../../api/models/input/update-profile.model';
+import { EditProfileInputModel } from '../../api/models/input/edit-profile.model';
 
 export class UserProfileDTO {
   readonly birthDate: string;
@@ -13,7 +13,7 @@ export class UserProfileDTO {
   readonly userId: string;
 
   constructor(
-    profileDto: UpdateProfileInputModel & { userName: string; userId: string },
+    profileDto: EditProfileInputModel & { userName: string; userId: string },
   ) {
     const {
       about,
@@ -38,3 +38,5 @@ export class UserProfileDTO {
     this.userId = userId;
   }
 }
+
+

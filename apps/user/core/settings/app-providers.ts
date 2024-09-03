@@ -39,13 +39,18 @@ import { EmailManager } from '../managers/email-manager';
 import { UserProfilesApiService } from '../../src/features/user/application/user-api.service';
 import { ProfilesQueryRepo } from '../../src/features/user/api/query-repositories/profiles.query.repo';
 import { ProfilesRepository } from '../../src/features/user/infrastructure/profiles.repository';
-import { UpdateProfileUseCase } from '../../src/features/user/application/use-cases/update-profile.use-case';
+import { FillOutProfileUseCase } from '../../src/features/user/application/use-cases/fill-out-profile.use-case';
+import { EditProfileUseCase } from '../../src/features/user/application/use-cases/edit-profile.use-case';
+import { ImageFilePipe } from '../../src/features/user/infrastructure/validation/upload-photo-format';
+import { AxiosAdapter } from '../adapters/axios.adapter';
+import { UserProfileService } from '../../src/features/user/application/profile.service';
 
 export const providers: Provider[] = [
   AuthService,
   UserService,
   AuthQueryRepository,
   CaptureAdapter,
+  AxiosAdapter,
   SecurityQueryRepo,
   EmailManager,
   EmailAdapter,
@@ -82,5 +87,8 @@ export const providers: Provider[] = [
   CreateOAuthUserUseCase,
   ProfilesQueryRepo,
   ProfilesRepository,
-  UpdateProfileUseCase
+  FillOutProfileUseCase,
+  EditProfileUseCase,
+  ImageFilePipe,
+  UserProfileService,
 ];

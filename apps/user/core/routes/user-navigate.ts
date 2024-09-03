@@ -1,3 +1,6 @@
 export enum UserNavigate {
-  UpdateProfile = 'update',
+  FillOutProfile = 'create',
+  EditProfile = 'edit',
+  GetProfile = 'get',
+  UploadPhoto = 'photo',
 }

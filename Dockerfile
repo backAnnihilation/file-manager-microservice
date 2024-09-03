@@ -10,7 +10,10 @@ WORKDIR /home/node/dist/app
 
 # Install app dependencies
 COPY --chown=node package*.json ./
-RUN npm install
+# --chown=node pnpm-lock.yaml ./
+
+# RUN pnpm i --frozen-lockfile
+RUN npm install 
 
 # Copy the rest of the application code
 COPY --chown=node . .

@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Model, Document } from 'mongoose';
-import { LayerNoticeInterceptor } from '../../../../../../libs/shared/notification';
+import { LayerNoticeInterceptor } from '../../../../../../../libs/shared/notification';
 
 export type UserProfileDocument = HydratedDocument<UserProfile>;
 
@@ -33,11 +33,11 @@ export class UserProfile {
     createDto: Partial<UserProfile>,
   ): Promise<LayerNoticeInterceptor<UserProfileDocument>> {
     const notice = new LayerNoticeInterceptor<UserProfileDocument>();
-    const userProfile = new this() as UserProfileDocument
-    
+    const userProfile = new this() as UserProfileDocument;
+
     userProfile.firstName = createDto.firstName;
     userProfile.lastName = createDto.lastName;
-    userProfile.userName = createDto.userName || 'userName';
+    userProfile.userName = createDto.userName;
 
     await notice.validateFields(userProfile);
     notice.addData(userProfile);
