@@ -4,7 +4,7 @@ import {
   ValidationError,
   ValidationPipe,
 } from '@nestjs/common';
-import { swaggerSetup } from './swagger.setup';
+import { swaggerSetup } from './swagger/swagger.setup';
 import { validationErrorsMapper } from '../validation/validation-utils';
 
 export const pipesSetup = (app: INestApplication) => {

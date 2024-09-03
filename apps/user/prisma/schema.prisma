@@ -17,7 +17,7 @@ enum Provider {
 model UserAccount {
   id                           String         @id @default(uuid())
   userName                     String         @unique
-  email                        String
+  email                        String         @unique
   passwordHash                 String?
   confirmationCode             String?
   confirmationExpDate          DateTime?

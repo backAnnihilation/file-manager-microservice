@@ -36,19 +36,21 @@ import { BcryptAdapter } from '../adapters/bcrypt.adapter';
 import { CaptureAdapter } from '../adapters/capture.adapter';
 import { EmailAdapter } from '../adapters/email.adapter';
 import { EmailManager } from '../managers/email-manager';
-import { UserProfilesApiService } from '../../src/features/user/application/user-api.service';
 import { ProfilesQueryRepo } from '../../src/features/user/api/query-repositories/profiles.query.repo';
 import { ProfilesRepository } from '../../src/features/user/infrastructure/profiles.repository';
 import { FillOutProfileUseCase } from '../../src/features/user/application/use-cases/fill-out-profile.use-case';
 import { EditProfileUseCase } from '../../src/features/user/application/use-cases/edit-profile.use-case';
 import { ImageFilePipe } from '../../src/features/user/infrastructure/validation/upload-photo-format';
 import { AxiosAdapter } from '../adapters/axios.adapter';
-import { UserProfileService } from '../../src/features/user/application/profile.service';
+import { CleanUpDatabaseRepository } from '../../src/features/admin/infrastructure/clean-up.repo';
+import { UserProfileService } from '../../src/features/user/application/services/profile.service';
+import { UserProfilesApiService } from '../../src/features/user/application/services/user-api.service';
 
 export const providers: Provider[] = [
   AuthService,
   UserService,
   AuthQueryRepository,
+  CleanUpDatabaseRepository,
   CaptureAdapter,
   AxiosAdapter,
   SecurityQueryRepo,

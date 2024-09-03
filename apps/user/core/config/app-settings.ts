@@ -1,4 +1,4 @@
-import { swaggerSetup } from './swagger.setup';
+import { swaggerSetup } from './swagger/swagger.setup';
 import { AppModule } from '../../src/app.module';
 import { useContainer } from 'class-validator';
 import { pipesSetup } from './pipes.setup';

@@ -1,14 +1,11 @@
 import {
   Body,
   Controller,
-  FileTypeValidator,
   Get,
   HttpCode,
   HttpStatus,
-  MaxFileSizeValidator,
   NotFoundException,
   Param,
-  ParseFilePipe,
   Post,
   Put,
   UploadedFile,
@@ -16,7 +13,9 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiTags } from '@nestjs/swagger';
+import { FileType } from '../../../../../../libs/shared/models/file.models';
 import {
   ApiTagsEnum,
   RoutingEnum,
@@ -25,18 +24,15 @@ import { UserNavigate } from '../../../../core/routes/user-navigate';
 import { UserPayload } from '../../auth/infrastructure/decorators/user-payload.decorator';
 import { AccessTokenGuard } from '../../auth/infrastructure/guards/accessToken.guard';
 import { UserSessionDto } from '../../security/api/models/security-input.models/security-session-info.model';
-import { FillOutProfileCommand } from '../application/use-cases/fill-out-profile.use-case';
-import { FillOutProfileInputModel } from './models/input/fill-out-profile.model';
-import { UserProfilesApiService } from '../application/user-api.service';
-import { ProfilesQueryRepo } from './query-repositories/profiles.query.repo';
-import { UserProfileViewModel } from './models/output/profile.view.model';
 import { EditProfileCommand } from '../application/use-cases/edit-profile.use-case';
-import { EditProfileInputModel } from './models/input/edit-profile.model';
+import { FillOutProfileCommand } from '../application/use-cases/fill-out-profile.use-case';
 import { ImageFilePipe } from '../infrastructure/validation/upload-photo-format';
-import { FileType } from '../../../../../../libs/shared/models/file.models';
-import { AxiosAdapter } from '../../../../core/adapters/axios.adapter';
-import { UserProfileService } from '../application/profile.service';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { EditProfileInputModel } from './models/input/edit-profile.model';
+import { FillOutProfileInputModel } from './models/input/fill-out-profile.model';
+import { UserProfileViewModel } from './models/output/profile.view.model';
+import { ProfilesQueryRepo } from './query-repositories/profiles.query.repo';
+import { UserProfileService } from '../application/services/profile.service';
+import { UserProfilesApiService } from '../application/services/user-api.service';
 
 @ApiTags(ApiTagsEnum.Profiles)
 @Controller(RoutingEnum.profiles)

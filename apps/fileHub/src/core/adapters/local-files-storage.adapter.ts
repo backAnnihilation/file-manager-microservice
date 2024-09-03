@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PutObjectCommandInput } from '@aws-sdk/client-s3'
+import { PutObjectCommandInput } from '@aws-sdk/client-s3';
 import { UploadFileOutputType } from './s3-files-storage.adapter';
 
 @Injectable()

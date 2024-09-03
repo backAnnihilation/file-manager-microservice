@@ -18,7 +18,6 @@ import { CreateUserDto } from '../models/input-sa.dtos.ts/create-user.model';
 import { SAQueryFilter } from '../models/outputSA.models.ts/query-filters';
 import { SAViewType } from '../models/user.view.models/userAdmin.view-type';
 import { UsersQueryRepo } from '../query-repositories/user-account.query.repo';
-import { DropDbSaCommand } from '../../application/commands/drop-db-sa.command';
 import { ApiTags } from '@nestjs/swagger';
 import { DropDatabaseSaEndpoint } from './swagger/drop-database-sa.description';
 import { CreateSaUserEndpoint } from './swagger/create-user-sa.description';
@@ -26,6 +25,7 @@ import { GetAllUsersEndpoint } from './swagger/get-all-users-sa.description';
 import { DeleteSaUserEndpoint } from './swagger/delete-user-sa.description';
 import { PaginationViewModel } from '../../../../../../../libs/shared/sorting-base-filter';
 import { RoutingEnum } from '../../../../../../../libs/shared/routing';
+import { CleanUpDatabaseRepository } from '../../infrastructure/clean-up.repo';
 
 @ApiTags(RoutingEnum.admins)
 @UseGuards(BasicSAAuthGuard)
@@ -33,9 +33,8 @@ import { RoutingEnum } from '../../../../../../../libs/shared/routing';
 export class SAController {
   constructor(
     private usersQueryRepo: UsersQueryRepo,
-    private saCrudApiService: SACudApiService<
-      CreateSACommand | DeleteSACommand | DropDbSaCommand
-    >,
+    private saCrudApiService: SACudApiService,
+    private dbRepo: CleanUpDatabaseRepository,
   ) {}
 
   @GetAllUsersEndpoint()
@@ -67,7 +66,6 @@ export class SAController {
   @Post('data-base/drop')
   @HttpCode(HttpStatus.OK)
   async dropDataBase(): Promise<any> {
-    const command = new DropDbSaCommand();
-    return await this.saCrudApiService.dropDataBase(command);
+    return this.dbRepo.clearDatabase();
   }
 }

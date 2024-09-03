@@ -1,9 +1,8 @@
-import { INestApplication } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { RoutingEnum } from '../../../../libs/shared/routing';
+import { RoutingEnum } from '../../../../../libs/shared/routing';
+import { INestApplication } from '@nestjs/common';
 
-export function swaggerSetup(app: INestApplication) {
-  // Основной Swagger документ
+export const mainSwaggerSetup = (app: INestApplication) => {
   const mainConfig = new DocumentBuilder()
     .setTitle('Incta-team')
     .setDescription('OpenAPI documentation')
@@ -22,7 +21,8 @@ export function swaggerSetup(app: INestApplication) {
         type: 'apiKey',
         name: 'refresh-Token',
         in: 'cookie',
-        description: 'JWT refreshToken inside cookie. Must be correct, and must not be expired',
+        description:
+          'JWT refreshToken inside cookie. Must be correct, and must not be expired',
       },
       'refreshToken',
     )
@@ -47,23 +47,4 @@ export function swaggerSetup(app: INestApplication) {
   pathsToDelete.forEach((path) => delete mainDocument.paths[path]);
 
   SwaggerModule.setup('api/v1', app, mainDocument);
-
-  // Второй Swagger документ для суперадмина
-  const adminConfig = new DocumentBuilder()
-    .setTitle('Incta-team Admin')
-    .setDescription('Admin OpenAPI documentation')
-    .setVersion('1.0')
-    .addBasicAuth()
-    .build();
-
-  const adminDocument = SwaggerModule.createDocument(app, adminConfig);
-
-  const pathsToRemoveFromAdmin = [RoutingEnum.auth, RoutingEnum.security];
-  const pathsToDeleteFromAdmin = Object.keys(adminDocument.paths).filter((path) =>
-    pathsToRemoveFromAdmin.some((pathToRemove) => path.startsWith(pathToRemove)),
-  );
-
-  pathsToDeleteFromAdmin.forEach((path) => delete adminDocument.paths[path]);
-
-  SwaggerModule.setup('api/v1/super-mega-admin', app, adminDocument);
-}
+};

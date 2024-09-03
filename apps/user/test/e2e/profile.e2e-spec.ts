@@ -38,7 +38,7 @@ aDescribe(skipSettings.for(e2eTestNamesEnum.Profile))('UserController', () => {
 
   describe('profile-testing', () => {
     afterAll(async () => {
-      // await dbCleaner();
+      await dbCleaner();
     });
 
     beforeAll(async () => {

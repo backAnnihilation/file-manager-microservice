@@ -27,7 +27,6 @@ import { mockedCaptureGuard } from '../tools/mock/capture-guard.mock';
 aDescribe(skipSettings.for(e2eTestNamesEnum.AUTH))('AuthController', () => {
   let app: INestApplication;
   let usersTestManager: UsersTestManager;
-  let databaseService: DatabaseService;
   let emailMockManager: EmailManagerMock;
   let emailManager: EmailManager;
   let authService: AuthService;

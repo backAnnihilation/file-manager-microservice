@@ -4,7 +4,7 @@ import { DefaultArgs } from '@prisma/client/runtime/library';
 import { DatabaseService } from '../../../../core/db/prisma/prisma.service';
 
 @Injectable()
-export class DropBbRepository {
+export class CleanUpDatabaseRepository {
   private readonly userAccounts: Prisma.UserAccountDelegate<DefaultArgs>;
   private readonly userSessions: Prisma.UserSessionDelegate<DefaultArgs>;
 

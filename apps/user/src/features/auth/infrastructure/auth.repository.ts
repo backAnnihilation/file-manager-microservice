@@ -1,16 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import {
-  UpdateConfirmationCodeDto,
-  UserRecoveryType,
-} from '../api/models/auth.output.models/auth.output.models';
 import { Prisma, Provider, UserAccount } from '@prisma/client';
 import { DefaultArgs } from '@prisma/client/runtime/library';
 import { DatabaseService } from '../../../../core/db/prisma/prisma.service';
 import { UpdatePasswordDto } from '../api/models/auth-input.models.ts/password-recovery.types';
-
-type BanInfoType = {
-  isBanned: boolean;
-};
+import {
+  UpdateConfirmationCodeDto,
+  UserRecoveryType,
+} from '../api/models/auth.output.models/auth.output.models';
 
 @Injectable()
 export class AuthRepository {
@@ -50,64 +46,6 @@ export class AuthRepository {
       return null;
     }
   }
-
-  async findExistedUserByEmailOrNameForRegistration({
-                                                      userName,
-                                                      email,
-                                                    }: {
-    userName: string;
-    email: string;
-  }): Promise<UserAccount | null> {
-    try {
-      // Проверяем наличие пользователя с тем же email, исключая записи с префиксами в userName
-      const userByEmail = await this.userAccounts.findFirst({
-        where: {
-          email,
-          AND: [
-            {
-              userName: {
-                not: {
-                  startsWith: 'google_',
-                },
-              },
-            },
-            {
-              userName: {
-                not: {
-                  startsWith: 'github_',
-                },
-              },
-            },
-          ],
-        },
-      });
-
-      // Проверяем наличие пользователя с тем же userName без учета префиксов
-      const userByUserName = await this.userAccounts.findFirst({
-        where: {
-          userName,
-        },
-      });
-
-      // Возвращаем пользователя, если найдено совпадение по email или userName
-      if (userByEmail || userByUserName) {
-        return userByEmail || userByUserName;
-      }
-
-      // Если совпадений нет, возвращаем null, что позволяет продолжить регистрацию
-      return null;
-    } catch (error) {
-      console.log(`findExistedUserByEmailOrNameForRegistration: ${error}`);
-      return null;
-    }
-  }
-
-
-
-
-
-
-
   async findExistedUserByEmailOrName({
     userName,
     email,
@@ -122,49 +60,15 @@ export class AuthRepository {
     }
   }
 
-  async findExistedUserByEmailAndName({
-                                       userName,
-                                       email,
-                                     }): Promise<UserAccount | null> {
-    try {
-      return await this.userAccounts.findFirst({
-        where: {email, userName},
-      });
-    } catch (error) {
-      console.log(`findByEmailOrName: ${error}`);
-      return null;
-    }
-  }
-
   async findUserByEmail(email: string): Promise<UserAccount | null> {
     try {
-      const result = await this.userAccounts.findFirst({
-        where: {
-          email,
-          AND: [
-            {
-              userName: {
-                not: {
-                  startsWith: 'google_',
-                },
-              },
-            },
-            {
-              userName: {
-                not: {
-                  startsWith: 'github_',
-                },
-              },
-            },
-          ],
-        },
-      });
+      const result = await this.userAccounts.findUnique({ where: { email } });
 
-      if(!result) return null
+      if (!result) return null;
 
       return result;
     } catch (e) {
-      console.error(`Произошла ошибка при поиске пользователя по email: ${e}`);
+      console.error(`there were some problems during find user by email, ${e}`);
       return null;
     }
   }
@@ -259,42 +163,13 @@ export class AuthRepository {
     recoveryData: UserRecoveryType,
   ): Promise<void> {
     try {
-      // Сначала находим пользователя с нужными условиями
-      const user = await this.userAccounts.findFirst({
-        where: {
-          email,
-          isConfirmed: false,
-          AND: [
-            {
-              userName: {
-                not: {
-                  startsWith: 'google_',
-                },
-              },
-            },
-            {
-              userName: {
-                not: {
-                  startsWith: 'github_',
-                },
-              },
-            },
-          ],
+      await this.userAccounts.update({
+        where: { email },
+        data: {
+          passwordRecoveryCode: recoveryData.recoveryCode,
+          passwordRecoveryExpDate: recoveryData.expirationDate,
         },
       });
-
-      // Если пользователь найден, обновляем его данные
-      if (user) {
-        await this.userAccounts.update({
-          where: { id: user.id }, // Обновляем пользователя по его уникальному ID
-          data: {
-            passwordRecoveryCode: recoveryData.recoveryCode,
-            passwordRecoveryExpDate: recoveryData.expirationDate,
-          },
-        });
-      } else {
-        console.error(`Пользователь с email ${email} не найден или имеет запрещенный userName.`);
-      }
     } catch (error) {
       console.error(
         `Database fails operate during update recovery code operation ${error}`,

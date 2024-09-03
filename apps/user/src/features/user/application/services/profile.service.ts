@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { FileType } from '../../../../../../libs/shared/models/file.models';
-import { AxiosAdapter } from '../../../../core/adapters/axios.adapter';
+import { FileType } from '../../../../../../../libs/shared/models/file.models';
+import { AxiosAdapter } from '../../../../../core/adapters/axios.adapter';
 
 @Injectable()
 export class UserProfileService {

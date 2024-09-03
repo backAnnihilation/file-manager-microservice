@@ -6,7 +6,10 @@ import { CreateUserCommand } from './commands/create-user.command';
 import { UserModelDTO } from '../../../admin/application/dto/create-user.dto';
 import { AuthRepository } from '../../infrastructure/auth.repository';
 import { EmailNotificationEvent } from './events/email-notification-event';
-import { GetErrors, LayerNoticeInterceptor } from '../../../../../../../libs/shared/notification';
+import {
+  GetErrors,
+  LayerNoticeInterceptor,
+} from '../../../../../../../libs/shared/notification';
 
 @CommandHandler(CreateUserCommand)
 export class CreateUserUseCase implements ICommandHandler<CreateUserCommand> {
@@ -24,22 +27,22 @@ export class CreateUserUseCase implements ICommandHandler<CreateUserCommand> {
     const { email, userName, password } = command.createDto;
     const notice = new LayerNoticeInterceptor<any>();
 
-    const existedUser = await this.authRepo.findExistedUserByEmailOrNameForRegistration({
+    const confirmedUser = await this.authRepo.findConfirmedUserByEmailOrName({
       userName,
       email,
     });
 
-    if (existedUser) {
-      if (existedUser.email === email) {
+    if (confirmedUser) {
+      if (confirmedUser.email === email) {
         notice.addError(
-          `User with email ${email} already exists`,
+          `User with email ${email} already confirmed`,
           this.location,
           GetErrors.IncorrectModel,
         );
       }
-      if (existedUser.userName === userName) {
+      if (confirmedUser.userName === userName) {
         notice.addError(
-          `User with userName ${userName} already exists`,
+          `User with userName ${userName} already confirmed`,
           this.location,
           GetErrors.IncorrectModel,
         );
