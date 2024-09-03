@@ -14,7 +14,9 @@ export const applyAppSettings = (app: INestApplication) => {
   console.log({ currentENV });
 
   currentENV !== Environment.TESTING && app.setGlobalPrefix('api/v1');
-  app.enableCors();
+  app.enableCors({
+    origin: [/localhost(:\d+)?$/],
+  });
   pipesSetup(app);
   swaggerSetup(app);
   exceptionFilterSetup(app, currentENV);
