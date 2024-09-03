@@ -1,19 +1,27 @@
 import { applyDecorators, HttpStatus } from '@nestjs/common';
-import { ApiBody, ApiProperty, ApiResponse } from '@nestjs/swagger';
+import { ApiBody, ApiHeader, ApiProperty, ApiResponse, ApiSecurity } from '@nestjs/swagger';
 import { AccessTokenResponseDto } from './shared/accessToken-response.dto';
-import { CaptchaHeader } from '../../../security/api/swagger/shared/captcha-using';
-import { TooManyRequestsApiResponse } from '../../../security/api/swagger/shared/too-many-requests-api-response';
-import { UnauthorizedViaPasswordApiResponse } from '../../../security/api/swagger/shared/authorization.response';
-import { ErrorResponseDto } from '../../../security/api/swagger/shared/error-message-response';
+import { UnauthorizedViaPasswordApiResponse } from './shared/authorization.response';
+import { CaptchaHeader, CaptureUsing } from './shared/capture-using';
+import { ErrorResponseDto } from './shared/error-message-response';
+import { TooManyRequestsApiResponse } from './shared/too-many-requests-api-response';
 
 export const SignInEndpoint = () =>
   applyDecorators(
     ApiBody({ required: true, type: SignInDto }),
     ApiResponse({ status: HttpStatus.OK, type: AccessTokenResponseDto }),
     ApiResponse({ status: HttpStatus.BAD_REQUEST, type: ErrorResponseDto }),
+    ApiHeader({
+      name: 'captchaToken',
+      description: 'Google reCAPTCHA token for validating the request',
+      required: true,
+    }),
     UnauthorizedViaPasswordApiResponse(),
     TooManyRequestsApiResponse(),
+    CaptureUsing(),
     CaptchaHeader(),
+    ApiSecurity('captchaToken')
+
   );
 
 class SignInDto {

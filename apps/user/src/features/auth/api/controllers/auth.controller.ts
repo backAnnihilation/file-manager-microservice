@@ -6,10 +6,11 @@ import {
   HttpStatus,
   NotFoundException,
   Post,
+  Req,
   Res,
   UseGuards,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiExcludeEndpoint, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
 import { CustomThrottlerGuard } from '../../../../../core/infrastructure/guards/custom-throttler.guard';
 import { AuthNavigate } from '../../../../../core/routes/auth-navigate';
@@ -57,7 +58,10 @@ import { RegistrationConfirmationEndpoint } from '../swagger/registration-confir
 import { RegistrationEmailResendingEndpoint } from '../swagger/registration-email-resending.description';
 import { SignInEndpoint } from '../swagger/signIn.description';
 import { SignUpEndpoint } from '../swagger/signup-endpoint.description';
-import { ApiTagsEnum, RoutingEnum } from '../../../../../../../libs/shared/routing';
+import {
+  ApiTagsEnum,
+  RoutingEnum,
+} from '../../../../../../../libs/shared/routing';
 
 @ApiTags(ApiTagsEnum.Auth)
 @Controller(RoutingEnum.auth)
@@ -174,6 +178,7 @@ export class AuthController {
     await this.authenticationApiService.authOperation(command);
   }
 
+  @GithubOauthEndpoint()
   @Get(AuthNavigate.GithubLogin)
   @UseGuards(GithubOauthGuard)
   githubAuth() {}
@@ -191,6 +196,8 @@ export class AuthController {
     return { accessToken };
   }
 
+  @GoogleOauthEndpoint()
+  @GoogleOauthGuard()
   @Get(AuthNavigate.GoogleLogin)
   @UseGuards(GoogleOauthGuard)
   googleAuth() {}

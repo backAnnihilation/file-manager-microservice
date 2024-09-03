@@ -18,13 +18,13 @@ RUN npm install
 # Copy the rest of the application code
 COPY --chown=node . .
 
-# Generate Prisma client
+# Генерация Prisma клиента
 RUN npx prisma generate --schema=./apps/user/prisma/schema.prisma
 
-# Build the app
+# Сборка приложения
 RUN npm run build
 
-# Set environment variables and expose the port
+# Настройка переменных окружения и порта
 ENV PORT=3498
 EXPOSE ${PORT}
 

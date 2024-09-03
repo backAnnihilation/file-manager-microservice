@@ -32,7 +32,7 @@ export class GithubStrategy extends PassportStrategy(
     const user = {
       providerId,
       userName,
-      email: emails[0].value,
+      email: emails?.[0].value,
       provider: provider,
       displayName: displayName,
     };

@@ -1,6 +1,6 @@
 import { applyDecorators, HttpStatus } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiSecurity } from '@nestjs/swagger';
-import { UnauthorizedViaTokenApiResponse } from '../../../security/api/swagger/shared/authorization.response';
+import { ApiOperation, ApiResponse, ApiCookieAuth, ApiSecurity } from '@nestjs/swagger';
+import { UnauthorizedViaTokenApiResponse } from './shared/authorization.response';
 
 export const LogoutEndpoint = () =>
   applyDecorators(
@@ -14,5 +14,5 @@ export const LogoutEndpoint = () =>
       description: 'No Content',
     }),
     UnauthorizedViaTokenApiResponse(),
-    ApiSecurity('refreshToken'),
+    ApiSecurity('refreshToken')
   );

@@ -3,11 +3,10 @@ import {
   ApiBody,
   ApiOperation,
   ApiProperty,
-  ApiResponse,
-  ApiSecurity,
+  ApiResponse, ApiSecurity,
 } from '@nestjs/swagger';
-import { CaptchaHeader } from '../../../security/api/swagger/shared/captcha-using';
-import { TooManyRequestsApiResponse } from '../../../security/api/swagger/shared/too-many-requests-api-response';
+import { TooManyRequestsApiResponse } from './shared/too-many-requests-api-response';
+import { CaptchaHeader } from './shared/capture-using';
 
 export const RegistrationEmailResendingEndpoint = () =>
   applyDecorators(
