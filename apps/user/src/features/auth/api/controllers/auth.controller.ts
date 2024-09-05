@@ -6,14 +6,14 @@ import {
   HttpStatus,
   NotFoundException,
   Post,
-  Req,
   Res,
   UseGuards,
 } from '@nestjs/common';
-import { ApiExcludeEndpoint, ApiTags } from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
-import { CustomThrottlerGuard } from '../../../../core/infrastructure/guards/custom-throttler.guard';
-import { AuthNavigate } from '../../../../core/routes/auth-navigate';
+import { ApiTagsEnum, RoutingEnum } from '@shared/routing';
+import { CustomThrottlerGuard } from '@user/core/infrastructure/guards/custom-throttler.guard';
+import { AuthNavigate } from '@user/core/routes/auth-navigate';
 import { UserSessionDto } from '../../../security/api/models/security-input.models/security-session-info.model';
 import { CreateSessionCommand } from '../../../security/application/use-cases/commands/create-session.command';
 import { DeleteActiveSessionCommand } from '../../../security/application/use-cases/commands/delete-active-session.command';
@@ -51,17 +51,13 @@ import { UserProfileType } from '../models/auth.output.models/auth.output.models
 import { AuthQueryRepository } from '../query-repositories/auth.query.repo';
 import { ConfirmPasswordEndpoint } from '../swagger/confirm-password-recovery.description';
 import { GetProfileEndpoint } from '../swagger/get-user-profile.description';
+import { GithubOauthEndpoint } from '../swagger/github.description';
+import { GoogleOauthEndpoint } from '../swagger/google.description';
+import { LogoutEndpoint } from '../swagger/logout-description';
 import { PasswordRecoveryEndpoint } from '../swagger/recovery-password.description';
 import { RefreshTokenEndpoint } from '../swagger/refresh-token.description';
 import { RegistrationConfirmationEndpoint } from '../swagger/registration-confirmation.description';
 import { RegistrationEmailResendingEndpoint } from '../swagger/registration-email-resending.description';
-import {
-  ApiTagsEnum,
-  RoutingEnum,
-} from '../../../../../../../libs/shared/routing';
-import { GithubOauthEndpoint } from '../swagger/github.description';
-import { GoogleOauthEndpoint } from '../swagger/google.description';
-import { LogoutEndpoint } from '../swagger/logout-description';
 import { SignInEndpoint } from '../swagger/sign-in.description';
 import { SignUpEndpoint } from '../swagger/sign-up.description';
 

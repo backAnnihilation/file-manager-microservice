@@ -13,6 +13,7 @@ export enum RoutingEnum {
 }
 
 export enum ApiTagsEnum {
+  Posts = 'posts',
   Users = 'users',
   Profiles = 'users/profiles',
   Auth = 'auth',

@@ -10,6 +10,7 @@ import { PrismaModule } from './core/db/prisma/prisma.module';
 import { SAController } from './features/admin/api/controllers/sa.controller';
 import { providers } from './core/settings/app-providers';
 import { UserProfilesController } from './features/user/api/profiles.controller';
+import { PostModule } from './features/post/post.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { UserProfilesController } from './features/user/api/profiles.controller'
     PassportModule,
     ConfigurationModule,
     CqrsModule,
+    PostModule,
     PrismaModule,
     ThrottlerModule.forRoot([{ limit: 20, ttl: Math.pow(20, 3) }]),
   ],
