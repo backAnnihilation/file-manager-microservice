@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import { OutputId } from '@models/output-id.dto';
 import {
   FileMeta,
   FileMetaDocument,
@@ -10,9 +11,10 @@ import {
 export class FilesRepository {
   constructor(@InjectModel(FileMeta.name) private fileModel: FileMetaModel) {}
 
-  async save(fileDto: FileMetaDocument): Promise<FileMetaDocument> {
+  async save(fileDto: FileMetaDocument): Promise<OutputId> {
     try {
-      return await fileDto.save();
+      const result = await fileDto.save();
+      return { id: result._id.toString() };
     } catch (error) {
       console.log(`failed save profile`);
       throw new Error(error);

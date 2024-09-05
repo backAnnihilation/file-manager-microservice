@@ -1,4 +1,4 @@
-import { convertTime } from '../../../../../core/utils/convert-string-to-date';
+import { convertTime } from '../../../../core/utils/convert-string-to-date';
 import { EditProfileInputModel } from '../../api/models/input/edit-profile.model';
 
 export class UserProfileDTO {
@@ -38,5 +38,3 @@ export class UserProfileDTO {
     this.userId = userId;
   }
 }
-
-

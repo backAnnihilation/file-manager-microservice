@@ -15,12 +15,8 @@ import {
 import { CommandBus } from '@nestjs/cqrs';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiTags } from '@nestjs/swagger';
-import { FileType } from '../../../../../../libs/shared/models/file.models';
-import {
-  ApiTagsEnum,
-  RoutingEnum,
-} from '../../../../../../libs/shared/routing';
-import { UserNavigate } from '../../../../core/routes/user-navigate';
+import { FileType } from '@models/file.models';
+import { ApiTagsEnum, RoutingEnum } from '@shared/routing';
 import { UserPayload } from '../../auth/infrastructure/decorators/user-payload.decorator';
 import { AccessTokenGuard } from '../../auth/infrastructure/guards/accessToken.guard';
 import { UserSessionDto } from '../../security/api/models/security-input.models/security-session-info.model';
@@ -33,6 +29,7 @@ import { UserProfileViewModel } from './models/output/profile.view.model';
 import { ProfilesQueryRepo } from './query-repositories/profiles.query.repo';
 import { UserProfileService } from '../application/services/profile.service';
 import { UserProfilesApiService } from '../application/services/user-api.service';
+import { UserNavigate } from '@user/core/routes/user-navigate';
 
 @ApiTags(ApiTagsEnum.Profiles)
 @Controller(RoutingEnum.profiles)
@@ -56,7 +53,7 @@ export class UserProfilesController {
   }
 
   @Post(UserNavigate.UploadPhoto)
-  @HttpCode(HttpStatus.NO_CONTENT)
+  // @HttpCode(HttpStatus.NO_CONTENT)
   @UseInterceptors(FileInterceptor('image'))
   @UseGuards(AccessTokenGuard)
   async uploadProfilePhoto(

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { DefaultArgs } from '@prisma/client/runtime/library';
-import { DatabaseService } from '../../../../../core/db/prisma/prisma.service';
+import { DatabaseService } from '../../../../core/db/prisma/prisma.service';
 import {
   getUserProfileViewModel,
   UserProfileViewModel,
@@ -17,9 +17,9 @@ export class ProfilesQueryRepo {
   async getById(id: string): Promise<UserProfileViewModel | null> {
     try {
       const result = await this.profiles.findUnique({ where: { id } });
-      
+
       if (!result) return null;
-      
+
       return getUserProfileViewModel(result);
     } catch (error) {
       console.error('Database fails operate with find user profile', error);

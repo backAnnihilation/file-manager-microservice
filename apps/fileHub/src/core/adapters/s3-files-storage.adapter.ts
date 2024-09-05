@@ -11,11 +11,7 @@ import { ConfigService } from '@nestjs/config';
 import { formatBytes } from '../../core/infrastructure/utils/format-file-size';
 import { AwsConfigType } from '../configuration/configuration';
 import { FilesScheduleService } from '../../features/profile/application/services/file-metadata.schedule.service';
-
-export type UploadFileOutputType = {
-  url: string;
-  id: string;
-};
+import { UploadFileOutputType } from '../../features/profile/api/models/output-models/file-output-types';
 
 @Injectable()
 export class S3FilesStorageAdapter {
@@ -53,38 +49,29 @@ export class S3FilesStorageAdapter {
     bucketParams: PutObjectCommandInput,
   ): Promise<UploadFileOutputType> {
     const { Bucket: bucketName, Key: key } = bucketParams;
-    await this.ensureBucketExists(bucketName);
+    await this.checkBucketBeforeUpload(bucketName);
     try {
       const { ETag } = await this.s3Client.send(
         new PutObjectCommand(bucketParams),
       );
-      const outputResult = {
+      return {
         url: `https://${this.mainDomain}/${bucketName}/${key}`,
         id: ETag.split('"')[1],
       };
-
-      return outputResult;
     } catch (error) {
       console.error(error);
       throw error;
     }
   }
 
+  private checkBucketBeforeUpload = async (bucketName: string) => {
+    await this.ensureBucketExists(bucketName);
+    await this.ensureBucketHasEnoughSpace(bucketName);
+  };
+
   private ensureBucketExists = async (bucketName: string) => {
     try {
       await this.s3Client.send(new HeadBucketCommand({ Bucket: bucketName }));
-      // console.log(`Bucket "${bucketName}" already exists.`);
-      const totalSize =
-        await this.filesScheduleService.getTotalBucketSize(bucketName);
-      const maxBucketSize = 1024 * 1024 * 1024;
-      if (totalSize > maxBucketSize) {
-        const formattedTotalSize = formatBytes(totalSize);
-        const formattedMaxSize = formatBytes(maxBucketSize);
-        console.warn(
-          `Bucket "${bucketName}", size: ${formattedTotalSize} exceeds allocated space ${formattedMaxSize} is running out of space. Starting cleanup...`,
-        );
-        await this.filesScheduleService.cleanUpBucket(bucketName, 10);
-      }
     } catch (error) {
       if (error.name === 'NotFound' || error.$metadata.httpStatusCode === 404) {
         try {
@@ -103,6 +90,20 @@ export class S3FilesStorageAdapter {
         console.error(`Error checking bucket "${bucketName}":`, error);
         throw error;
       }
+    }
+  };
+
+  private ensureBucketHasEnoughSpace = async (bucketName: string) => {
+    const totalSize =
+      await this.filesScheduleService.getTotalBucketSize(bucketName);
+    const maxBucketSize = 880 * 1024 * 1024; // ~900 mb
+    if (totalSize > maxBucketSize) {
+      const formattedTotalSize = formatBytes(totalSize);
+      const formattedMaxSize = formatBytes(maxBucketSize);
+      console.warn(
+        `Bucket "${bucketName}", size: ${formattedTotalSize} exceeds allocated space ${formattedMaxSize} is running out of space. Starting cleanup...`,
+      );
+      await this.filesScheduleService.cleanUpBucket(bucketName, 10);
     }
   };
 }

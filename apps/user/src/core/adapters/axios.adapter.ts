@@ -2,8 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import axios, { AxiosInstance } from 'axios';
 import { EnvironmentVariables } from '../config/configuration';
-import { FileType } from '../../../../libs/shared/models/file.models';
 import * as FormData from 'form-data';
+import { ProfileImageToSendType } from '../../features/user/api/models/input/upload-file-type.model';
+import { ImageViewModelType } from '@models/file.models';
 
 @Injectable()
 export class AxiosAdapter {
@@ -12,27 +13,33 @@ export class AxiosAdapter {
     this.axiosInstance = axios.create({
       baseURL: this.config.get('FILES_SERVICE_URL'),
       headers: {
-        Authorization: `Bearer ${this.config.get('ACCESS_TOKEN_SECRET')}`,
         'Content-Type': 'multipart/form-data',
         'x-api-key': config.get('API_KEY'),
       },
     });
   }
 
-  async sendPostRequest(url: string, file: FileType): Promise<void> {
+  async sendPostRequest(
+    url: string,
+    fileDto: ProfileImageToSendType,
+  ): Promise<ImageViewModelType> {
     try {
       const formData = new FormData();
-
-      formData.append('file', file.buffer, {
-        filename: file.originalname,
-        contentType: file.mimetype,
-      });
+      const { image, ...fileTypes } = fileDto;
+      const fileType = {
+        filename: image.originalname,
+        contentType: image.mimetype,
+      };
+      formData.append('file', image.buffer, fileType);
+      formData.append('fileFormat', fileTypes.fileFormat);
+      formData.append('fileType', fileTypes.fileType);
 
       const headers = { ...formData.getHeaders() };
 
-      const response = await this.axiosInstance
-        .post(url, formData, { headers })
-      
+      const response = await this.axiosInstance.post(url, formData, {
+        headers,
+      });
+      return response.data;
     } catch (error) {
       console.log('sendPostRequest', error);
     }

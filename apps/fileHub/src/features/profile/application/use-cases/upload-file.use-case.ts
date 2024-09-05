@@ -1,46 +1,61 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { InjectModel } from '@nestjs/mongoose';
-import { FileType } from '../../../../../../../libs/shared/models/file.models';
-import { OutputId } from '../../../../../../../libs/shared/models/output-id.dto';
-import { LayerNoticeInterceptor } from '../../../../../../../libs/shared/notification';
-import {
-  UserProfile,
-  UserProfileModel,
-} from '../../domain/entities/user-profile.schema';
-import {
-  FileMeta,
-  FileMetaModel,
-} from '../../domain/entities/file-meta.schema';
-('../../api/models/input-models/fill-profile.model');
+import { OutputId } from '@models/output-id.dto';
+import { LayerNoticeInterceptor } from '@shared/notification';
+import { FilesStorageAdapter } from '../../../../core/adapters/local-files-storage.adapter';
+import { Bucket } from '../../api/models/enums/file-details.enum';
+import { FileUploadType } from '../../api/models/input-models/extracted-file-types';
+import { FilesService } from '../services/file-metadata.service';
 
 export class UploadFileCommand {
-  constructor(public uploadDto: FileType & { userId: string }) {}
+  constructor(public uploadDto: FileUploadType) {}
 }
 
 @CommandHandler(UploadFileCommand)
 export class UploadFileUseCase implements ICommandHandler<UploadFileCommand> {
   private location = this.constructor.name;
   constructor(
-    @InjectModel(FileMeta.name) private FileMetaModel: FileMetaModel,
+    private filesService: FilesService,
+    private filesAdapter: FilesStorageAdapter,
   ) {}
 
   async execute(
     command: UploadFileCommand,
   ): Promise<LayerNoticeInterceptor<OutputId>> {
-    let notice = new LayerNoticeInterceptor<any>();
-    const { userId, ...fileCharacters } = command.uploadDto;
-    // const createdProfileNotice = await this.ProfileModel.makeInstance(
-    //   command.profileDto,
-    // );
+    const { profileId, ...fileCharacters } = command.uploadDto;
+    const { fileFormat, buffer, fileType, mimetype, originalname, size } =
+      fileCharacters;
 
-    // if (createdProfileNotice.hasError)
-    //   return createdProfileNotice as LayerNoticeInterceptor;
+    const { ContentType, Key } = this.filesService.generateImageKey({
+      contentType: mimetype,
+      fileName: originalname,
+      imageType: fileType,
+      profileId,
+    });
 
-    // const userDto = createdProfileNotice.data;
+    const bucketParams = {
+      Bucket: Bucket.Inst,
+      Key,
+      Body: buffer,
+      ContentType,
+    };
 
-    // const result = await this.profileRepo.save(userDto);
+    const uploadedFileInStorage =
+    await this.filesAdapter.uploadFile(bucketParams);
+    const { url: fileUrl, id: fileId } = uploadedFileInStorage;
 
-    // notice.addData({ id: result.id });
-    return notice;
+    const savedFileNotice = await this.filesService.saveFileMeta({
+      profileId,
+      fileFormat,
+      fileId,
+      fileName: originalname,
+      fileSize: size,
+      fileType,
+      fileUrl,
+    });
+
+    if (savedFileNotice.hasError)
+      return savedFileNotice as LayerNoticeInterceptor;
+
+    return new LayerNoticeInterceptor(savedFileNotice.data);
   }
 }

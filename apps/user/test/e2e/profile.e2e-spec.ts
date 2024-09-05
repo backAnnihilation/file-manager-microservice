@@ -1,5 +1,5 @@
 import { HttpStatus, INestApplication } from '@nestjs/common';
-import { DatabaseService } from '../../core/db/prisma/prisma.service';
+import { DatabaseService } from '../../src/core/db/prisma/prisma.service';
 import { initSettings } from '../tools/initSettings';
 import { UsersTestManager } from '../tools/managers/UsersTestManager';
 import {

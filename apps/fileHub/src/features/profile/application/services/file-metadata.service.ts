@@ -1,148 +1,60 @@
-// import { Injectable } from '@nestjs/common';
-// import { FilesRepository } from '../infrastructure/profiles.repository';
+import { Injectable } from '@nestjs/common';
+import { LayerNoticeInterceptor } from '@shared/notification';
+import { FilesStorageAdapter } from '../../../../core/adapters/local-files-storage.adapter';
+import { FilesRepository } from '../../infrastructure/files.repository';
+import { ContentType } from '../../api/models/output-models/file-output-types';
+import { ImageType } from '../../api/models/enums/file-details.enum';
+import {
+  CreateFileMetaDto,
+  FileMeta,
+  FileMetaDocument,
+  FileMetaModel,
+} from '../../domain/entities/file-meta.schema';
+import { InjectModel } from '@nestjs/mongoose';
+import { OutputId } from '@models/output-id.dto';
 
+@Injectable()
+export class FilesService {
+  private readonly location: string;
+  constructor(
+    private readonly filesRepo: FilesRepository,
+    private readonly filesAdapter: FilesStorageAdapter,
+    @InjectModel(FileMeta.name) private FileMetadata: FileMetaModel,
+  ) {
+    this.location = this.constructor.name;
+  }
 
-// @Injectable()
-// export class FilesService {
-//   private readonly location: string;
-//   constructor(
-//     private readonly filesRepo: FilesRepository,
-//     private readonly filesAdapter: FilesStorageAdapter,
-//   ) {
-//     this.location = this.constructor.name;
-//   }
+  async saveFileMeta(
+    fileMetaDto: CreateFileMetaDto,
+  ): Promise<LayerNoticeInterceptor<OutputId>> {
+    try {
+      const fileNotice = await this.FileMetadata.makeInstance(fileMetaDto);
 
-//   async saveFileMetadata(
-//     fileMetaDto: FileMetadataTypeEntityType,
-//     manager: EntityManager,
-//   ): Promise<LayerNoticeInterceptor<FileMetadata>> {
-//     try {
-//       const fileNotice = await FileMetadata.createMetadata(fileMetaDto);
-//       if (fileNotice.hasError) return fileNotice;
+      if (fileNotice.hasError) return fileNotice as LayerNoticeInterceptor;
 
-//       const result = await this.filesRepo.save(fileNotice.data, manager);
-//       return new LayerNoticeInterceptor(result);
-//     } catch (error) {
-//       throw new Error(`${this.location}: ${error}`);
-//     }
-//   }
+      const result = await this.filesRepo.save(fileNotice.data);
+      return new LayerNoticeInterceptor(result);
+    } catch (error) {
+      throw new Error(`${this.location}: ${error}`);
+    }
+  }
 
-//   async manageBlogImageUpload(
-//     uploadImageDto: UploadBlogDtoType,
-//   ): Promise<LayerNoticeInterceptor<ResponseFileType>> {
-//     const notice = new LayerNoticeInterceptor<ResponseFileType>();
-//     const {
-//       blogId,
-//       userId,
-//       manager,
-//       photoTypes,
-//       fileType,
-//       fileBuffer,
-//       bucketName,
-//       ...fileDimensions
-//     } = uploadImageDto;
+  generateImageKey = (keyInfo: GenerateImageKeyType) => {
+    const { profileId, imageType, contentType, fileName } = keyInfo;
+    const [, fileExtension] = contentType.split('/');
+    const timeStamp = new Date().getTime();
+    const withExtension = fileName.endsWith(fileExtension);
+    const fileSignature = withExtension ? fileName.split('.')[0] : fileName;
 
-//     const entitiesId = { blogId, userId };
-//     const validationNotice = await this.blogService.ensureUserHasBlogAccess(
-//       blogId,
-//       userId,
-//     );
+    let generatedKey = `images/users/profiles/${imageType}/profileId-${profileId}/${fileSignature}${timeStamp}.${fileExtension}`;
 
-//     if (validationNotice.hasError)
-//       return validationNotice as LayerNoticeInterceptor;
+    return { Key: generatedKey, ContentType: contentType };
+  };
+}
 
-//     let blogImages = await this.filesRepo.getBlogImage(blogId, manager);
-
-//     if (!blogImages) {
-//       const newBlogImage = new BlogImage();
-//       newBlogImage.setBlogId(blogId);
-
-//       blogImages = await this.filesRepo.saveBlogImgs(newBlogImage, manager);
-//     }
-
-//     const { ContentType, Key } = this.generateImageKey({
-//       ...entitiesId,
-//       contentType: fileType,
-//       fileName: fileDimensions.fileName,
-//       ...photoTypes,
-//     });
-
-//     const bucketParams = {
-//       Bucket: 'hub-bucket',
-//       Key,
-//       Body: fileBuffer,
-//       ContentType,
-//     };
-
-//     const uploadResult = await this.filesAdapter.uploadFile(bucketParams);
-//     const { url: fileUrl, id: fileId } = uploadResult;
-
-//     const mainFileMetadata: FileMetadataBlogImagesType = {
-//       ...photoTypes,
-//       ...fileDimensions,
-//       fileUrl,
-//       blogImgId: blogImages.id,
-//       fileId,
-//       fileType,
-//     };
-
-//     const savedMainImageNotice = await this.saveFileMetadata(
-//       mainFileMetadata,
-//       manager,
-//     );
-
-//     if (savedMainImageNotice.hasError)
-//       return savedMainImageNotice as LayerNoticeInterceptor;
-//     notice.addData({ blogId });
-
-//     return notice;
-//   }
-
-//   generateImageKey = (keyInfo: GenerateImageKeyType) => {
-//     const { blogId, userId, photoType, photoSizeType, contentType, fileName } =
-//       keyInfo;
-//     const [, fileExtension] = contentType.split('/');
-//     const timeStamp = new Date().getTime();
-//     const withExtension = fileName.endsWith(fileExtension);
-//     const fileSignature = withExtension ? fileName.split('.')[0] : fileName;
-
-//     let generatedKey = `images/bloggers/${
-//       keyInfo.postId ? 'posts' : 'blogs'
-//     }/${photoType}/blogId-${blogId}/`;
-
-//     if (keyInfo.postId) {
-//       generatedKey += `postId-${keyInfo.postId}/`;
-//     }
-//     generatedKey += `userId-${userId}/${photoSizeType}-${fileSignature}${timeStamp}.${fileExtension}`;
-
-//     return { Key: generatedKey, ContentType: contentType };
-//   };
-
-//   resizeImage = async (
-//     buffer: Buffer,
-//     width: number,
-//     height: number,
-//   ): Promise<Buffer> => sharp(buffer).resize(width, height).toBuffer();
-// }
-
-// type GenerateImageKeyType = {
-//   fileName: string;
-//   contentType: ContentType;
-//   blogId: string;
-//   userId: string;
-//   photoType: string;
-//   photoSizeType: PhotoSizeType;
-//   postId?: string;
-// };
-// type UploadBlogDtoType = UploadMainImageDataType & {
-//   manager: EntityManager;
-//   photoTypes: {
-//     photoSizeType: PhotoSizeType;
-//     photoType: PhotoType;
-//   };
-//   bucketName: BucketName;
-// };
-
-// export enum BucketName {
-//   HUB = 'hub-bucket',
-// }
+type GenerateImageKeyType = {
+  fileName: string;
+  contentType: ContentType;
+  imageType: ImageType;
+  profileId: string;
+};

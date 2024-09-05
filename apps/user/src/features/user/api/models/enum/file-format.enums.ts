@@ -10,7 +10,3 @@ export enum ImageType {
   WALLPAPER = 'wallpaper',
   BACKGROUND = 'background',
 }
-
-export enum Bucket {
-  Inst = 'inctagram.team',
-}
