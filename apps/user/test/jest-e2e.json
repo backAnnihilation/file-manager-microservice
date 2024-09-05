@@ -6,5 +6,9 @@
   "transform": {
     "^.+\\.(t|j)s$": "ts-jest"
   },
-  "setupFilesAfterEnv": ["./setupTests.e2e.ts"]
+  "setupFilesAfterEnv": ["./setupTests.e2e.ts"],
+  "moduleNameMapper": {
+    "^@shared/(.*)$": "<rootDir>/../../../libs/shared/$1",
+    "^@user/core/(.*)$": "<rootDir>/../src/core/$1"
+  }
 }

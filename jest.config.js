@@ -5,5 +5,6 @@ module.exports = {
   ],
   moduleNameMapper: {
     '^@shared/(.*)$': '<rootDir>/libs/shared/$1',
+    '^@user/core/(.*)$': '<rootDir>/apps/user/src/core/$1',
   },
 };
