@@ -11,12 +11,14 @@ import { Environment } from '../../../../../libs/shared/environment.enum';
 
 export const applyAppSettings = (app: INestApplication) => {
   const currentENV = app.get(ConfigService<EnvironmentVariables>).get('ENV');
-  console.log({ currentENV });
 
   currentENV !== Environment.TESTING && app.setGlobalPrefix('api/v1');
-  app.enableCors({
+  const corsSetup = {
     origin: [/localhost(:\d+)?$/],
-  });
+    credentials: true,
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+  };
+  app.enableCors(corsSetup);
   pipesSetup(app);
   swaggerSetup(app);
   exceptionFilterSetup(app, currentENV);
