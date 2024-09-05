@@ -9,6 +9,7 @@ import { Global, Module } from '@nestjs/common';
       load: [awsConfig],
       isGlobal: true,
       validate,
+      cache: true,
       expandVariables: true,
       envFilePath: 'apps/fileHub/.env',
     }),

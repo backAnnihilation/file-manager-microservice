@@ -4,9 +4,11 @@ import {
   IsNumber,
   IsOptional,
   IsString,
+  Max,
+  Min,
   validateSync,
 } from 'class-validator';
-import { Environment } from '../../../../../libs/shared/environment.enum';
+import { Environment } from '@shared/environment.enum';
 import { registerAs } from '@nestjs/config';
 
 export type AwsConfigType = { aws: ReturnType<typeof awsConfig> };
@@ -19,8 +21,15 @@ export const awsConfig = registerAs('aws', () => ({
   accessPoint: process.env.AWS_ACCESS_POINT,
 }));
 
+export enum Storage {
+  LOCAL = 'LOCAL',
+  S3 = 'S3',
+}
+
 export class EnvironmentVariables {
   @IsNumber()
+  @Min(1000)
+  @Max(65535)
   PORT: number;
 
   @IsString()
@@ -45,6 +54,9 @@ export class EnvironmentVariables {
   AWS_PRIVATE_BUCKET_NAME: string;
   @IsOptional()
   AWS_ACCESS_POINT: string;
+
+  @IsEnum(Storage)
+  STORAGE: Storage;
 
   @IsEnum(Environment)
   ENV: Environment;

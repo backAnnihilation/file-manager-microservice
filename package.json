@@ -9,6 +9,7 @@
     "prisma:deploy": "cd apps/user && npx prisma migrate deploy",
     "prisma:migrate": "node ./apps/user/prisma/tools/add-migration.js",
     "prisma:generate": "npx prisma generate --schema=./apps/user/prisma/schema.prisma",
+    "prisma:studio": "npx prisma studio --schema=./apps/user/prisma/schema.prisma",
     "build": "nest build",
     "format": "prettier --write \"apps/**/*.ts\" \"libs/**/*.ts\"",
     "start": "nest start",

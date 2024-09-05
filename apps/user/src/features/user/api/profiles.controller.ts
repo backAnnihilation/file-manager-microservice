@@ -15,7 +15,7 @@ import {
 import { CommandBus } from '@nestjs/cqrs';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiTags } from '@nestjs/swagger';
-import { FileType } from '@models/file.models';
+import { FileType, ImageViewModelType } from '@models/file.models';
 import { ApiTagsEnum, RoutingEnum } from '@shared/routing';
 import { UserPayload } from '../../auth/infrastructure/decorators/user-payload.decorator';
 import { AccessTokenGuard } from '../../auth/infrastructure/guards/accessToken.guard';
@@ -60,7 +60,7 @@ export class UserProfilesController {
     @UserPayload() userPayload: UserSessionDto,
     @UploadedFile(ImageFilePipe)
     image: FileType,
-  ) {
+  ): Promise<ImageViewModelType> {
     return this.profileService.uploadProfilePhoto({
       image,
       userId: userPayload.userId,

@@ -8,6 +8,7 @@ import { Global, Module } from '@nestjs/common';
     ConfigModule.forRoot({
       isGlobal: true,
       validate,
+      cache: true,
       expandVariables: true,
       envFilePath: 'apps/user/.env',
     }),

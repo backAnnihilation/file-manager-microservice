@@ -1,9 +1,9 @@
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
+import { applyAppSettings } from '@file/core/configuration/app-settings';
+import { EnvironmentVariables } from '@file/core/configuration/configuration';
+import { COLORS } from '@shared/logger';
 import { AppModule } from './app.module';
-import { applyAppSettings } from './core/configuration/app-settings';
-import { EnvironmentVariables } from './core/configuration/configuration';
-import { COLORS } from '../../../libs/shared/logger';
 
 (async () => {
   const appOptions = {

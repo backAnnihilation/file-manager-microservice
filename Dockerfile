@@ -1,32 +1,30 @@
 FROM node:20.11-alpine
 
-# Set to a non-root built-in user `node`
+USER root
+
+RUN npm install -g pnpm
+
 USER node
 
-# Create app directory (with user `node`)
 RUN mkdir -p /home/node/dist/app
 
 WORKDIR /home/node/dist/app
 
-# Install app dependencies
-COPY --chown=node package*.json ./
-# --chown=node pnpm-lock.yaml ./
+COPY --chown=node package*.json ./ 
+COPY --chown=node pnpm-lock.yaml ./
 
-# RUN pnpm i --frozen-lockfile
-RUN npm install 
+RUN pnpm install
 
-# Copy the rest of the application code
+ENV PORT=3507
+
 COPY --chown=node . .
 
-# Генерация Prisma клиента
 RUN npx prisma generate --schema=./apps/user/prisma/schema.prisma
 
-# Сборка приложения
-RUN npm run build
+RUN npx prisma migrate deploy --schema=./apps/user/prisma/schema.prisma
 
-# Настройка переменных окружения и порта
-ENV PORT=3498
+RUN pnpm run build
+
 EXPOSE ${PORT}
 
-# Start the application with Prisma migration
-CMD ["sh", "-c", "npm prisma:generate && npm start"]
+CMD ["pnpm", "start"]
