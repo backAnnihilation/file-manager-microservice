@@ -2,7 +2,7 @@ import { Injectable, OnModuleInit, OnModuleDestroy } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PrismaClient } from '@prisma/client';
 import { EnvironmentVariables } from '../../config/configuration';
-import { Environment } from '../../../../../libs/shared/environment.enum';
+import { Environment } from '../../../../../../libs/shared/environment.enum';
 
 @Injectable()
 export class DatabaseService

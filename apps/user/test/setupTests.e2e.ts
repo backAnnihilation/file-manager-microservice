@@ -1,7 +1,7 @@
 import { ConfigService } from '@nestjs/config';
-import { EnvironmentVariables } from '../core/config/configuration';
+import { EnvironmentVariables } from '../src/core/config/configuration';
 import { execSync } from 'child_process';
-import { DatabaseService } from '../core/db/prisma/prisma.service';
+import { DatabaseService } from '../src/core/db/prisma/prisma.service';
 import { join } from 'path';
 import { databaseCleanUp } from './tools/utils/db-cleanUp';
 import { Environment } from '../../../libs/shared/environment.enum';

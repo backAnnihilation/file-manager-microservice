@@ -23,8 +23,8 @@ import { DropDatabaseSaEndpoint } from './swagger/drop-database-sa.description';
 import { CreateSaUserEndpoint } from './swagger/create-user-sa.description';
 import { GetAllUsersEndpoint } from './swagger/get-all-users-sa.description';
 import { DeleteSaUserEndpoint } from './swagger/delete-user-sa.description';
-import { PaginationViewModel } from '../../../../../../../libs/shared/sorting-base-filter';
-import { RoutingEnum } from '../../../../../../../libs/shared/routing';
+import { PaginationViewModel } from '@shared/sorting-base-filter';
+import { RoutingEnum } from '@shared/routing';
 import { CleanUpDatabaseRepository } from '../../infrastructure/clean-up.repo';
 
 @ApiTags(RoutingEnum.admins)

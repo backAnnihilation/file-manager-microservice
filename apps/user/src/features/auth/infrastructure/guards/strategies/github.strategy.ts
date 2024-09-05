@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
-import { EnvironmentVariables } from '../../../../../../core/config/configuration';
-import { StrategyType } from '../../../../../../core/infrastructure/guards/models/strategy.enum';
+import { EnvironmentVariables } from '../../../../../core/config/configuration';
+import { StrategyType } from '../../../../../core/infrastructure/guards/models/strategy.enum';
 import { Profile, Strategy } from 'passport-github2';
 import { sanitizedDisplayName } from '../../utils/sanitized-display-name';
 

@@ -1,8 +1,8 @@
 import { ConfigService } from '@nestjs/config';
 import { Test, TestingModuleBuilder } from '@nestjs/testing';
-import { applyAppSettings } from '../../core/config/app-settings';
-import { EnvironmentVariables } from '../../core/config/configuration';
-import { EmailManager } from '../../core/managers/email-manager';
+import { applyAppSettings } from '../../src/core/config/app-settings';
+import { EnvironmentVariables } from '../../src/core/config/configuration';
+import { EmailManager } from '../../src/core/managers/email-manager';
 import { AppModule } from '../../src/app.module';
 import { databaseService } from '../setupTests.e2e';
 import { UsersTestManager } from './managers/UsersTestManager';

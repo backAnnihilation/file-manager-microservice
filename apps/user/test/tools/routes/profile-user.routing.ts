@@ -1,5 +1,5 @@
 import { RoutingEnum } from '../../../../../libs/shared/routing';
-import { UserNavigate } from '../../../core/routes/user-navigate';
+import { UserNavigate } from '../../../src/core/routes/user-navigate';
 
 export class ProfileRouting {
   constructor(private readonly baseUrl = RoutingEnum.profiles) {}

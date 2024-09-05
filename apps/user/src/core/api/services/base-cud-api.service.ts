@@ -1,6 +1,6 @@
 import { CommandBus } from '@nestjs/cqrs';
-import { handleErrors } from '../../../../../libs/shared/handle-response-errors';
-import { LayerNoticeInterceptor } from '../../../../../libs/shared/notification';
+import { handleErrors } from '../../../../../../libs/shared/handle-response-errors';
+import { LayerNoticeInterceptor } from '../../../../../../libs/shared/notification';
 
 export interface BaseQueryRepository<T> {
   getById: (id: string) => Promise<T>;

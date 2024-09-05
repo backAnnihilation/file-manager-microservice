@@ -1,5 +1,5 @@
 import { CommandHandler, EventBus, ICommandHandler } from '@nestjs/cqrs';
-import { BcryptAdapter } from '../../../../../core/adapters/bcrypt.adapter';
+import { BcryptAdapter } from '../../../../core/adapters/bcrypt.adapter';
 import { UserIdType } from '../../../admin/api/models/outputSA.models.ts/user-models';
 import { UsersRepository } from '../../../admin/infrastructure/users.repo';
 import { CreateUserCommand } from './commands/create-user.command';

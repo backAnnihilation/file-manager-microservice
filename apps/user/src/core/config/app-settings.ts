@@ -1,5 +1,5 @@
 import { swaggerSetup } from './swagger/swagger.setup';
-import { AppModule } from '../../src/app.module';
+import { AppModule } from '../../app.module';
 import { useContainer } from 'class-validator';
 import { pipesSetup } from './pipes.setup';
 import * as cookieParser from 'cookie-parser';
@@ -7,7 +7,7 @@ import { INestApplication } from '@nestjs/common';
 import { exceptionFilterSetup } from './exception-filter.setup';
 import { ConfigService } from '@nestjs/config';
 import { EnvironmentVariables } from './configuration';
-import { Environment } from '../../../../libs/shared/environment.enum';
+import { Environment } from '../../../../../libs/shared/environment.enum';
 
 export const applyAppSettings = (app: INestApplication) => {
   const currentENV = app.get(ConfigService<EnvironmentVariables>).get('ENV');

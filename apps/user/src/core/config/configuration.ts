@@ -6,7 +6,7 @@ import {
   IsString,
   validateSync,
 } from 'class-validator';
-import { Environment } from '../../../../libs/shared/environment.enum';
+import { Environment } from '../../../../../libs/shared/environment.enum';
 
 export class EnvironmentVariables {
   @IsNumber()
@@ -59,10 +59,10 @@ export class EnvironmentVariables {
   @IsString()
   CAPTURE_SITE_KEY: string;
 
-  @IsOptional()
+  @IsString()
   FILES_SERVICE_URL: string;
 
-  @IsOptional()
+  @IsString()
   API_KEY: string;
 
   @IsEnum(Environment)

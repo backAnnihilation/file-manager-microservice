@@ -1,5 +1,5 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { BcryptAdapter } from '../../../../../core/adapters/bcrypt.adapter';
+import { BcryptAdapter } from '../../../../core/adapters/bcrypt.adapter';
 import { ResponseIdType } from '../../api/models/outputSA.models.ts/user-models';
 import { UsersRepository } from '../../infrastructure/users.repo';
 import { CreateSACommand } from '../commands/create-sa.command';

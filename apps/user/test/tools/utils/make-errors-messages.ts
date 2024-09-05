@@ -2,7 +2,7 @@ import {
   ErrorField,
   ErrorsMessages,
   ErrorsMessagesTypes,
-} from '../../../core/utils/error-handler';
+} from '../../../src/core/utils/error-handler';
 
 export const constructErrorMessages = (
   fields: ErrorField[],

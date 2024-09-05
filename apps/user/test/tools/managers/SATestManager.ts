@@ -1,8 +1,8 @@
 import { HttpStatus, INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { BaseTestManager } from './BaseTestManager';
-import { ErrorsMessages } from '../../../core/utils/error-handler';
-import { PaginationViewModel } from '../../../core/utils/sorting-base-filter';
+import { ErrorsMessages } from '../../../src/core/utils/error-handler';
+import { PaginationViewModel } from '../../../src/core/utils/sorting-base-filter';
 import { SAQueryFilter } from '../../../src/features/admin/api/models/outputSA.models.ts/query-filters';
 import { SAViewType } from '../../../src/features/admin/api/models/user.view.models/userAdmin.view-type';
 import { AuthUserType } from '../../../src/features/auth/api/models/auth.output.models/auth.user.types';
