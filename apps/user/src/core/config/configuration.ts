@@ -6,7 +6,7 @@ import {
   IsString,
   validateSync,
 } from 'class-validator';
-import { Environment } from '../../../../../libs/shared/environment.enum';
+import { Environment } from '@shared/environment.enum';
 
 export class EnvironmentVariables {
   @IsNumber()
@@ -46,9 +46,9 @@ export class EnvironmentVariables {
   @IsString()
   OAUTH_GITHUB_REDIRECT_URL: string;
 
-  @IsString()
+  @IsOptional()
   OAUTH_GOOGLE_CLIENT_ID: string;
-  @IsString()
+  @IsOptional()
   OAUTH_GOOGLE_CLIENT_SECRET: string;
   @IsString()
   OAUTH_GOOGLE_REDIRECT_URL: string;
@@ -59,10 +59,10 @@ export class EnvironmentVariables {
   @IsString()
   CAPTURE_SITE_KEY: string;
 
-  @IsString()
+  @IsOptional()
   FILES_SERVICE_URL: string;
 
-  @IsString()
+  @IsOptional()
   API_KEY: string;
 
   @IsEnum(Environment)

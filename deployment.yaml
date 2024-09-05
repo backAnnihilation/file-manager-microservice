@@ -21,3 +21,14 @@ spec:
            ports:
              - containerPort: PORT_CONTAINER
 
+           env:
+             - name: OAUTH_GOOGLE_CLIENT_ID
+               valueFrom:
+                 secretKeyRef:
+                   name: back-404-production-config-secret
+                   key: OAUTH_GOOGLE_CLIENT_ID
+             - name: OAUTH_GOOGLE_CLIENT_SECRET
+               valueFrom:
+                 secretKeyRef:
+                   name: back-404-production-config-secret
+                   key: OAUTH_GOOGLE_CLIENT_SECRET
