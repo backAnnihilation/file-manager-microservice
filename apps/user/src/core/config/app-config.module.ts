@@ -10,7 +10,7 @@ import { Global, Module } from '@nestjs/common';
       validate,
       cache: true,
       expandVariables: true,
-      envFilePath: 'apps/user/.env',
+      // envFilePath: 'apps/user/.env',
     }),
   ],
   exports: [ConfigModule],
