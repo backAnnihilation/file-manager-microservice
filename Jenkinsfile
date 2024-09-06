@@ -28,6 +28,8 @@ pipeline {
                        [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
                        nvm use --lts
                        yarn install
+                       yarn run prisma:generate
+                       yarn run prisma:migrate
                        yarn test
                     '''
                 }
