@@ -11,7 +11,7 @@ let config: ConfigService<EnvironmentVariables>;
 let dbCleaner: () => Promise<void>;
 beforeAll(async () => {
   config = new ConfigService();
-  config.set('ENV', Environment.TESTING);
+  // config.set('ENV', Environment.TESTING);
   const dbUrl = config.get('DATABASE_URL_FOR_TESTS');
 
   const workerDir = join(__dirname, '..');
