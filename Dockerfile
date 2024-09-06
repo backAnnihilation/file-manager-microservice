@@ -15,7 +15,7 @@ COPY --chown=node pnpm-lock.yaml ./
 
 RUN pnpm install
 
-ENV PORT=3507
+ENV PORT=3508
 
 COPY --chown=node . .
 
