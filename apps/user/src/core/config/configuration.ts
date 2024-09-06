@@ -36,7 +36,7 @@ export class EnvironmentVariables {
   @IsString()
   DATABASE_URL: string;
 
-  @IsString()
+  @IsOptional()
   DATABASE_URL_FOR_TESTS: string;
 
   @IsString()
