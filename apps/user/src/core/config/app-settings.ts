@@ -10,11 +10,11 @@ import { swaggerSetup } from './swagger/swagger.setup';
 
 export const applyAppSettings = (app: INestApplication) => {
   const currentENV = app.get(ConfigService).get('ENV');
-
+  
   let appPrefix = 'api/v1';
   currentENV === Environment.TESTING && (appPrefix = '');
   app.setGlobalPrefix(appPrefix);
-
+  
   const corsSetup = {
     origin: 'http://localhost:3000',
     credentials: true,

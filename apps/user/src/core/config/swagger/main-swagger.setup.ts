@@ -1,10 +1,10 @@
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { RoutingEnum } from '../../../../../../libs/shared/routing';
+import { RoutingEnum } from '@shared/routing';
 import { INestApplication } from '@nestjs/common';
 
 export const mainSwaggerSetup = (app: INestApplication) => {
   const mainConfig = new DocumentBuilder()
-    .setTitle('Incta-team')
+    .setTitle('Social media platform')
     .setDescription('OpenAPI documentation')
     .setVersion('1.0')
     .addBearerAuth(
@@ -39,9 +39,13 @@ export const mainSwaggerSetup = (app: INestApplication) => {
 
   const mainDocument = SwaggerModule.createDocument(app, mainConfig);
 
-  const pathsToRemove = [RoutingEnum.admins];
-  const pathsToDelete = Object.keys(mainDocument.paths).filter((path) =>
-    pathsToRemove.some((pathToRemove) => path.startsWith(pathToRemove)),
+  let pathsToRemove = RoutingEnum.admins;
+  const appPaths = Object.keys(mainDocument.paths);
+  if (appPaths[0].startsWith('/api')) {
+    pathsToRemove = `/api/v1${pathsToRemove}` as RoutingEnum;
+  }
+  const pathsToDelete = appPaths.filter((path) =>
+    path.startsWith(pathsToRemove),
   );
 
   pathsToDelete.forEach((path) => delete mainDocument.paths[path]);
