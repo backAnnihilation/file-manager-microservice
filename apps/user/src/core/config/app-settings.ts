@@ -12,7 +12,10 @@ import { Environment } from '@shared/environment.enum';
 export const applyAppSettings = (app: INestApplication) => {
   const currentENV = app.get(ConfigService<EnvironmentVariables>).get('ENV');
 
-  // currentENV !== Environment.TESTING && app.setGlobalPrefix('api/v1');
+  let appPrefix = 'api/v1';
+  currentENV === Environment.TESTING && (appPrefix = '');
+  app.setGlobalPrefix(appPrefix);
+
   const corsSetup = {
     origin: [/localhost(:\d+)?$/],
     credentials: true,

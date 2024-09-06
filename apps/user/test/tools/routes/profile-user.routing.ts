@@ -1,8 +1,11 @@
-import { RoutingEnum } from '../../../../../libs/shared/routing';
+import { RoutingEnum } from '@shared/routing';
 import { UserNavigate } from '../../../src/core/routes/user-navigate';
+import { BaseRouting } from './base-api.routing';
 
-export class ProfileRouting {
-  constructor(private readonly baseUrl = RoutingEnum.profiles) {}
+export class ProfileRouting extends BaseRouting {
+  constructor() {
+    super(RoutingEnum.profiles);
+  }
   fillOutProfile = () => `${this.baseUrl}/${UserNavigate.FillOutProfile}`;
   editProfile = () => `${this.baseUrl}/${UserNavigate.EditProfile}`;
   getProfile = () => `${this.baseUrl}/${UserNavigate.GetProfile}`;

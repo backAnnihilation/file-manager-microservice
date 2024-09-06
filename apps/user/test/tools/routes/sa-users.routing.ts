@@ -1,7 +1,10 @@
-import { RoutingEnum } from "../../../../../libs/shared/routing";
+import { RoutingEnum } from '@shared/routing';
+import { BaseRouting } from './base-api.routing';
 
-export class SAUsersRouting {
-  constructor(private readonly baseUrl = RoutingEnum.admins) {}
+export class SAUsersRouting extends BaseRouting {
+  constructor() {
+    super(RoutingEnum.admins);
+  }
   getUsers = () => this.baseUrl;
   createSA = () => this.baseUrl;
   banUnbanRestriction = (userId: string) => `${this.baseUrl}/${userId}/ban`;
