@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Model, Document } from 'mongoose';
+
 import { LayerNoticeInterceptor } from '../../../../../../../libs/shared/notification';
 
 export type UserProfileDocument = HydratedDocument<UserProfile>;

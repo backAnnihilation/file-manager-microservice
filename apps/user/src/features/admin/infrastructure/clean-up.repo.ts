@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Prisma } from '@prisma/client';
 import { Environment } from '@shared/environment.enum';
+
 import { EnvironmentVariables } from '../../../core/config/configuration';
 import { DatabaseService } from '../../../core/db/prisma/prisma.service';
 

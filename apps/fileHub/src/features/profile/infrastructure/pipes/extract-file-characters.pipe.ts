@@ -1,9 +1,10 @@
 import { ArgumentMetadata, Injectable, PipeTransform } from '@nestjs/common';
+import { FileType } from '@shared/models/file.models';
+
 import {
   FileExtractedType,
   FileFormatType,
 } from '../../api/models/input-models/extracted-file-types';
-import { FileType } from '../../../../../../../libs/shared/models/file.models';
 
 export type FileInputType = FileType & FileFormatType;
 

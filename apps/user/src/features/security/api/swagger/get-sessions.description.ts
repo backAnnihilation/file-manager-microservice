@@ -5,7 +5,8 @@ import {
   ApiProperty,
   ApiOperation,
 } from '@nestjs/swagger';
-import { UnauthorizedViaTokenApiResponse } from './shared/authorization.response';
+
+import { UnauthorizedViaTokenApiResponse } from '../../../auth/api/swagger/shared/authorization.response';
 
 export class SecurityViewDeviceResponse {
   @ApiProperty({ description: 'IP address of the device' })

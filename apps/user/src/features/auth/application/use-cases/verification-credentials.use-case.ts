@@ -1,12 +1,14 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+
 import { UserIdType } from '../../../admin/api/models/outputSA.models.ts/user-models';
 import { AuthRepository } from '../../infrastructure/auth.repository';
-import { VerificationCredentialsCommand } from './commands/verification-credentials.command';
 import { BcryptAdapter } from '../../../../core/adapters/bcrypt.adapter';
 import {
   LayerNoticeInterceptor,
   GetErrors,
 } from '../../../../../../../libs/shared/notification';
+
+import { VerificationCredentialsCommand } from './commands/verification-credentials.command';
 
 @CommandHandler(VerificationCredentialsCommand)
 export class VerificationCredentialsUseCase

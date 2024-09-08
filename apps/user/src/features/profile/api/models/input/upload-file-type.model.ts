@@ -1,4 +1,5 @@
-import { FileType } from '../../../../../../../../libs/shared/models/file.models';
+import { FileType } from '@models/file.models';
+
 import { FileFormat, ImageType } from '../enum/file-format.enums';
 
 export type UploadFileDto = {

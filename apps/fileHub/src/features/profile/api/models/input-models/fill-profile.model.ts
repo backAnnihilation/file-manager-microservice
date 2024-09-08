@@ -1,11 +1,12 @@
 import { IsOptional } from 'class-validator';
+
 import {
-    aboutLength,
-    frequentLength,
-    nameInitials,
-    nameInitialsMatch,
-    passwordLength,
-    textMatch
+  aboutLength,
+  frequentLength,
+  nameInitials,
+  nameInitialsMatch,
+  passwordLength,
+  textMatch,
 } from '../../../../../../../../libs/shared/validation/input-constants';
 import { iSValidField } from '../../../../../../../../libs/shared/validation/validate-input-fields';
 import { IsDateFormat } from '../../../infrastructure/validation/date-format-validate';

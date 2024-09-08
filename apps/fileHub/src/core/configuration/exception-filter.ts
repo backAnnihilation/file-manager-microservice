@@ -24,7 +24,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const request = ctx.getRequest<Request>();
     const { message, key, statusCode } = exception.getResponse() as any;
 
-    let devErrorResponse = {
+    const devErrorResponse = {
       statusCode,
       timestamp: new Date().toISOString(),
       location: key,

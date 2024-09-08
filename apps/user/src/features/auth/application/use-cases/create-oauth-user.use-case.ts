@@ -15,8 +15,9 @@ import {
   IGoogleProvider,
 } from '../../api/models/auth-input.models.ts/provider-user-info';
 import { AuthRepository } from '../../infrastructure/auth.repository';
-import { EmailNotificationOauthEvent } from './events/email-notification-oauth-event';
 import { LayerNoticeInterceptor } from '../../../../../../../libs/shared/notification';
+
+import { EmailNotificationOauthEvent } from './events/email-notification-oauth-event';
 
 export class CreateOAuthUserCommand {
   constructor(public createDto: IGoogleProvider | IGithubProvider) {}

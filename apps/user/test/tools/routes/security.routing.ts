@@ -1,4 +1,5 @@
 import { RoutingEnum } from '@shared/routing';
+
 import { BaseRouting } from './base-api.routing';
 
 export class SecurityRouting extends BaseRouting {

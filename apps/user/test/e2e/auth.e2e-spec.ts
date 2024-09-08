@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { TestingModuleBuilder } from '@nestjs/testing';
 import { v4 as uuidv4 } from 'uuid';
+
 import { EnvironmentVariables } from '../../src/core/config/configuration';
 import { DatabaseService } from '../../src/core/db/prisma/prisma.service';
 import { EmailManager } from '../../src/core/managers/email-manager';
@@ -297,7 +298,7 @@ aDescribe(skipSettings.for(e2eTestNamesEnum.AUTH))('AuthController', () => {
     describe('refresh-token', () => {
       beforeAll(async () => {
         const createdUserData = usersTestManager.createInputData({});
-        let admin = await usersTestManager.createSA(createdUserData);
+        const admin = await usersTestManager.createSA(createdUserData);
 
         const { accessToken, refreshToken } =
           await usersTestManager.signIn(admin);

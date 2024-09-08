@@ -1,7 +1,8 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { OutputId } from '@models/output-id.dto';
 import { LayerNoticeInterceptor } from '@shared/notification';
-import { FilesStorageAdapter } from '../../../../core/adapters/local-files-storage.adapter';
+import { FilesStorageAdapter } from '@file/core/adapters/local-files-storage.adapter';
+
 import { Bucket } from '../../api/models/enums/file-details.enum';
 import { FileUploadType } from '../../api/models/input-models/extracted-file-types';
 import { FilesService } from '../services/file-metadata.service';
@@ -40,7 +41,7 @@ export class UploadFileUseCase implements ICommandHandler<UploadFileCommand> {
     };
 
     const uploadedFileInStorage =
-    await this.filesAdapter.uploadFile(bucketParams);
+      await this.filesAdapter.uploadFile(bucketParams);
     const { url: fileUrl, id: fileId } = uploadedFileInStorage;
 
     const savedFileNotice = await this.filesService.saveFileMeta({

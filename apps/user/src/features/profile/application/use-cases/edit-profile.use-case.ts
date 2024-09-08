@@ -1,4 +1,5 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+
 import { OutputId } from '../../../../../../../libs/shared/models/output-id.dto';
 import {
   GetErrors,
@@ -21,7 +22,7 @@ export class EditProfileUseCase implements ICommandHandler<EditProfileCommand> {
   async execute(
     command: EditProfileCommand,
   ): Promise<LayerNoticeInterceptor<OutputId>> {
-    let notice = new LayerNoticeInterceptor<null | OutputId>();
+    const notice = new LayerNoticeInterceptor<null | OutputId>();
     const { userId } = command.profileDto;
 
     const userProfile = await this.profilesRepo.getByUserId(userId);

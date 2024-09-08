@@ -1,28 +1,17 @@
 import { FileType } from '@models/file.models';
-import {
-  Controller,
-  Get,
-  Param,
-  Post,
-  UseGuards
-} from '@nestjs/common';
+import { Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { ApiTagsEnum, RoutingEnum } from '@shared/routing';
 import { UserNavigate } from '@user/core/routes/user-navigate';
+
 import { UserPayload } from '../../auth/infrastructure/decorators/user-payload.decorator';
 import { AccessTokenGuard } from '../../auth/infrastructure/guards/accessToken.guard';
 import { UserSessionDto } from '../../security/api/models/security-input.models/security-session-info.model';
 
-
-
 @ApiTags(ApiTagsEnum.Posts)
 @Controller(RoutingEnum.posts)
 export class PostsController {
-  constructor() // private commandBus: CommandBus,
-  // private userProfilesApiService: UserProfilesApiService,
-  // private profilesQueryRepo: ProfilesQueryRepo,
-  // private profileService: UserProfileService,
-  {}
+  constructor() {} // private profileService: UserProfileService, // private profilesQueryRepo: ProfilesQueryRepo, // private userProfilesApiService: UserProfilesApiService, // private commandBus: CommandBus,
 
   @Get(UserNavigate.GetProfile)
   async getUserProfile(@Param('id') profileId: string): Promise<any> {

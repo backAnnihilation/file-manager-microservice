@@ -1,4 +1,5 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+
 import { CaptureAdapter } from '../../../../core/adapters/capture.adapter';
 
 @Injectable()

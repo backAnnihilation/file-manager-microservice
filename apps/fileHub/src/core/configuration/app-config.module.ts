@@ -1,6 +1,7 @@
 import { ConfigModule } from '@nestjs/config';
-import { awsConfig, validate } from './configuration';
 import { Global, Module } from '@nestjs/common';
+
+import { awsConfig, validate } from './configuration';
 
 @Global()
 @Module({

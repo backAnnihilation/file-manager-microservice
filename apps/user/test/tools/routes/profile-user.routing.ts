@@ -1,5 +1,7 @@
 import { RoutingEnum } from '@shared/routing';
+
 import { UserNavigate } from '../../../src/core/routes/user-navigate';
+
 import { BaseRouting } from './base-api.routing';
 
 export class ProfileRouting extends BaseRouting {

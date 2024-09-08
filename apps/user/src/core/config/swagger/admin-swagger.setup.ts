@@ -33,5 +33,5 @@ export const adminSwaggerSetup = (app: INestApplication) => {
 
   pathsToDeleteFromAppPaths.forEach((path) => delete adminDocument.paths[path]);
 
-  SwaggerModule.setup('api/v1/maga-admin', app, adminDocument);
+  SwaggerModule.setup('api/v1/admin/dashboard', app, adminDocument);
 };

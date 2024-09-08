@@ -13,8 +13,9 @@ export const userNameLength = { min: 6, max: 30 };
 export const passwordLength = { min: 6, max: 20 };
 export const nameLength = { min: 3, max: 15 };
 export const loginLength = { min: 3, max: 10 };
-export const nameInitialsMatch = /^[A-Za-zА-Яа-я\s]+$/
-export const textMatch = /^[0-9A-Za-zА-Яа-я,.\-!@#$%^&*()_+=\[\]{};:'"<>?/\|`\s]+$/
+export const nameInitialsMatch = /^[A-Za-zА-Яа-я\s]+$/;
+export const textMatch =
+  /^[0-9A-Za-zА-Яа-я,.\-!@#$%^&*()_+=\[\]{};:'"<>?/\|`\s]+$/;
 export const stringMatch = /^[a-zA-Z0-9_-]*$/;
 export const emailMatches = /^\s*[\w-\.]+@([\w-]+\.)+[\w-]{2,4}\s*$/;
 export const urlMatching =

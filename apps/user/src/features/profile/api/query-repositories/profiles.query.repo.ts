@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { DefaultArgs } from '@prisma/client/runtime/library';
-import { DatabaseService } from '../../../../core/db/prisma/prisma.service';
+import { DatabaseService } from '@user/core/db/prisma/prisma.service';
+
 import {
   getUserProfileViewModel,
   UserProfileViewModel,

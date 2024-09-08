@@ -36,15 +36,15 @@ import { BcryptAdapter } from '../adapters/bcrypt.adapter';
 import { CaptureAdapter } from '../adapters/capture.adapter';
 import { EmailAdapter } from '../adapters/email.adapter';
 import { EmailManager } from '../managers/email-manager';
-import { ProfilesQueryRepo } from '../../features/user/api/query-repositories/profiles.query.repo';
-import { ProfilesRepository } from '../../features/user/infrastructure/profiles.repository';
-import { FillOutProfileUseCase } from '../../features/user/application/use-cases/fill-out-profile.use-case';
-import { EditProfileUseCase } from '../../features/user/application/use-cases/edit-profile.use-case';
-import { ImageFilePipe } from '../../features/user/infrastructure/validation/upload-photo-format';
+import { ProfilesQueryRepo } from '../../features/profile/api/query-repositories/profiles.query.repo';
+import { ProfilesRepository } from '../../features/profile/infrastructure/profiles.repository';
+import { FillOutProfileUseCase } from '../../features/profile/application/use-cases/fill-out-profile.use-case';
+import { EditProfileUseCase } from '../../features/profile/application/use-cases/edit-profile.use-case';
+import { ImageFilePipe } from '../../features/profile/infrastructure/validation/upload-photo-format';
 import { AxiosAdapter } from '../adapters/axios.adapter';
 import { CleanUpDatabaseRepository } from '../../features/admin/infrastructure/clean-up.repo';
-import { UserProfileService } from '../../features/user/application/services/profile.service';
-import { UserProfilesApiService } from '../../features/user/application/services/user-api.service';
+import { UserProfileService } from '../../features/profile/application/services/profile.service';
+import { UserProfilesApiService } from '../../features/profile/application/services/user-api.service';
 
 export const providers: Provider[] = [
   AuthService,

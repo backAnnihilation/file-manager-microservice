@@ -1,4 +1,5 @@
 import { IsEnum } from 'class-validator';
+
 import { FileFormat, ImageType } from '../enums/file-details.enum';
 import { ContentType } from '../output-models/file-output-types';
 

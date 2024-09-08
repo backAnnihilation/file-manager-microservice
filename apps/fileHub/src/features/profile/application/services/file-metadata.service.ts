@@ -1,5 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { LayerNoticeInterceptor } from '@shared/notification';
+import { InjectModel } from '@nestjs/mongoose';
+import { OutputId } from '@models/output-id.dto';
+
 import { FilesStorageAdapter } from '../../../../core/adapters/local-files-storage.adapter';
 import { FilesRepository } from '../../infrastructure/files.repository';
 import { ContentType } from '../../api/models/output-models/file-output-types';
@@ -10,8 +13,6 @@ import {
   FileMetaDocument,
   FileMetaModel,
 } from '../../domain/entities/file-meta.schema';
-import { InjectModel } from '@nestjs/mongoose';
-import { OutputId } from '@models/output-id.dto';
 
 @Injectable()
 export class FilesService {
@@ -46,7 +47,7 @@ export class FilesService {
     const withExtension = fileName.endsWith(fileExtension);
     const fileSignature = withExtension ? fileName.split('.')[0] : fileName;
 
-    let generatedKey = `images/users/profiles/${imageType}/profileId-${profileId}/${fileSignature}${timeStamp}.${fileExtension}`;
+    const generatedKey = `images/users/profiles/${imageType}/profileId-${profileId}/${fileSignature}${timeStamp}.${fileExtension}`;
 
     return { Key: generatedKey, ContentType: contentType };
   };

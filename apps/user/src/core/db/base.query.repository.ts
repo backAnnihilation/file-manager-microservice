@@ -3,7 +3,6 @@ export interface BaseQueryRepository<T> {
   getById(id: string): Promise<T>;
 }
 
-
 export class BaseQueryRepository<T> implements BaseQueryRepository<T> {
   async getAll(): Promise<T[]> {
     throw new Error('Method not implemented.');

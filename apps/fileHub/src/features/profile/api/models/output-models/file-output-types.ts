@@ -3,7 +3,6 @@ export type UploadFileOutputType = {
   id: string;
 };
 
-
 export type ContentType =
   | 'image/png'
   | 'image/jpeg'

@@ -1,5 +1,6 @@
 import { Storage } from '@file/core/configuration/configuration';
 import { Provider } from '@nestjs/common';
+
 import { FilesQueryRepository } from '../../features/profile/api/files.query.repository';
 import { FilesScheduleService } from '../../features/profile/application/services/file-metadata.schedule.service';
 import { FilesService } from '../../features/profile/application/services/file-metadata.service';

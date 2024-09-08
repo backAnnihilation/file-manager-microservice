@@ -3,6 +3,7 @@ import { NestFactory } from '@nestjs/core';
 import { applyAppSettings } from '@file/core/configuration/app-settings';
 import { EnvironmentVariables } from '@file/core/configuration/configuration';
 import { COLORS } from '@shared/logger';
+
 import { AppModule } from './app.module';
 
 (async () => {

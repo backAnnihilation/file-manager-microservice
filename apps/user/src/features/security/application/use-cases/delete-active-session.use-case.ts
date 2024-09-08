@@ -1,7 +1,9 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+
 import { SecurityRepository } from '../../infrastructure/security.repository';
-import { DeleteActiveSessionCommand } from './commands/delete-active-session.command';
 import { LayerNoticeInterceptor } from '../../../../../../../libs/shared/notification';
+
+import { DeleteActiveSessionCommand } from './commands/delete-active-session.command';
 
 @CommandHandler(DeleteActiveSessionCommand)
 export class DeleteActiveSessionUseCase

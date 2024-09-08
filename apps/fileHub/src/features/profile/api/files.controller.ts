@@ -11,16 +11,18 @@ import { CommandBus } from '@nestjs/cqrs';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiTags } from '@nestjs/swagger';
 import { ProfileNavigate } from '@file/core/routes/profile-navigate';
+import { ApiTagsEnum, RoutingEnum } from '@shared/routing';
+import { ImageViewModelType } from '@models/file.models';
+
 import { UploadFileCommand } from '../application/use-cases/upload-file.use-case';
 import { ApiKeyGuard } from '../infrastructure/guards/api-key.guard';
 import { FileExtractPipe } from '../infrastructure/pipes/extract-file-characters.pipe';
+import { FilesBaseApiService } from '../application/services/file.base.service';
+
 import {
   FileExtractedType,
   InputFileTypesDto,
 } from './models/input-models/extracted-file-types';
-import { FilesBaseApiService } from '../application/services/file.base.service';
-import { ApiTagsEnum, RoutingEnum } from '@shared/routing';
-import { ImageViewModelType } from '@models/file.models';
 
 @ApiTags(ApiTagsEnum.Files)
 @Controller(RoutingEnum.files)

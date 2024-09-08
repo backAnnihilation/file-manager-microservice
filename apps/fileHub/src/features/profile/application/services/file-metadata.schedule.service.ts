@@ -8,9 +8,10 @@ import {
 } from '@aws-sdk/client-s3';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { AwsConfigType } from '../../../../core/configuration/configuration';
 import { SchedulerRegistry, CronExpression } from '@nestjs/schedule';
 import { CronJob } from 'cron';
+
+import { AwsConfigType } from '../../../../core/configuration/configuration';
 
 @Injectable()
 export class FilesScheduleService {

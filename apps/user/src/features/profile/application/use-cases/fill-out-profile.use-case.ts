@@ -1,4 +1,5 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+
 import { OutputId } from '../../../../../../../libs/shared/models/output-id.dto';
 import {
   GetErrors,
@@ -28,7 +29,7 @@ export class FillOutProfileUseCase
   async execute(
     command: FillOutProfileCommand,
   ): Promise<LayerNoticeInterceptor<OutputId>> {
-    let notice = new LayerNoticeInterceptor<null | OutputId>();
+    const notice = new LayerNoticeInterceptor<null | OutputId>();
     const { userId } = command.profileDto;
     const { userName } = await this.userRepo.getUserById(userId);
 

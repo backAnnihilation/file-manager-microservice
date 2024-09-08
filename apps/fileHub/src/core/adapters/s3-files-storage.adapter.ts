@@ -8,6 +8,7 @@ import {
 } from '@aws-sdk/client-s3';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+
 import { formatBytes } from '../../core/infrastructure/utils/format-file-size';
 import { AwsConfigType } from '../configuration/configuration';
 import { FilesScheduleService } from '../../features/profile/application/services/file-metadata.schedule.service';

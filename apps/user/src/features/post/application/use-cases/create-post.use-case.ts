@@ -1,16 +1,13 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 
 export class EditProfileCommand {
-  constructor() // public profileDto: IEditProfile
-
-  {}
+  constructor() {} // public profileDto: IEditProfile
 }
 
 @CommandHandler(EditProfileCommand)
 export class EditProfileUseCase implements ICommandHandler<EditProfileCommand> {
   private location = this.constructor.name;
-  constructor() // private profilesRepo: ProfilesRepository
-  {}
+  constructor() {} // private profilesRepo: ProfilesRepository
 
   async execute(command: EditProfileCommand) {
     // : Promise<LayerNoticeInterceptor<OutputId>>

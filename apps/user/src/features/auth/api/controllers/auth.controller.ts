@@ -9,11 +9,12 @@ import {
   Res,
   UseGuards,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiExcludeEndpoint, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
 import { ApiTagsEnum, RoutingEnum } from '@shared/routing';
 import { CustomThrottlerGuard } from '@user/core/infrastructure/guards/custom-throttler.guard';
 import { AuthNavigate } from '@user/core/routes/auth-navigate';
+
 import { UserSessionDto } from '../../../security/api/models/security-input.models/security-session-info.model';
 import { CreateSessionCommand } from '../../../security/application/use-cases/commands/create-session.command';
 import { DeleteActiveSessionCommand } from '../../../security/application/use-cases/commands/delete-active-session.command';
@@ -181,6 +182,7 @@ export class AuthController {
   @UseGuards(GithubOauthGuard)
   githubAuth() {}
 
+  @ApiExcludeEndpoint()
   @Get(AuthNavigate.GithubCallback)
   @UseGuards(GithubOauthGuard)
   async githubLogin(
@@ -199,6 +201,7 @@ export class AuthController {
   @UseGuards(GoogleOauthGuard)
   googleAuth() {}
 
+  @ApiExcludeEndpoint()
   @Get(AuthNavigate.GoogleRedirect)
   @UseGuards(GoogleOauthGuard)
   async googleLogin(
