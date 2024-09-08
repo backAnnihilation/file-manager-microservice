@@ -14,9 +14,9 @@ import {
   nameInitialsMatch,
   passwordLength,
 } from '@shared/validation/input-constants';
-
 import { UnauthorizedViaTokenApiResponse } from '../../../auth/api/swagger/shared/authorization.response';
 import { Gender } from '../models/enum/profile.enums';
+import { UserProfileResponseType } from './get-profile.description';
 
 class FillOutProfileInputModel {
   @ApiProperty({
@@ -132,6 +132,7 @@ export const FillOutProfileEndpoint = () =>
     ApiResponse({
       status: HttpStatus.CREATED,
       description: 'Profile successfully filled',
+      type: UserProfileResponseType,
     }),
     ApiBody({ required: true, type: FillOutProfileInputModel }),
     ApiResponse({

@@ -8,7 +8,6 @@ import {
   textMatch,
 } from '@shared/validation/input-constants';
 import { iSValidField } from '@shared/validation/validate-input-fields';
-
 import { IsDateFormat } from '../../../infrastructure/validation/date-format-validate';
 import { isValidAge } from '../../../infrastructure/validation/user-age-validate';
 import { Gender } from '../enum/profile.enums';

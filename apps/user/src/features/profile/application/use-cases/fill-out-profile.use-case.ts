@@ -1,16 +1,11 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-
-import { OutputId } from '../../../../../../../libs/shared/models/output-id.dto';
-import {
-  GetErrors,
-  LayerNoticeInterceptor,
-} from '../../../../../../../libs/shared/notification';
+import { OutputId } from '@shared/models/output-id.dto';
+import { GetErrors, LayerNoticeInterceptor } from '@shared/notification';
 import { UsersRepository } from '../../../admin/infrastructure/users.repo';
 import { IFillOutProfileCommand } from '../../api/models/input/fill-out-profile.model';
 import { UserEntities } from '../../api/models/enum/user-entities.enum';
 import { ProfilesRepository } from '../../infrastructure/profiles.repository';
 import { UserProfileDTO } from '../dto/create-profile.dto';
-('../../api/models/input-models/fill-profile.model');
 
 export class FillOutProfileCommand {
   constructor(public profileDto: IFillOutProfileCommand) {}

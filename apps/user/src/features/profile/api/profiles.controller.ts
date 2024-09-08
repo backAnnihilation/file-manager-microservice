@@ -82,7 +82,7 @@ export class UserProfilesController {
   async fillOutProfile(
     @UserPayload() userPayload: UserSessionDto,
     @Body() profileDto: FillOutProfileInputModel,
-  ) {
+  ): Promise<UserProfileViewModel> {
     const command = new FillOutProfileCommand({
       ...profileDto,
       userId: userPayload.userId,
