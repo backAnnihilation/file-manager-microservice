@@ -1,7 +1,9 @@
-import { INestApplication } from '@nestjs/common';
-
+import { INestApplication, INestMicroservice } from '@nestjs/common';
 import { HttpExceptionFilter } from './exception-filter';
 
-export const exceptionFilterSetup = (app: INestApplication, env: string) => {
+export const exceptionFilterSetup = (
+  app: INestApplication | INestMicroservice,
+  env: string,
+) => {
   app.useGlobalFilters(new HttpExceptionFilter(env));
 };

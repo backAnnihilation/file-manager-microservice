@@ -3,7 +3,6 @@ import { Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { ApiTagsEnum, RoutingEnum } from '@shared/routing';
 import { UserNavigate } from '@user/core/routes/user-navigate';
-
 import { UserPayload } from '../../auth/infrastructure/decorators/user-payload.decorator';
 import { AccessTokenGuard } from '../../auth/infrastructure/guards/accessToken.guard';
 import { UserSessionDto } from '../../security/api/models/security-input.models/security-session-info.model';

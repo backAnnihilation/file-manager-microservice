@@ -1,3 +1,6 @@
+import { ProfileNavigate } from '@file/core/routes/profile-navigate';
+import { UPLOAD_PHOTO } from '@models/enum/queue-tokens';
+import { ImageViewModelType } from '@models/file.models';
 import {
   Body,
   Controller,
@@ -8,17 +11,19 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
+import {
+  Ctx,
+  MessagePattern,
+  Payload,
+  RmqContext,
+} from '@nestjs/microservices';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiTags } from '@nestjs/swagger';
-import { ProfileNavigate } from '@file/core/routes/profile-navigate';
 import { ApiTagsEnum, RoutingEnum } from '@shared/routing';
-import { ImageViewModelType } from '@models/file.models';
-
+import { FilesBaseApiService } from '../application/services/file.base.service';
 import { UploadFileCommand } from '../application/use-cases/upload-file.use-case';
 import { ApiKeyGuard } from '../infrastructure/guards/api-key.guard';
 import { FileExtractPipe } from '../infrastructure/pipes/extract-file-characters.pipe';
-import { FilesBaseApiService } from '../application/services/file.base.service';
-
 import {
   FileExtractedType,
   InputFileTypesDto,
@@ -46,5 +51,21 @@ export class FilesController {
       profileId,
     });
     return this.filesApiService.create(command);
+  }
+
+  @MessagePattern(UPLOAD_PHOTO)
+  handleUploadPhoto(@Payload() data?: number[], @Ctx() context?: RmqContext) {
+    console.log(data);
+
+    const originalChanel = context.getChannelRef();
+    const originalMsg = context.getMessage();
+    originalChanel.ack(originalMsg);
+    return true;
+    // const command = new UploadProfileImageCommand({
+    //   ...extractedFile,
+    //   ...fileDto,
+    //   profileId,
+    // });
+    // return this.filesApiService.create(command);
   }
 }

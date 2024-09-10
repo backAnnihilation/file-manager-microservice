@@ -3,7 +3,6 @@ import { ConfigService } from '@nestjs/config';
 import axios, { AxiosInstance } from 'axios';
 import * as FormData from 'form-data';
 import { ImageViewModelType } from '@models/file.models';
-
 import { EnvironmentVariables } from '../config/configuration';
 import { ProfileImageToSendType } from '../../features/profile/api/models/input/upload-file-type.model';
 

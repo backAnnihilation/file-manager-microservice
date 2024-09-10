@@ -1,3 +1,4 @@
+import { Environment } from '@shared/environment.enum';
 import { plainToInstance } from 'class-transformer';
 import {
   IsEnum,
@@ -6,7 +7,6 @@ import {
   IsString,
   validateSync,
 } from 'class-validator';
-import { Environment } from '@shared/environment.enum';
 
 export class EnvironmentVariables {
   @IsNumber()
@@ -65,6 +65,21 @@ export class EnvironmentVariables {
   @IsOptional()
   API_KEY: string;
 
+  @IsString()
+  RMQ_URL: string;
+  @IsString()
+  RMQ_QUEUE_NAME: string;
+  @IsOptional()
+  RMQ_EXCHANGE_NAME: string;
+  @IsOptional()
+  RMQ_ROUTING_KEY: string;
+  @IsOptional()
+  RMQ_QUEUE_NAME_EMAIL: string;
+  @IsOptional()
+  RMQ_EXCHANGE_NAME_EMAIL: string;
+  @IsOptional()
+  RMQ_ROUTING_KEY_EMAIL: string;
+
   @IsEnum(Environment)
   ENV: Environment;
 }
@@ -74,6 +89,7 @@ export const validate = (config: Record<string, unknown>) => {
   const validatedConfig = plainToInstance(EnvironmentVariables, config, {
     enableImplicitConversion: true,
   });
+  console.log({ ENV: validatedConfig.ENV });
 
   const errors = validateSync(validatedConfig, {
     skipMissingProperties: false,

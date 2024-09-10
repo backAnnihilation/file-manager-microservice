@@ -1,14 +1,16 @@
-const execSync = require('child_process').execSync;
-const path = require('path');
+const { execSync } = require('child_process');
+const { join } = require('path');
 
 const migrationName = process.argv[2];
 
-if (!migrationName) throw new Error(`Migration name wasn't provided`);
+if (!migrationName) {
+  throw new Error(`Migration name wasn't provided`);
+}
 
-const userProjectPath = path.join(__dirname, '..', '..');
+const userDirectory = join(__dirname, '..', '..');
 
-const command = `npx prisma migrate dev --name ${migrationName}`;
+const command = `npx prisma migrate dev --name ${migrationName} --schema=./prisma/schemas`;
 
-process.chdir(userProjectPath);
+process.chdir(userDirectory);
 
 execSync(command, { stdio: 'inherit' });

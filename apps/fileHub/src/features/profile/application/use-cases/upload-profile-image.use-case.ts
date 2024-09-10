@@ -6,12 +6,14 @@ import { Bucket } from '../../api/models/enums/file-details.enum';
 import { FileUploadType } from '../../api/models/input-models/extracted-file-types';
 import { FilesService } from '../services/file-metadata.service';
 
-export class UploadFileCommand {
+export class UploadProfileImageCommand {
   constructor(public uploadDto: FileUploadType) {}
 }
 
-@CommandHandler(UploadFileCommand)
-export class UploadFileUseCase implements ICommandHandler<UploadFileCommand> {
+@CommandHandler(UploadProfileImageCommand)
+export class UploadProfileImageUseCase
+  implements ICommandHandler<UploadProfileImageCommand>
+{
   private location = this.constructor.name;
   constructor(
     private filesService: FilesService,
@@ -19,7 +21,7 @@ export class UploadFileUseCase implements ICommandHandler<UploadFileCommand> {
   ) {}
 
   async execute(
-    command: UploadFileCommand,
+    command: UploadProfileImageCommand,
   ): Promise<LayerNoticeInterceptor<OutputId>> {
     const { profileId, ...fileCharacters } = command.uploadDto;
     const { fileFormat, buffer, fileType, mimetype, originalname, size } =

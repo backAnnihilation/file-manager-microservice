@@ -1,18 +1,18 @@
-import { Injectable } from '@nestjs/common';
-import { LayerNoticeInterceptor } from '@shared/notification';
-import { InjectModel } from '@nestjs/mongoose';
+import { FilesStorageAdapter } from '@file/core/adapters/local-files-storage.adapter';
 import { OutputId } from '@models/output-id.dto';
-
-import { FilesStorageAdapter } from '../../../../core/adapters/local-files-storage.adapter';
-import { FilesRepository } from '../../infrastructure/files.repository';
-import { ContentType } from '../../api/models/output-models/file-output-types';
+import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { LayerNoticeInterceptor } from '@shared/notification';
 import { ImageType } from '../../api/models/enums/file-details.enum';
+import { ContentType } from '../../api/models/output-models/file-output-types';
 import {
   CreateFileMetaDto,
   FileMeta,
-  FileMetaDocument,
   FileMetaModel,
 } from '../../domain/entities/file-meta.schema';
+import { FilesRepository } from '../../infrastructure/files.repository';
+import * as sharp from 'sharp';
+import { FileType } from '@models/file.models';
 
 @Injectable()
 export class FilesService {
@@ -51,6 +51,9 @@ export class FilesService {
 
     return { Key: generatedKey, ContentType: contentType };
   };
+
+  convertPhotoToStorageFormat = async (image: FileType): Promise<Buffer> =>
+    await sharp(image.buffer).webp({ quality: 80 }).toBuffer();
 }
 
 type GenerateImageKeyType = {

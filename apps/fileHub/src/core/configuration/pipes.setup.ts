@@ -1,15 +1,13 @@
 import {
   BadRequestException,
   INestApplication,
+  INestMicroservice,
   ValidationError,
   ValidationPipe,
 } from '@nestjs/common';
-
 import { validationErrorsMapper } from '../validation/validation-utils';
 
-import { swaggerSetup } from './swagger.setup';
-
-export const pipesSetup = (app: INestApplication) => {
+export const pipesSetup = (app: INestApplication | INestMicroservice) => {
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
@@ -25,7 +23,6 @@ export const pipesSetup = (app: INestApplication) => {
       },
     }),
   );
-  swaggerSetup(app);
 };
 
 export type ValidationPipeErrorType = {

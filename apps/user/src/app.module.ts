@@ -3,7 +3,6 @@ import { CqrsModule } from '@nestjs/cqrs';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
-
 import { SecurityController } from './features/security/api/security.controller';
 import { ConfigurationModule } from './core/config/app-config.module';
 import { AuthController } from './features/auth/api/controllers/auth.controller';

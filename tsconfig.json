@@ -21,6 +21,7 @@
     "paths": {
       "@shared/*": ["libs/shared/*"],
       "@models/*": ["libs/shared/models/*"],
+      "@config/*": ["libs/shared/config/*"],
       "@user/core/*": ["apps/user/src/core/*"],
       "@file/core/*": ["apps/fileHub/src/core/*"]
     }

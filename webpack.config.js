@@ -6,6 +6,7 @@ module.exports = {
     alias: {
       '@shared': resolve(__dirname, './libs/shared/'),
       '@models': resolve(__dirname, './libs/shared/models/'),
+      '@config': resolve(__dirname, './libs/shared/config/'),
       '@user/core': resolve(__dirname, './apps/user/src/core/'),
       '@file/core': resolve(__dirname, './apps/fileHub/src/core/'),
     },

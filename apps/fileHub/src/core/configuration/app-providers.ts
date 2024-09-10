@@ -1,6 +1,5 @@
 import { Storage } from '@file/core/configuration/configuration';
 import { Provider } from '@nestjs/common';
-
 import { FilesQueryRepository } from '../../features/profile/api/files.query.repository';
 import { FilesScheduleService } from '../../features/profile/application/services/file-metadata.schedule.service';
 import { FilesService } from '../../features/profile/application/services/file-metadata.service';
@@ -11,6 +10,13 @@ import { ApiKeyGuard } from '../../features/profile/infrastructure/guards/api-ke
 import { FileExtractPipe } from '../../features/profile/infrastructure/pipes/extract-file-characters.pipe';
 import { FilesStorageAdapter } from '../adapters/local-files-storage.adapter';
 import { S3FilesStorageAdapter } from '../adapters/s3-files-storage.adapter';
+import { ConfigService } from '@nestjs/config';
+import {
+  RmqOptions,
+  Transport,
+  ClientProxyFactory,
+} from '@nestjs/microservices';
+import { RmqConfig } from '@config/rmq.config';
 
 export const providers: Provider[] = [
   FilesRepository,

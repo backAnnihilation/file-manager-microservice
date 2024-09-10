@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-
 import { EnvironmentVariables } from '../config/configuration';
 
 @Injectable()

@@ -2,6 +2,7 @@ import { Provider } from '@nestjs/common';
 import { UsersQueryRepo } from '../../features/admin/api/query-repositories/user-account.query.repo';
 import { SACudApiService } from '../../features/admin/application/sa-cud-api.service';
 import { CreateSAUseCase } from '../../features/admin/application/use-cases/create-sa.use.case';
+import { CleanUpDatabaseRepository } from '../../features/admin/infrastructure/clean-up.repo';
 import { UsersRepository } from '../../features/admin/infrastructure/users.repo';
 import { AuthQueryRepository } from '../../features/auth/api/query-repositories/auth.query.repo';
 import { AuthenticationApiService } from '../../features/auth/application/auth-token-response.service';
@@ -27,42 +28,47 @@ import { GoogleStrategy } from '../../features/auth/infrastructure/guards/strate
 import { LocalStrategy } from '../../features/auth/infrastructure/guards/strategies/local.strategy';
 import { RefreshTokenStrategy } from '../../features/auth/infrastructure/guards/strategies/refresh-token.strategy';
 import { CaptureGuard } from '../../features/auth/infrastructure/guards/validate-capture.guard';
+import { ProfilesQueryRepo } from '../../features/profile/api/query-repositories/profiles.query.repo';
+import { UserProfileService } from '../../features/profile/application/services/profile.service';
+import { UserProfilesApiService } from '../../features/profile/application/services/user-api.service';
+import { EditProfileUseCase } from '../../features/profile/application/use-cases/edit-profile.use-case';
+import { FillOutProfileUseCase } from '../../features/profile/application/use-cases/fill-out-profile.use-case';
+import { ProfilesRepository } from '../../features/profile/infrastructure/profiles.repository';
+import { ImageFilePipe } from '../../features/profile/infrastructure/validation/upload-photo-format';
 import { SecurityQueryRepo } from '../../features/security/api/query-repositories/security.query.repo';
 import { CreateUserSessionUseCase } from '../../features/security/application/use-cases/create-user-session.use-case';
 import { DeleteActiveSessionUseCase } from '../../features/security/application/use-cases/delete-active-session.use-case';
 import { DeleteOtherUserSessionsUseCase } from '../../features/security/application/use-cases/delete-other-user-sessions.use-case';
 import { SecurityRepository } from '../../features/security/infrastructure/security.repository';
+import { AxiosAdapter } from '../adapters/axios.adapter';
 import { BcryptAdapter } from '../adapters/bcrypt.adapter';
 import { CaptureAdapter } from '../adapters/capture.adapter';
 import { EmailAdapter } from '../adapters/email.adapter';
+import { RMQAdapter } from '../adapters/rmq.adapter';
 import { EmailManager } from '../managers/email-manager';
-import { ProfilesQueryRepo } from '../../features/profile/api/query-repositories/profiles.query.repo';
-import { ProfilesRepository } from '../../features/profile/infrastructure/profiles.repository';
-import { FillOutProfileUseCase } from '../../features/profile/application/use-cases/fill-out-profile.use-case';
-import { EditProfileUseCase } from '../../features/profile/application/use-cases/edit-profile.use-case';
-import { ImageFilePipe } from '../../features/profile/infrastructure/validation/upload-photo-format';
-import { AxiosAdapter } from '../adapters/axios.adapter';
-import { CleanUpDatabaseRepository } from '../../features/admin/infrastructure/clean-up.repo';
-import { UserProfileService } from '../../features/profile/application/services/profile.service';
-import { UserProfilesApiService } from '../../features/profile/application/services/user-api.service';
+
+const adapters: Provider[] = [
+  BcryptAdapter,
+  CaptureAdapter,
+  EmailAdapter,
+  RMQAdapter,
+  AxiosAdapter,
+];
 
 export const providers: Provider[] = [
+  ...adapters,
   AuthService,
   UserService,
   AuthQueryRepository,
   CleanUpDatabaseRepository,
-  CaptureAdapter,
-  AxiosAdapter,
   SecurityQueryRepo,
   EmailManager,
-  EmailAdapter,
   UsersQueryRepo,
   SACudApiService,
   BasicSAAuthGuard,
   BasicSAStrategy,
   LocalStrategy,
   CreateSAUseCase,
-  BcryptAdapter,
   UsersRepository,
   CaptureGuard,
   VerificationCredentialsUseCase,
@@ -93,4 +99,22 @@ export const providers: Provider[] = [
   EditProfileUseCase,
   ImageFilePipe,
   UserProfileService,
+  // {
+  //   provide: 'FILES_SERVICE',
+  //   useFactory: (configService: ConfigService<RmqConfig>) => {
+  //     const { url, queueName: queue } = configService.getOrThrow('rmq');
+  //     const rmqOption: RmqOptions = {
+  //       transport: Transport.RMQ,
+  //       options: {
+  //         urls: [url],
+  //         queue,
+  //         queueOptions: {
+  //           durable: true,
+  //         },
+  //       },
+  //     };
+  //     return ClientProxyFactory.create(rmqOption);
+  //   },
+  //   inject: [ConfigService],
+  // },
 ];

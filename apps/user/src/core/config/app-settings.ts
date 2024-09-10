@@ -3,9 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { Environment } from '@shared/environment.enum';
 import { useContainer } from 'class-validator';
 import * as cookieParser from 'cookie-parser';
-
 import { AppModule } from '../../app.module';
-
 import { exceptionFilterSetup } from './exception-filter.setup';
 import { pipesSetup } from './pipes.setup';
 import { swaggerSetup } from './swagger/swagger.setup';

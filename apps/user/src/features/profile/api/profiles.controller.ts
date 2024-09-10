@@ -18,7 +18,6 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiExcludeEndpoint, ApiTags } from '@nestjs/swagger';
 import { ApiTagsEnum, RoutingEnum } from '@shared/routing';
 import { UserNavigate } from '@user/core/routes/user-navigate';
-
 import { UserPayload } from '../../auth/infrastructure/decorators/user-payload.decorator';
 import { AccessTokenGuard } from '../../auth/infrastructure/guards/accessToken.guard';
 import { UserSessionDto } from '../../security/api/models/security-input.models/security-session-info.model';
@@ -29,7 +28,6 @@ import { FillOutProfileCommand } from '../application/use-cases/fill-out-profile
 import { ImageFilePipe } from '../infrastructure/validation/upload-photo-format';
 import { SetUserIdGuard } from '../../auth/infrastructure/guards/set-user-id.guard';
 import { ExtractUserId } from '../../auth/infrastructure/decorators/current-user-id.decorator';
-
 import { EditProfileInputModel } from './models/input/edit-profile.model';
 import { FillOutProfileInputModel } from './models/input/fill-out-profile.model';
 import { UserProfileViewModel } from './models/output/profile.view.model';
@@ -70,10 +68,15 @@ export class UserProfilesController {
     @UploadedFile(ImageFilePipe)
     image: FileType,
   ): Promise<ImageViewModelType> {
-    return this.profileService.uploadProfilePhoto({
+    await this.profileService.uploadProfileImage({
       image,
       userId: userPayload.userId,
     });
+    return;
+    // return this.profileService.uploadProfilePhoto({
+    //   image,
+    //   userId: userPayload.userId,
+    // });
   }
 
   @FillOutProfileEndpoint()
