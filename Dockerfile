@@ -6,7 +6,7 @@ RUN npm install -g pnpm
 
 USER node
 
-RUN mkdir -p /home  /node/dist/app
+RUN mkdir -p /home/node/dist/app
 
 WORKDIR /home/node/dist/app
 
