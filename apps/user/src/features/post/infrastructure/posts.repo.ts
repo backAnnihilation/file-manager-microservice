@@ -24,7 +24,6 @@ export class PostsRepository extends BaseRepository {
       };
 
       const post = await this.userPosts.create({ data });
-      console.log(post.id);
       return;
     } catch (error) {
       console.log(error);
