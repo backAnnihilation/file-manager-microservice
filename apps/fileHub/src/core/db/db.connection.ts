@@ -2,7 +2,6 @@ import { ConfigService } from '@nestjs/config';
 import { Environment } from '@shared/environment.enum';
 import { COLORS } from '@shared/logger';
 import { MongooseModuleOptions } from '@nestjs/mongoose';
-
 import { EnvironmentVariables } from '../configuration/configuration';
 
 export const getConnection = async (

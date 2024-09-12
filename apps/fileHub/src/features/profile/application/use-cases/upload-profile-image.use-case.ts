@@ -1,13 +1,14 @@
-import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { OutputId } from '@models/output-id.dto';
-import { LayerNoticeInterceptor } from '@shared/notification';
 import { FilesStorageAdapter } from '@file/core/adapters/local-files-storage.adapter';
+import { OutputId } from '@models/output-id.dto';
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { LayerNoticeInterceptor } from '@shared/notification';
 import { Bucket } from '../../api/models/enums/file-details.enum';
-import { FileUploadType } from '../../api/models/input-models/extracted-file-types';
+import { UploadProfileImageDto } from '../../api/models/input-models/profile-image.model';
+import { ContentType } from '../../api/models/output-models/file-output-types';
 import { FilesService } from '../services/file-metadata.service';
 
 export class UploadProfileImageCommand {
-  constructor(public uploadDto: FileUploadType) {}
+  constructor(public uploadDto: UploadProfileImageDto) {}
 }
 
 @CommandHandler(UploadProfileImageCommand)
@@ -23,21 +24,25 @@ export class UploadProfileImageUseCase
   async execute(
     command: UploadProfileImageCommand,
   ): Promise<LayerNoticeInterceptor<OutputId>> {
-    const { profileId, ...fileCharacters } = command.uploadDto;
-    const { fileFormat, buffer, fileType, mimetype, originalname, size } =
-      fileCharacters;
+    const { profileId, fileFormat, fileType, image } = command.uploadDto;
+    const { buffer, mimetype, originalname, size } = image;
 
     const { ContentType, Key } = this.filesService.generateImageKey({
-      contentType: mimetype,
+      contentType: mimetype as ContentType,
       fileName: originalname,
       imageType: fileType,
       profileId,
     });
 
+    const buf = Buffer.from((buffer as any).data);
+
+    const convertedBuffer =
+      await this.filesService.convertPhotoToStorageFormat(buf);
+
     const bucketParams = {
       Bucket: Bucket.Inst,
       Key,
-      Body: buffer,
+      Body: convertedBuffer,
       ContentType,
     };
 

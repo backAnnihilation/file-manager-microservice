@@ -68,11 +68,11 @@ export class UserProfilesController {
     @UploadedFile(ImageFilePipe)
     image: FileType,
   ): Promise<ImageViewModelType> {
-    await this.profileService.uploadProfileImage({
+    const result = await this.profileService.uploadProfileImage({
       image,
       userId: userPayload.userId,
     });
-    return;
+    return result.data;
     // return this.profileService.uploadProfilePhoto({
     //   image,
     //   userId: userPayload.userId,

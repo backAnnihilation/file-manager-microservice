@@ -1,5 +1,4 @@
 import { IsOptional } from 'class-validator';
-
 import {
   userNameLength,
   stringMatch,
@@ -7,8 +6,8 @@ import {
   passwordMatch,
   frequentLength,
   emailMatches,
-} from '../../../../../../../../libs/shared/validation/input-constants';
-import { iSValidField } from '../../../../../../../../libs/shared/validation/validate-input-fields';
+} from '@shared/validation/input-constants';
+import { iSValidField } from '@shared/validation/validate-input-fields';
 
 export class CreateUserDto {
   /**

@@ -3,6 +3,13 @@ export enum QUEUE_TOKEN {
   PHOTO_QUEUE = 'PHOTO_SERVICE',
   VIDEO_QUEUE = 'VIDEO_SERVICE',
 }
+export enum QUEUE_NAME {
+  FILES = 'FILES',
+  PHOTO = 'PHOTO',
+  VIDEO = 'VIDEO',
+}
+
+export const FILES_SERVICE = QUEUE_NAME.FILES;
 
 export enum EVENT_NAME {
   FILE_UPLOAD = 'upload_file',

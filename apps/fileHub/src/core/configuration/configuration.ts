@@ -55,6 +55,13 @@ export class EnvironmentVariables {
   @IsOptional()
   AWS_ACCESS_POINT: string;
 
+  @IsOptional()
+  RMQ_URL: string;
+  @IsOptional()
+  RMQ_LOCAL_URL: string;
+  @IsOptional()
+  RMQ_FILES_QUEUE: string;
+
   @IsEnum(Storage)
   STORAGE: Storage;
 
@@ -67,6 +74,7 @@ export const validate = (config: Record<string, unknown>) => {
   const validatedConfig = plainToInstance(EnvironmentVariables, config, {
     enableImplicitConversion: true,
   });
+  console.log({ ENV: validatedConfig.ENV });
 
   const errors = validateSync(validatedConfig, {
     skipMissingProperties: false,

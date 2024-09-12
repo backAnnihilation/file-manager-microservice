@@ -11,16 +11,19 @@ import { SAController } from './features/admin/api/controllers/sa.controller';
 import { providers } from './core/settings/app-providers';
 import { UserProfilesController } from './features/profile/api/profiles.controller';
 import { PostModule } from './features/post/post.module';
+import { RmqModule } from '@shared/src';
+import { QUEUE_NAME } from '@shared/models/enum/queue-tokens';
 
 @Module({
   imports: [
     JwtModule.register({}),
+    RmqModule.register({ name: QUEUE_NAME.FILES }),
+    ThrottlerModule.forRoot([{ limit: 20, ttl: Math.pow(20, 3) }]),
     PassportModule,
     ConfigurationModule,
     CqrsModule,
     PostModule,
     PrismaModule,
-    ThrottlerModule.forRoot([{ limit: 20, ttl: Math.pow(20, 3) }]),
   ],
   controllers: [
     SecurityController,

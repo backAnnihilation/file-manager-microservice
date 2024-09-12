@@ -10,8 +10,7 @@ import { pipesSetup } from './pipes.setup';
 import { swaggerSetup } from './swagger.setup';
 
 export const applyAppSettings = (app: INestApplication | INestMicroservice) => {
-  const currentENV = app.get(ConfigService<EnvironmentVariables>).get('ENV');
-  console.log({ currentENV });
+  const currentENV = app.get(ConfigService).getOrThrow('ENV');
 
   // let appPrefix = 'api/v1';
   // currentENV === Environment.TESTING && (appPrefix = '');

@@ -10,13 +10,7 @@ import { ApiKeyGuard } from '../../features/profile/infrastructure/guards/api-ke
 import { FileExtractPipe } from '../../features/profile/infrastructure/pipes/extract-file-characters.pipe';
 import { FilesStorageAdapter } from '../adapters/local-files-storage.adapter';
 import { S3FilesStorageAdapter } from '../adapters/s3-files-storage.adapter';
-import { ConfigService } from '@nestjs/config';
-import {
-  RmqOptions,
-  Transport,
-  ClientProxyFactory,
-} from '@nestjs/microservices';
-import { RmqConfig } from '@config/rmq.config';
+import { UploadProfileImageUseCase } from '../../features/profile/application/use-cases/upload-profile-image.use-case';
 
 export const providers: Provider[] = [
   FilesRepository,
@@ -27,6 +21,7 @@ export const providers: Provider[] = [
   FilesService,
   FilesBaseApiService,
   FilesQueryRepository,
+  UploadProfileImageUseCase,
   {
     provide: FilesStorageAdapter,
     useClass:

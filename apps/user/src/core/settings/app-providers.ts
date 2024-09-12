@@ -47,6 +47,7 @@ import { EmailAdapter } from '../adapters/email.adapter';
 import { RMQAdapter } from '../adapters/rmq.adapter';
 import { EmailManager } from '../managers/email-manager';
 
+
 const adapters: Provider[] = [
   BcryptAdapter,
   CaptureAdapter,
@@ -99,22 +100,4 @@ export const providers: Provider[] = [
   EditProfileUseCase,
   ImageFilePipe,
   UserProfileService,
-  // {
-  //   provide: 'FILES_SERVICE',
-  //   useFactory: (configService: ConfigService<RmqConfig>) => {
-  //     const { url, queueName: queue } = configService.getOrThrow('rmq');
-  //     const rmqOption: RmqOptions = {
-  //       transport: Transport.RMQ,
-  //       options: {
-  //         urls: [url],
-  //         queue,
-  //         queueOptions: {
-  //           durable: true,
-  //         },
-  //       },
-  //     };
-  //     return ClientProxyFactory.create(rmqOption);
-  //   },
-  //   inject: [ConfigService],
-  // },
 ];

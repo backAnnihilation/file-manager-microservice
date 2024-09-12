@@ -1,9 +1,10 @@
 import { ProfileNavigate } from '@file/core/routes/profile-navigate';
-import { UPLOAD_PHOTO } from '@models/enum/queue-tokens';
+import { UPLOAD_FILE, UPLOAD_PHOTO } from '@models/enum/queue-tokens';
 import { ImageViewModelType } from '@models/file.models';
 import {
   Body,
   Controller,
+  Get,
   Param,
   Post,
   UploadedFile,
@@ -13,6 +14,7 @@ import {
 import { CommandBus } from '@nestjs/cqrs';
 import {
   Ctx,
+  EventPattern,
   MessagePattern,
   Payload,
   RmqContext,
@@ -28,6 +30,9 @@ import {
   FileExtractedType,
   InputFileTypesDto,
 } from './models/input-models/extracted-file-types';
+import { RmqService } from '@shared/src';
+import { UploadProfileImageDto } from './models/input-models/profile-image.model';
+import { UploadProfileImageCommand } from '../application/use-cases/upload-profile-image.use-case';
 
 @ApiTags(ApiTagsEnum.Files)
 @Controller(RoutingEnum.files)
@@ -35,6 +40,7 @@ export class FilesController {
   constructor(
     private commandBus: CommandBus,
     private filesApiService: FilesBaseApiService,
+    private readonly rmqService: RmqService,
   ) {}
 
   @Post(ProfileNavigate.UploadProfilePhoto)
@@ -54,18 +60,27 @@ export class FilesController {
   }
 
   @MessagePattern(UPLOAD_PHOTO)
-  handleUploadPhoto(@Payload() data?: number[], @Ctx() context?: RmqContext) {
-    console.log(data);
+  handleUploadProfileImage(
+    @Payload() data?: UploadProfileImageDto,
+    @Ctx() context?: RmqContext,
+  ) {
+    this.rmqService.ack(context);
+    const command = new UploadProfileImageCommand(data);
+    return this.filesApiService.create(command);
+  }
 
-    const originalChanel = context.getChannelRef();
-    const originalMsg = context.getMessage();
-    originalChanel.ack(originalMsg);
-    return true;
-    // const command = new UploadProfileImageCommand({
-    //   ...extractedFile,
-    //   ...fileDto,
-    //   profileId,
-    // });
-    // return this.filesApiService.create(command);
+  @EventPattern('emit')
+  handleUploadFile(
+    @Payload() data?: UploadProfileImageDto,
+    @Ctx() context?: RmqContext,
+  ) {
+    console.log({ data });
+
+    this.rmqService.ack(context);
+  }
+
+  @Get()
+  get() {
+    return 'Hello';
   }
 }

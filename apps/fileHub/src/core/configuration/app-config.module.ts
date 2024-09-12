@@ -13,10 +13,8 @@ import { Environment } from '@shared/environment.enum';
       validate,
       cache: true,
       expandVariables: true,
-      envFilePath:
-        // process.env.ENV === Environment.TESTING ?
-        'apps/fileHub/.env',
-      // : '',
+      envFilePath: 'apps/fileHub/.env'
+        // process.env.ENV === Environment.TESTING ? 'apps/fileHub/.env' : '',
     }),
   ],
   exports: [ConfigModule],

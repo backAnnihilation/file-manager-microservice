@@ -52,8 +52,8 @@ export class FilesService {
     return { Key: generatedKey, ContentType: contentType };
   };
 
-  convertPhotoToStorageFormat = async (image: FileType): Promise<Buffer> =>
-    await sharp(image.buffer).webp({ quality: 80 }).toBuffer();
+  convertPhotoToStorageFormat = async (buffer: any): Promise<Buffer> =>
+    await sharp(buffer).webp({ quality: 80 }).toBuffer();
 }
 
 type GenerateImageKeyType = {

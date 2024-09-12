@@ -67,8 +67,10 @@ export class EnvironmentVariables {
 
   @IsString()
   RMQ_URL: string;
+  @IsOptional()
+  RMQ_LOCAL_URL: string;
   @IsString()
-  RMQ_QUEUE_NAME: string;
+  RMQ_FILES_QUEUE: string;
   @IsOptional()
   RMQ_EXCHANGE_NAME: string;
   @IsOptional()
