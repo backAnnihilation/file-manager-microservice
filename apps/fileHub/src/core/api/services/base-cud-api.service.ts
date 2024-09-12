@@ -10,6 +10,11 @@ export interface BaseViewModel {
   id?: string;
 }
 
+export interface PostViewModel {
+  id?: string;
+  url?: string;
+}
+
 export class BaseCUDApiService<TCommand, TViewModel> {
   constructor(
     private readonly commandBus: CommandBus,
@@ -34,10 +39,10 @@ export class BaseCUDApiService<TCommand, TViewModel> {
     return await this.queryRepo.getById(notification.data.id);
   }
 
-  async createPost(command: TCommand): Promise<string> {
+  async createPost(command: TCommand) {
     const notification = await this.commandBus.execute<
       TCommand,
-      LayerNoticeInterceptor<TViewModel & BaseViewModel>
+      LayerNoticeInterceptor<TViewModel & PostViewModel>
     >(command);
 
     if (notification.hasError) {
@@ -48,9 +53,11 @@ export class BaseCUDApiService<TCommand, TViewModel> {
       throw error;
     }
 
-    return notification.data.id;
+    return {
+      postId: notification.data.id,
+      url: notification.data.url,
+    };
   }
-
   async updateOrDelete(command: TCommand): Promise<void> {
     const notification = await this.commandBus.execute<
       TCommand,

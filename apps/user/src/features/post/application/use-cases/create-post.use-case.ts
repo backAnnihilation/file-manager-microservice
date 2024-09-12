@@ -50,8 +50,6 @@ export class CreatePostUseCase implements ICommandHandler<CreatePostCommand> {
 
     const result = await this.rmqAdapter.sendMessage(imagePayload, commandName);
 
-    console.log(result)
-
     if (!result) {
       notice.addError(
         `Image wasn't uploaded`,
@@ -66,6 +64,8 @@ export class CreatePostUseCase implements ICommandHandler<CreatePostCommand> {
       userId,
       imageUrl: result.url,
     });
+
+    console.log(result.url)
 
     await this.postRepo.create(postDto);
 

@@ -1,5 +1,5 @@
 import { FilesStorageAdapter } from '@file/core/adapters/local-files-storage.adapter';
-import { OutputId } from '@models/output-id.dto';
+import { OutputId, OutputIdAndUrl } from '@models/output-id.dto';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { LayerNoticeInterceptor } from '@shared/notification';
@@ -48,7 +48,7 @@ export class FilesService {
   }
   async savePostFileMeta(
     postFileMetaDto: CreatePostFileMetaDto,
-  ): Promise<LayerNoticeInterceptor<OutputId>> {
+  ): Promise<LayerNoticeInterceptor<OutputIdAndUrl>> {
     try {
       const fileNotice =
         await this.PostFileMetadata.makeInstance(postFileMetaDto);
