@@ -9,6 +9,7 @@ import { UsersRepository } from '../../../admin/infrastructure/users.repo';
 import { ProfilesRepository } from '../../infrastructure/profiles.repository';
 import { IEditPostCommand } from '../../api/models/input/edit-profile.model';
 import { EditUserPostDTO } from '../dto/edit-post.dto';
+import { PostsRepository } from '../../infrastructure/posts.repo';
 ('../../api/models/input-models/fill-profile.model');
 
 export class EditPostCommand {
