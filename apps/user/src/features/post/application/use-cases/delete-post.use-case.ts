@@ -8,8 +8,8 @@ import {
 // import { IEditPostCommand } from '../../api/models/input/edit-profile.model';
 // import { ProfilesRepository } from '../../infrastructure/profiles.repository';
 import { IDeletePostCommand } from '../../api/models/input/delete-profile.model';
-import { PostsRepository } from '../../../admin/infrastructure/posts.repo';
 import { UsersRepository } from '../../../admin/infrastructure/users.repo';
+import { PostsRepository } from '../../infrastructure/posts.repo';
 ('../../api/models/input-models/fill-profile.model');
 
 export class DeletePostCommand {

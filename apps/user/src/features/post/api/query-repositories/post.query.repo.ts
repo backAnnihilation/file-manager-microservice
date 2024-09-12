@@ -2,9 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { DefaultArgs } from '@prisma/client/runtime/library';
 
-import { DatabaseService } from '../../../../../core/db/prisma/prisma.service';
 import { UserPostViewModel } from '../models/output/post.view.model';
 import { getPostViewModel } from '../models/output/post.output.model';
+import { DatabaseService } from '@user/core/db/prisma/prisma.service';
 
 @Injectable()
 export class PostQueryRepo {

@@ -8,9 +8,9 @@ import {
 import { UsersRepository } from '../../../admin/infrastructure/users.repo';
 import { ProfilesRepository } from '../../infrastructure/profiles.repository';
 import { IEditPostCommand } from '../../api/models/input/edit-profile.model';
-import { PostsRepository } from '../../../admin/infrastructure/posts.repo';
 import { ICreatePostCommand } from '../../api/models/input/create-post.model';
 import { CreateUserPostDTO } from '../dto/create-post.dto';
+import { PostsRepository } from '../../infrastructure/posts.repo';
 // import { NewUserPostDTO } from '../dto/create2-profile.dto';
 ('../../api/models/input-models/fill-profile.model');
 
