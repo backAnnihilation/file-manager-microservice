@@ -29,8 +29,28 @@ export class BaseCUDApiService<TCommand, TViewModel> {
       throw error;
     }
 
-    return this.queryRepo.getById(notification.data.id);
+    console.log(notification.data.id);
+
+    return await this.queryRepo.getById(notification.data.id);
   }
+
+  async createPost(command: TCommand): Promise<string> {
+    const notification = await this.commandBus.execute<
+      TCommand,
+      LayerNoticeInterceptor<TViewModel & BaseViewModel>
+    >(command);
+
+    if (notification.hasError) {
+      const { error } = handleErrors(
+        notification.code,
+        notification.extensions[0],
+      );
+      throw error;
+    }
+
+    return notification.data.id;
+  }
+
   async updateOrDelete(command: TCommand): Promise<void> {
     const notification = await this.commandBus.execute<
       TCommand,

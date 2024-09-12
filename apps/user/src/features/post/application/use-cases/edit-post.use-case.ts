@@ -6,10 +6,8 @@ import {
   LayerNoticeInterceptor,
 } from '../../../../../../../libs/shared/notification';
 import { UsersRepository } from '../../../admin/infrastructure/users.repo';
-import { ProfilesRepository } from '../../infrastructure/profiles.repository';
-import { IEditPostCommand } from '../../api/models/input/edit-profile.model';
-import { EditUserPostDTO } from '../dto/edit-post.dto';
 import { PostsRepository } from '../../infrastructure/posts.repo';
+import { IEditPostCommand } from '../../api/models/input/edit-profile.model';
 ('../../api/models/input-models/fill-profile.model');
 
 export class EditPostCommand {
@@ -32,10 +30,13 @@ export class EditPostUseCase implements ICommandHandler<EditPostCommand> {
     const { userId, postId } = command.postDto;
     const post = await this.postRepo.getPostById(postId);
     if (post.userId !== userId) {
-      notice.addError('user is not the owner of the post');
+      notice.addError(
+        'User is not the owner of the post',
+        null,
+        GetErrors.Forbidden,
+      );
       return notice;
     }
-
     await this.postRepo.update(command.postDto);
 
     return notice;

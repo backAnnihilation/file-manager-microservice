@@ -35,8 +35,11 @@ import { ImagePhotoPipe } from '../infrastructure/validation/create-post-photo';
 import { PostQueryRepo } from './query-repositories/post.query.repo';
 import { EditPostInputModel } from './models/input/edit-profile.model';
 import { CreatePostInputModel } from './models/input/create-post.model';
-import { UserPostViewModel } from './models/output/post.view.model';
 import { CreatePostEndpoint } from './swagger/create-post.description';
+import { UserPostViewModel } from './models/output/post.view.model';
+import { UpdatePostEndpoint } from './swagger/update-post.description';
+import { DeletePostEndpoint } from './swagger/delete-post.description';
+import { GetaUserPostsEndpoint } from './swagger/get-user-posts.description';
 
 // декораторы для свагера
 @ApiTags(ApiTagsEnum.Posts)
@@ -51,6 +54,7 @@ export class UserPostsController {
 
   // по айди пользователя получить все его посты (доступно всем незареганым пользователям)
   // 8шт, авторизированный может получать частями по 8постов через скролл
+  @GetaUserPostsEndpoint()
   @Get(':userId')
   async getUserPosts(
     @Param(':userId') userId: string,
@@ -70,13 +74,14 @@ export class UserPostsController {
   ) {
     const command = new CreatePostCommand({
       ...createPostDto,
-      photo: file,
+      image: file,
       userId: userPayload.userId,
     });
 
     return this.UserPostApiService.updateOrDelete(command);
   }
 
+  @UpdatePostEndpoint()
   @UseGuards(AccessTokenGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
   @Put(':id')
@@ -93,7 +98,7 @@ export class UserPostsController {
     return this.UserPostApiService.updateOrDelete(command);
   }
 
-
+  @DeletePostEndpoint()
   @UseGuards(AccessTokenGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')

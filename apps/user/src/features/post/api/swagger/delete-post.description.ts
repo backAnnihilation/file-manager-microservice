@@ -1,33 +1,35 @@
-import { applyDecorators, HttpStatus } from '@nestjs/common';
 import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
   ApiOperation,
-  ApiParam,
+  ApiProperty,
   ApiResponse,
-  ApiSecurity,
 } from '@nestjs/swagger';
+import { applyDecorators, HttpStatus } from '@nestjs/common';
 
-import { UnauthorizedViaTokenApiResponse } from '../../../auth/api/swagger/shared/authorization.response';
-
-export const DeleteSessionEndpoint = () =>
+export const DeletePostEndpoint = () =>
   applyDecorators(
-    ApiParam({ name: 'id', type: String, description: 'ID of the device' }),
     ApiOperation({
-      summary: 'Terminate specific session',
-      description:
-        'Terminate a specific user session by id. In cookie must be refreshToken',
-    }),
-    ApiResponse({
-      status: HttpStatus.OK,
-      description: 'Success - Session was terminated successfully',
-    }),
-    ApiResponse({
-      status: HttpStatus.NOT_FOUND,
-      description: 'Session was not found',
+      summary: 'Delete post',
+      description: 'Delete post by id. Requires a valid access token.',
     }),
     ApiResponse({
       status: HttpStatus.FORBIDDEN,
-      description: 'Do not have permission',
+      description:
+        'Forbidden - If a user tries to delete a post that he does not own',
     }),
-    UnauthorizedViaTokenApiResponse(),
-    ApiSecurity('refreshToken'),
+    ApiResponse({
+      status: HttpStatus.NO_CONTENT,
+      description: 'Success - Post was successfully deleted',
+    }),
+    ApiResponse({
+      status: HttpStatus.NOT_FOUND,
+      description: 'Not Found - Post was not found',
+    }),
+    ApiResponse({
+      status: HttpStatus.UNAUTHORIZED,
+      description: 'Unauthorized - Invalid or missing token',
+    }),
+    ApiBearerAuth('accessToken'),
   );

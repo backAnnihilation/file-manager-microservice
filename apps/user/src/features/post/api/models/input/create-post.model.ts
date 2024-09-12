@@ -8,5 +8,5 @@ export class CreatePostInputModel {
 
 export interface ICreatePostCommand extends CreatePostInputModel {
   userId: string;
-  photo: Express.Multer.File;
+  image: Express.Multer.File;
 }

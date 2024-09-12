@@ -45,10 +45,13 @@ export class DeletePostUseCase implements ICommandHandler<DeletePostCommand> {
     }
 
     if (post.userId !== userId) {
-      notice.addError('user is not the owner of the post');
+      notice.addError(
+        'User is not the owner of the post',
+        null,
+        GetErrors.Forbidden,
+      );
       return notice;
     }
-
     await this.postRepo.deletePost(post.id);
 
     return notice;

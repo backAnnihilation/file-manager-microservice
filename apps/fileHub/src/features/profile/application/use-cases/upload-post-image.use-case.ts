@@ -2,19 +2,18 @@ import { FilesStorageAdapter } from '@file/core/adapters/local-files-storage.ada
 import { OutputId } from '@models/output-id.dto';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { LayerNoticeInterceptor } from '@shared/notification';
-
 import { Bucket } from '../../api/models/enums/file-details.enum';
-import { UploadProfileImageDto } from '../../api/models/input-models/profile-image.model';
+import { UploadPostImageDto, UploadProfileImageDto } from '../../api/models/input-models/profile-image.model';
 import { ContentType } from '../../api/models/output-models/file-output-types';
 import { FilesService } from '../services/file-metadata.service';
 
-export class UploadProfileImageCommand {
-  constructor(public uploadDto: UploadProfileImageDto) {}
+export class UploadPostImageCommand {
+  constructor(public uploadDto: UploadPostImageDto) {}
 }
 
-@CommandHandler(UploadProfileImageCommand)
-export class UploadProfileImageUseCase
-  implements ICommandHandler<UploadProfileImageCommand>
+@CommandHandler(UploadPostImageCommand)
+export class UploadPostImageUseCase
+  implements ICommandHandler<UploadPostImageCommand>
 {
   private location = this.constructor.name;
   constructor(
@@ -23,16 +22,15 @@ export class UploadProfileImageUseCase
   ) {}
 
   async execute(
-    command: UploadProfileImageCommand,
+    command: UploadPostImageCommand,
   ): Promise<LayerNoticeInterceptor<OutputId>> {
-    const { profileId, fileFormat, fileType, image } = command.uploadDto;
+    const { userId, fileFormat, fileType, image } = command.uploadDto;
     const { buffer, mimetype, originalname, size } = image;
-
-    const { ContentType, Key } = this.filesService.generateImageKey({
+    const { ContentType, Key } = this.filesService.generatePostImageKey({
       contentType: mimetype as ContentType,
       fileName: originalname,
       imageType: fileType,
-      profileId,
+      userId,
     });
 
     const buf = Buffer.from((buffer as any).data);
@@ -51,8 +49,8 @@ export class UploadProfileImageUseCase
       await this.filesAdapter.uploadFile(bucketParams);
     const { url: fileUrl, id: fileId } = uploadedFileInStorage;
 
-    const savedFileNotice = await this.filesService.saveFileMeta({
-      profileId,
+    const savedFileNotice = await this.filesService.savePostFileMeta({
+      userId,
       fileFormat,
       fileId,
       fileName: originalname,

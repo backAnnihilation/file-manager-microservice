@@ -11,6 +11,10 @@ import { FileExtractPipe } from '../../features/profile/infrastructure/pipes/ext
 import { FilesStorageAdapter } from '../adapters/local-files-storage.adapter';
 import { S3FilesStorageAdapter } from '../adapters/s3-files-storage.adapter';
 import { UploadProfileImageUseCase } from '../../features/profile/application/use-cases/upload-profile-image.use-case';
+import {
+  UploadPostImageCommand,
+  UploadPostImageUseCase,
+} from '../../features/profile/application/use-cases/upload-post-image.use-case';
 
 export const providers: Provider[] = [
   FilesRepository,
@@ -22,6 +26,8 @@ export const providers: Provider[] = [
   FilesBaseApiService,
   FilesQueryRepository,
   UploadProfileImageUseCase,
+  UploadPostImageCommand,
+  UploadPostImageUseCase,
   {
     provide: FilesStorageAdapter,
     useClass:

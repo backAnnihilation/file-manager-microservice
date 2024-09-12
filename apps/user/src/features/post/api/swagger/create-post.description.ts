@@ -1,12 +1,20 @@
-import { ApiBearerAuth, ApiBody, ApiConsumes, ApiOperation, ApiProperty, ApiResponse } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
+  ApiOperation,
+  ApiProperty,
+  ApiResponse,
+} from '@nestjs/swagger';
 import { applyDecorators, HttpStatus } from '@nestjs/common';
-import { CreatePostInputModel } from '../models/input/create-post.model';
+
 
 export const CreatePostEndpoint = () =>
   applyDecorators(
     ApiOperation({
       summary: 'Create new post',
-      description: 'Creates a new post for the specified user. Requires a valid access token.',
+      description:
+        'Creates a new post for the specified user. Requires a valid access token.',
     }),
     ApiConsumes('multipart/form-data'),
     ApiBody({
@@ -16,7 +24,7 @@ export const CreatePostEndpoint = () =>
     ApiResponse({
       status: HttpStatus.BAD_REQUEST,
       description: 'Bad request - The input data is invalid',
-      type: ErrorResponseDto,
+      type: ErrorsResponseDto,
     }),
     ApiResponse({
       status: HttpStatus.NO_CONTENT,
@@ -31,7 +39,8 @@ export const CreatePostEndpoint = () =>
 
 export class CreatePostFormDto {
   @ApiProperty({
-    description: 'The image file to upload for the post. Accepted formats are JPEG and PNG. The maximum allowed file size is 20 MB.',
+    description:
+      'The image file to upload for the post. Accepted formats are JPEG and PNG. The maximum allowed file size is 20 MB.',
     type: 'string',
     format: 'binary',
     example: 'Upload a JPEG or PNG image file with a maximum size of 20 MB.',
@@ -44,20 +53,26 @@ export class CreatePostFormDto {
   })
   description: string;
 }
-
-export class ErrorMessageDto {
+export class ErrorsMessageDto {
   @ApiProperty({
     description: 'Error message',
-    example: 'Invalid input data',
+    example: 'Invalid  input data',
     nullable: true,
   })
   message: string;
+
+  @ApiProperty({
+    description: 'Field where the error occurred',
+    example: 'description',
+    nullable: true,
+  })
+  field: string;
 }
 
-export class ErrorResponseDto {
+export class ErrorsResponseDto {
   @ApiProperty({
-    description: 'List of error messages if the input model has incorrect values',
-    type: [ErrorMessageDto],
+    description: 'If the inputModel has incorrect values',
+    type: [ErrorsMessageDto],
   })
-  errorsMessages: ErrorMessageDto[];
+  errorsMessages: ErrorsMessageDto[];
 }
