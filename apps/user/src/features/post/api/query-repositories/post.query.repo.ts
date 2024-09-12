@@ -1,10 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { DefaultArgs } from '@prisma/client/runtime/library';
+import { DatabaseService } from '@user/core/db/prisma/prisma.service';
 
 import { UserPostViewModel } from '../models/output/post.view.model';
 import { getPostViewModel } from '../models/output/post.output.model';
-import { DatabaseService } from '@user/core/db/prisma/prisma.service';
 
 @Injectable()
 export class PostQueryRepo {
@@ -13,27 +13,27 @@ export class PostQueryRepo {
     this.userPostsRepo = this.prisma.userPost;
   }
 
-  async getUsersPosts(userId: string): Promise<UserPostViewModel[] | null> {
+  async getUsersPosts(userId: string): Promise<UserPostViewModel[] | []> {
     try {
-      const posts = await this.userPostsRepo.findMany({ where: { userId } });
+      const posts = await this.userPostsRepo.findMany({
+        where: { userId: userId },
+      });
 
-      if (!posts) return null;
+      if (!posts) return [];
 
-      const result: UserPostViewModel[] = [];
-
-      // цикл с подбором фоток к каждому посту
-      for (let i = 0; i < posts.length; i++) {
-        const post = posts[i];
-        // const photo = await this.fileService.getFileByUrl(post.imageUrl)
-        const photo = '1231231';
-
-        result.push(getPostViewModel(post, photo));
-      }
-
-      return result;
+      return posts.map(getPostViewModel);
     } catch (error) {
-      console.error('Database fails operate with find user profile', error);
-      return null;
+      console.error('Database fails operate with find user posts', error);
+    }
+  }
+  async getPost(id: string): Promise<UserPostViewModel> {
+    try {
+      const post = await this.userPostsRepo.findUnique({ where: { id: id } });
+
+      return getPostViewModel(post);
+    } catch (error) {
+      console.error('Database fails operate with find user post', error);
+      throw new NotFoundException();
     }
   }
 }

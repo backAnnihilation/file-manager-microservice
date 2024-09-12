@@ -1,16 +1,20 @@
 import { ApiOperation, ApiProperty, ApiResponse } from '@nestjs/swagger';
 import { applyDecorators, HttpStatus } from '@nestjs/common';
 
-export const GetUserPostsEndpoint = () =>
+export const GetPostEndpoint = () =>
   applyDecorators(
     ApiOperation({
-      summary: 'Get user posts',
-      description: 'Get all existing posts of a user by id',
+      summary: 'Get post by id',
+      description: 'Get specified post by id',
     }),
     ApiResponse({
       status: HttpStatus.OK,
-      description: 'Success - All posts of specified user',
-      type: [UserPostViewModel],
+      description: 'Success - Get specified post',
+      type: UserPostViewModel,
+    }),
+    ApiResponse({
+      status: HttpStatus.NOT_FOUND,
+      description: 'Not Found - Post was not found',
     }),
   );
 

@@ -39,9 +39,9 @@ import { CreatePostEndpoint } from './swagger/create-post.description';
 import { UserPostViewModel } from './models/output/post.view.model';
 import { UpdatePostEndpoint } from './swagger/update-post.description';
 import { DeletePostEndpoint } from './swagger/delete-post.description';
-import { GetaUserPostsEndpoint } from './swagger/get-user-posts.description';
+import { GetPostEndpoint } from './swagger/get-user-post.description';
+import { GetUserPostsEndpoint } from './swagger/get-user-posts.description';
 
-// декораторы для свагера
 @ApiTags(ApiTagsEnum.Posts)
 @Controller(RoutingEnum.posts)
 export class UserPostsController {
@@ -52,14 +52,18 @@ export class UserPostsController {
     // private profileService: UserProfileService,
   ) {}
 
-  // по айди пользователя получить все его посты (доступно всем незареганым пользователям)
-  // 8шт, авторизированный может получать частями по 8постов через скролл
-  @GetaUserPostsEndpoint()
-  @Get(':userId')
+  @GetUserPostsEndpoint()
+  @Get('all/:userId')
   async getUserPosts(
-    @Param(':userId') userId: string,
-  ): Promise<UserPostViewModel[] | null> {
+    @Param('userId') userId: string,
+  ): Promise<UserPostViewModel[] | []> {
     return await this.postQueryRepo.getUsersPosts(userId);
+  }
+
+  @GetPostEndpoint()
+  @Get(':id')
+  async getPost(@Param('id') userId: string): Promise<UserPostViewModel> {
+    return await this.postQueryRepo.getPost(userId);
   }
 
   @CreatePostEndpoint()

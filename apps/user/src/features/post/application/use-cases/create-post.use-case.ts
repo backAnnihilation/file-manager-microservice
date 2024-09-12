@@ -63,9 +63,8 @@ export class CreatePostUseCase implements ICommandHandler<CreatePostCommand> {
       description,
       userId,
       imageUrl: result.url,
+      imageId: result.postId,
     });
-
-    console.log(result.url)
 
     await this.postRepo.create(postDto);
 

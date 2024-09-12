@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { DefaultArgs } from '@prisma/client/runtime/library';
-import { EditUserPostDTO } from '../application/dto/edit-post.dto';
 import { DatabaseService } from '@user/core/db/prisma/prisma.service';
 import { BaseRepository } from '@user/core/db/base.repository';
+
+import { EditUserPostDTO } from '../application/dto/edit-post.dto';
 import { CreateUserPostDTO } from '../application/dto/create-post.dto';
 
 @Injectable()
@@ -18,13 +19,13 @@ export class PostsRepository extends BaseRepository {
       const data: Prisma.UserPostCreateInput = {
         description: userPostDto.description,
         imageUrl: userPostDto.imageUrl,
+        imageId: userPostDto.imageId,
         userAccount: {
           connect: { id: userPostDto.userId },
         },
       };
 
-      const post = await this.userPosts.create({ data });
-      return;
+      return await this.userPosts.create({ data });
     } catch (error) {
       console.log(error);
       throw new Error(`userPost is not saved: ${error}`);
