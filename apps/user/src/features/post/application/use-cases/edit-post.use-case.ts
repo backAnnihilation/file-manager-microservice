@@ -9,17 +9,15 @@ import { UsersRepository } from '../../../admin/infrastructure/users.repo';
 import { ProfilesRepository } from '../../infrastructure/profiles.repository';
 import { IEditPostCommand } from '../../api/models/input/edit-profile.model';
 import { PostsRepository } from '../../../admin/infrastructure/posts.repo';
-import { ICreatePostCommand } from '../../api/models/input/create-post.model';
-import { CreateUserPostDTO } from '../dto/create-post.dto';
-// import { NewUserPostDTO } from '../dto/create2-profile.dto';
+import { EditUserPostDTO } from '../dto/edit-post.dto';
 ('../../api/models/input-models/fill-profile.model');
 
-export class CreatePostCommand {
-  constructor(public postDto: ICreatePostCommand) {}
+export class EditPostCommand {
+  constructor(public postDto: IEditPostCommand) {}
 }
 
-@CommandHandler(CreatePostCommand)
-export class CreatePostUseCase implements ICommandHandler<CreatePostCommand> {
+@CommandHandler(EditPostCommand)
+export class EditPostUseCase implements ICommandHandler<EditPostCommand> {
   private location = this.constructor.name;
   constructor(
     private userRepo: UsersRepository,
@@ -28,21 +26,17 @@ export class CreatePostUseCase implements ICommandHandler<CreatePostCommand> {
   ) {}
 
   async execute(
-    command: CreatePostCommand,
+    command: EditPostCommand,
   ): Promise<LayerNoticeInterceptor<OutputId>> {
-    // ): Promise<any> {
     const notice = new LayerNoticeInterceptor<null | OutputId>();
+    const { userId, postId } = command.postDto;
+    const post = await this.postRepo.getPostById(postId);
+    if (post.userId !== userId) {
+      notice.addError('user is not the owner of the post');
+      return notice;
+    }
 
-    //  const imageUrl = await fileService.save(postDto.photo)
-    const imageUrl = '1231aasd2311';
-
-    const postDto = new CreateUserPostDTO({
-      description: command.postDto.description,
-      userId: command.postDto.userId,
-      imageUrl,
-    });
-
-    await this.postRepo.create(postDto);
+    await this.postRepo.update(command.postDto);
 
     return notice;
   }
