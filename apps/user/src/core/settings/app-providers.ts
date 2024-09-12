@@ -46,6 +46,8 @@ import { CaptureAdapter } from '../adapters/capture.adapter';
 import { EmailAdapter } from '../adapters/email.adapter';
 import { RMQAdapter } from '../adapters/rmq.adapter';
 import { EmailManager } from '../managers/email-manager';
+import { UserPostApiService } from '../../features/post/application/services/user-api.service';
+import { PostQueryRepo } from '../../features/post/api/query-repositories/post.query.repo';
 
 
 const adapters: Provider[] = [
@@ -100,4 +102,6 @@ export const providers: Provider[] = [
   EditProfileUseCase,
   ImageFilePipe,
   UserProfileService,
+  UserPostApiService,
+  PostQueryRepo
 ];

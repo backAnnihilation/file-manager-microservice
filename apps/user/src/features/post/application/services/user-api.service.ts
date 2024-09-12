@@ -14,6 +14,7 @@ export class UserPostApiService extends BaseCUDApiService<
   UserPostViewModel
 > {
   constructor(commandBus: CommandBus, queryRepo: PostQueryRepo) {
+    // @ts-ignore
     super(commandBus, queryRepo);
   }
 }
