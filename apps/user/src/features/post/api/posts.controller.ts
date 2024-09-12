@@ -36,6 +36,7 @@ import { PostQueryRepo } from './query-repositories/post.query.repo';
 import { EditPostInputModel } from './models/input/edit-profile.model';
 import { CreatePostInputModel } from './models/input/create-post.model';
 import { UserPostViewModel } from './models/output/post.view.model';
+import { CreatePostEndpoint } from './swagger/create-post.description';
 
 // декораторы для свагера
 @ApiTags(ApiTagsEnum.Posts)
@@ -57,10 +58,11 @@ export class UserPostsController {
     return await this.postQueryRepo.getUsersPosts(userId);
   }
 
+  @CreatePostEndpoint()
   @UseGuards(AccessTokenGuard)
   @Post()
   @HttpCode(HttpStatus.NO_CONTENT)
-  @UseInterceptors(FileInterceptor('photo'))
+  @UseInterceptors(FileInterceptor('image'))
   async createPost(
     @UserPayload() userPayload: UserSessionDto,
     @Body() createPostDto: CreatePostInputModel,
@@ -90,6 +92,7 @@ export class UserPostsController {
     });
     return this.UserPostApiService.updateOrDelete(command);
   }
+
 
   @UseGuards(AccessTokenGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
