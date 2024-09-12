@@ -8,7 +8,6 @@ import {
 import { UsersRepository } from '../../../admin/infrastructure/users.repo';
 import { ProfilesRepository } from '../../infrastructure/profiles.repository';
 import { IEditPostCommand } from '../../api/models/input/edit-profile.model';
-import { PostsRepository } from '../../../admin/infrastructure/posts.repo';
 import { EditUserPostDTO } from '../dto/edit-post.dto';
 ('../../api/models/input-models/fill-profile.model');
 

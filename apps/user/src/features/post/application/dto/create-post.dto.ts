@@ -1,4 +1,3 @@
-// eslint-disable-next-line import/namespace
 import { CreatePostInputModel } from '../../api/models/input/create-post.model';
 
 export class CreateUserPostDTO {

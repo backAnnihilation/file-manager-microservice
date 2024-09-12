@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { FileType } from '../../../../../../../libs/shared/models/file.models';
-import { AxiosAdapter } from '../../../../../core/adapters/axios.adapter';
+import { AxiosAdapter } from '@user/core/adapters/axios.adapter';
 
 @Injectable()
 export class UserPostService {
@@ -9,7 +9,7 @@ export class UserPostService {
   async uploadProfilePhoto(uploadFileDto: UploadFileDto): Promise<void> {
     const { image, userId } = uploadFileDto;
     const url = `/${userId}/upload`;
-    await this.resendAdapter.sendPostRequest(url, image);
+    // await this.resendAdapter.sendPostRequest(url, image);
   }
 }
 

@@ -23,7 +23,6 @@ import {
   ApiTagsEnum,
   RoutingEnum,
 } from '../../../../../../libs/shared/routing';
-import { UserNavigate } from '../../../../core/routes/user-navigate';
 import { UserPayload } from '../../auth/infrastructure/decorators/user-payload.decorator';
 import { AccessTokenGuard } from '../../auth/infrastructure/guards/accessToken.guard';
 import { UserSessionDto } from '../../security/api/models/security-input.models/security-session-info.model';
@@ -73,7 +72,7 @@ export class UserPostsController {
       userId: userPayload.userId,
     });
 
-    return this.UserPostApiService.save(command);
+    return this.UserPostApiService.updateOrDelete(command);
   }
 
   @UseGuards(AccessTokenGuard)
@@ -89,7 +88,7 @@ export class UserPostsController {
       userId: userPayload.userId,
       postId,
     });
-    return this.UserPostApiService.save(command);
+    return this.UserPostApiService.updateOrDelete(command);
   }
 
   @UseGuards(AccessTokenGuard)
@@ -103,6 +102,6 @@ export class UserPostsController {
       userId: userPayload.userId,
       postId,
     });
-    return this.UserPostApiService.save(command);
+    return this.UserPostApiService.updateOrDelete(command);
   }
 }
