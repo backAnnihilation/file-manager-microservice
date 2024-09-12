@@ -68,7 +68,7 @@ export class UserPostsController {
   ) {
     const command = new CreatePostCommand({
       ...createPostDto,
-      photo: file.buffer,
+      photo: file,
       userId: userPayload.userId,
     });
 
