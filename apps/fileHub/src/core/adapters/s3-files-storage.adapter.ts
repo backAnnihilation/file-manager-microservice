@@ -11,8 +11,8 @@ import { ConfigService } from '@nestjs/config';
 
 import { formatBytes } from '../../core/infrastructure/utils/format-file-size';
 import { AwsConfigType } from '../configuration/configuration';
-import { FilesScheduleService } from '../../features/profile/application/services/file-metadata.schedule.service';
-import { UploadFileOutputType } from '../../features/profile/api/models/output-models/file-output-types';
+import { FilesScheduleService } from '../../features/file/application/services/file-metadata.schedule.service';
+import { UploadFileOutputType } from '../../features/file/api/models/output-models/file-output-types';
 
 @Injectable()
 export class S3FilesStorageAdapter {

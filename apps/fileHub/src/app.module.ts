@@ -7,7 +7,7 @@ import { ConfigurationModule } from './core/configuration/app-config.module';
 import { providers } from './core/configuration/app-providers';
 import { DatabaseModule } from './core/db/database.module';
 import { schemas } from './core/db/schemas';
-import { FilesController } from './features/profile/api/files.controller';
+import { FilesController } from './features/file/api/files.controller';
 
 @Module({
   imports: [
