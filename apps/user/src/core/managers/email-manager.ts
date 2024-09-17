@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-
 import { EmailAdapter } from '../adapters/email.adapter';
 
 @Injectable()
@@ -45,7 +44,7 @@ export class EmailManager {
     email: string,
     confirmationCode: string,
   ): Promise<string> {
-    const confirmationLink = `https://Incta.team/confirm-email?code=${confirmationCode}`;
+    const confirmationLink = `https://incta.team/confirm-email?code=${confirmationCode}`;
     const confirmationData = {
       from: `Incta team👻`,
       subject: 'Email Confirmation',
@@ -61,7 +60,7 @@ export class EmailManager {
 
   async sendEmailRegistrationSuccess(email: string, userName: string) {
     const mailOptions = {
-      from: 'Incta team👻 <Incta.team@gmail.com>',
+      from: 'Incta team👻 <incta.team@gmail.com>',
       to: email,
       subject: 'Registration Successful',
       message: `<h1>Thank you for registering, ${userName}!</h1>

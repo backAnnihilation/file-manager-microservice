@@ -1,6 +1,5 @@
 import { ConfigService } from '@nestjs/config';
-import { Environment } from '@shared/environment.enum';
-import { COLORS } from '@shared/logger';
+import { COLORS, Environment } from '@app/shared';
 import { MongooseModuleOptions } from '@nestjs/mongoose';
 import { EnvironmentVariables } from '../configuration/configuration';
 

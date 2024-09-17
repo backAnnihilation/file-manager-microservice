@@ -1,6 +1,6 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { OutputId } from '@shared/models/output-id.dto';
-import { GetErrors, LayerNoticeInterceptor } from '@shared/notification';
+import { OutputId } from '@app/shared';
+import { LayerNoticeInterceptor } from '@app/shared';
 import { UsersRepository } from '../../../admin/infrastructure/users.repo';
 import { IFillOutProfileCommand } from '../../api/models/input/fill-out-profile.model';
 import { UserEntities } from '../../api/models/enum/user-entities.enum';
@@ -29,11 +29,12 @@ export class FillOutProfileUseCase
     const { userName } = await this.userRepo.getUserById(userId);
 
     const userProfile = await this.profilesRepo.getByUserId(userId);
+
     if (userProfile) {
       notice.addError(
         'profile already exists',
         this.location,
-        GetErrors.IncorrectModel,
+        notice.errorCodes.ResourceNotFound,
       );
       return notice;
     }

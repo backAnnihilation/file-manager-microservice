@@ -1,15 +1,13 @@
 import { FilesStorageAdapter } from '@file/core/adapters/local-files-storage.adapter';
-import { OutputId } from '@models/output-id.dto';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { LayerNoticeInterceptor } from '@shared/notification';
-
-import { Bucket } from '../../api/models/enums/file-details.enum';
-import { UploadProfileImageDto } from '../../api/models/input-models/profile-image.model';
+import { LayerNoticeInterceptor, OutputId } from '@app/shared';
+import { Bucket } from '../../api/models/enums/file-models.enum';
+import { InputProfileImageDto } from '../../api/models/input-models/profile-image.model';
 import { ContentType } from '../../api/models/output-models/file-output-types';
 import { FilesService } from '../services/file-metadata.service';
 
 export class UploadProfileImageCommand {
-  constructor(public uploadDto: UploadProfileImageDto) {}
+  constructor(public imageDto: InputProfileImageDto) {}
 }
 
 @CommandHandler(UploadProfileImageCommand)
@@ -25,9 +23,9 @@ export class UploadProfileImageUseCase
   async execute(
     command: UploadProfileImageCommand,
   ): Promise<LayerNoticeInterceptor<OutputId>> {
-    const { profileId, fileFormat, fileType, image } = command.uploadDto;
+    const { profileId, image } = command.imageDto;
     const { buffer, mimetype, originalname, size } = image;
-
+    const fileFormat = 'IMAGE';
     const { ContentType, Key } = this.filesService.generateImageKey({
       contentType: mimetype as ContentType,
       fileName: originalname,

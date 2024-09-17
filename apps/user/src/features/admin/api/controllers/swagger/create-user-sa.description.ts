@@ -5,10 +5,7 @@ import {
   ApiProperty,
   ApiResponse,
 } from '@nestjs/swagger';
-import {
-  emailMatches,
-  nameInitialsMatch,
-} from '@shared/validation/input-constants';
+import { emailMatches, nameInitialsMatch } from '@app/shared';
 
 import { SingUpErrorResponse } from '../../../../auth/api/swagger/shared/error-message-response';
 import { PasswordDescription } from '../../../../auth/api/swagger/shared/password-description';

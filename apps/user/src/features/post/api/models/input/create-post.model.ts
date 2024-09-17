@@ -1,4 +1,5 @@
 import { IsNotEmpty, Length } from 'class-validator';
+import { FileMetadata } from '@app/shared';
 
 export class CreatePostInputModel {
   @IsNotEmpty()
@@ -8,5 +9,11 @@ export class CreatePostInputModel {
 
 export interface ICreatePostCommand extends CreatePostInputModel {
   userId: string;
-  image: Express.Multer.File;
+  image: FileMetadata;
+}
+
+export interface ICreatePostDTOModel extends CreatePostInputModel {
+  userId: string;
+  imageUrl: string;
+  imageId: string;
 }

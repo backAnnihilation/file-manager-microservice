@@ -2,21 +2,22 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import axios, { AxiosInstance } from 'axios';
 import * as FormData from 'form-data';
-import { ImageViewModelType } from '@models/file.models';
+import { ImageViewModelType } from '@app/shared';
 import { EnvironmentVariables } from '../config/configuration';
 import { ProfileImageToSendType } from '../../features/profile/api/models/input/upload-file-type.model';
 
+// out of date
 @Injectable()
 export class AxiosAdapter {
   private readonly axiosInstance: AxiosInstance;
   constructor(private readonly config: ConfigService<EnvironmentVariables>) {
-    this.axiosInstance = axios.create({
-      baseURL: this.config.get('FILES_SERVICE_URL'),
-      headers: {
-        'Content-Type': 'multipart/form-data',
-        'x-api-key': config.get('API_KEY'),
-      },
-    });
+    // this.axiosInstance = axios.create({
+    //   baseURL: this.config.get('FILES_SERVICE_URL'),
+    //   headers: {
+    //     'Content-Type': 'multipart/form-data',
+    //     'x-api-key': config.get('API_KEY'),
+    //   },
+    // });
   }
 
   async sendPostRequest(

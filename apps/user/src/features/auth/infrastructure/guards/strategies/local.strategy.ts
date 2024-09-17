@@ -11,7 +11,7 @@ import { PassportStrategy } from '@nestjs/passport';
 import { UserIdType } from '../../../../admin/api/models/outputSA.models.ts/user-models';
 import { VerificationCredentialsCommand } from '../../../application/use-cases/commands/verification-credentials.command';
 import { UserCredentialsDto } from '../../../api/models/auth-input.models.ts/verify-credentials.model';
-import { LayerNoticeInterceptor } from '../../../../../../../../libs/shared/notification';
+import { LayerNoticeInterceptor } from '../../../../../../../../libs/shared/src/interceptors/notification';
 
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy) {

@@ -1,4 +1,4 @@
-import { Environment } from '@shared/environment.enum';
+import { Environment } from '@app/shared';
 
 export const BASE_PREFIX = '/api/v1';
 

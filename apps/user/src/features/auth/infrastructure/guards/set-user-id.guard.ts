@@ -5,7 +5,7 @@ import { Request } from 'express';
 import { EnvironmentVariables } from '@user/core/config/configuration';
 
 @Injectable()
-export class SetUserIdGuard implements CanActivate {
+export class UserIdExtractor implements CanActivate {
   constructor(
     private jwtService: JwtService,
     private configService: ConfigService<EnvironmentVariables>,
@@ -14,6 +14,7 @@ export class SetUserIdGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
     const accessToken = this.extractTokenFromHeaders(request);
+    const exit = true;
 
     const accessSecret = this.configService.get('ACCESS_TOKEN_SECRET');
 
@@ -22,13 +23,14 @@ export class SetUserIdGuard implements CanActivate {
         const userPayload = await this.jwtService.verifyAsync(accessToken, {
           secret: accessSecret,
         });
-        request.userId = userPayload.userId;
+        const user = { userId: userPayload.userId };
+        request.user = user;
       } catch (error) {
-        return true;
+        return exit;
       }
     }
 
-    return true;
+    return exit;
   }
 
   private extractTokenFromHeaders(request: Request): string | null {

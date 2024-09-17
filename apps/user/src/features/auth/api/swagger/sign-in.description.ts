@@ -6,10 +6,7 @@ import {
   ApiResponse,
   ApiSecurity,
 } from '@nestjs/swagger';
-import {
-  emailMatches,
-  passwordMatch,
-} from '@shared/validation/input-constants';
+import { emailMatches, passwordMatch } from '@app/shared';
 
 import { AccessTokenResponseDto } from './shared/accessToken-response.dto';
 import { UnauthorizedViaPasswordApiResponse } from './shared/authorization.response';

@@ -1,13 +1,11 @@
 import { HttpStatus, INestApplication } from '@nestjs/common';
-import { PaginationViewModel } from '@shared/sorting-base-filter';
+import { PaginationViewModel } from '@app/shared';
 import * as request from 'supertest';
-
-import { SAQueryFilter } from '../../../src/features/admin/api/models/outputSA.models.ts/query-filters';
+import { SAQueryFilter } from '../../../src/features/admin/api/models/outputSA.models.ts/sa-query-filter';
 import { SAViewType } from '../../../src/features/admin/api/models/user.view.models/userAdmin.view-type';
 import { AuthUserType } from '../../../src/features/auth/api/models/auth.output.models/auth.user.types';
 import { SAUsersRouting } from '../routes/sa-users.routing';
 import { AuthConstantsType } from '../utils/test-constants';
-
 import { BaseTestManager } from './BaseTestManager';
 
 export class SATestManager extends BaseTestManager {

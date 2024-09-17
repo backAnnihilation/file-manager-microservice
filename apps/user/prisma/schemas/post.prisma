@@ -1,8 +1,8 @@
-model UserPost {
+model Post {
   id                String         @id @default(uuid())
   description       String
-  imageUrl             String @unique
-  imageId String @unique
+  imageUrl          String         @unique
+  imageId           String         @unique
 
   userAccount       UserAccount    @relation(fields: [userId], references: [id])
   userId            String

@@ -1,13 +1,11 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { OutputId } from '@models/output-id.dto';
-import { LayerNoticeInterceptor } from '@shared/notification';
+import { LayerNoticeInterceptor, OutputId } from '@app/shared';
 import { FilesStorageAdapter } from '@file/core/adapters/local-files-storage.adapter';
-import { Bucket } from '../../api/models/enums/file-details.enum';
-import { FileUploadType } from '../../api/models/input-models/extracted-file-types';
+import { Bucket } from '../../api/models/enums/file-models.enum';
 import { FilesService } from '../services/file-metadata.service';
 
 export class UploadFileCommand {
-  constructor(public uploadDto: FileUploadType) {}
+  constructor(public uploadDto: any) {}
 }
 
 @CommandHandler(UploadFileCommand)

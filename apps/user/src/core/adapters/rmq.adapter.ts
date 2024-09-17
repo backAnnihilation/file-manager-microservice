@@ -1,8 +1,4 @@
-import {
-  EVENT_CMD,
-  EVENT_COMMANDS,
-  FILES_SERVICE,
-} from '@models/enum/queue-tokens';
+import { EVENT_CMD, EVENT_COMMANDS, FILES_SERVICE } from '@app/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { lastValueFrom } from 'rxjs';

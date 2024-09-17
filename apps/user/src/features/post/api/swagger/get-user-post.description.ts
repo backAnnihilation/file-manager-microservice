@@ -18,7 +18,7 @@ export const GetPostEndpoint = () =>
     }),
   );
 
-export class UserPostViewModel {
+class UserPostViewModel {
   @ApiProperty({
     description: 'Unique identifier of the post',
     example: '1234-abcd-5678-efgh',

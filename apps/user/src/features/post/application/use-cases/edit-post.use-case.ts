@@ -1,14 +1,7 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-
-import { OutputId } from '../../../../../../../libs/shared/models/output-id.dto';
-import {
-  GetErrors,
-  LayerNoticeInterceptor,
-} from '../../../../../../../libs/shared/notification';
-import { UsersRepository } from '../../../admin/infrastructure/users.repo';
-import { PostsRepository } from '../../infrastructure/posts.repo';
+import { PostsRepository } from '../../infrastructure/posts.repository';
 import { IEditPostCommand } from '../../api/models/input/edit-profile.model';
-('../../api/models/input-models/fill-profile.model');
+import { OutputId, LayerNoticeInterceptor } from '@app/shared';
 
 export class EditPostCommand {
   constructor(public postDto: IEditPostCommand) {}
@@ -17,11 +10,7 @@ export class EditPostCommand {
 @CommandHandler(EditPostCommand)
 export class EditPostUseCase implements ICommandHandler<EditPostCommand> {
   private location = this.constructor.name;
-  constructor(
-    private userRepo: UsersRepository,
-    private postRepo: PostsRepository,
-    // private profilesRepo: ProfilesRepository,
-  ) {}
+  constructor(private postRepo: PostsRepository) {}
 
   async execute(
     command: EditPostCommand,
@@ -32,8 +21,8 @@ export class EditPostUseCase implements ICommandHandler<EditPostCommand> {
     if (post.userId !== userId) {
       notice.addError(
         'User is not the owner of the post',
-        null,
-        GetErrors.Forbidden,
+        this.location,
+        notice.errorCodes.AccessForbidden,
       );
       return notice;
     }

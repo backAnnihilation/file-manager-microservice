@@ -1,13 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { DefaultArgs } from '@prisma/client/runtime/library';
-
-import { DatabaseService } from '../../../../core/db/prisma/prisma.service';
-import { SAQueryFilter } from '../models/outputSA.models.ts/query-filters';
+import { DatabaseService } from '@user/core/db/prisma/prisma.service';
 import { getSAViewModel } from '../models/user.view.models/saView.model';
+import { PaginationViewModel } from '@app/shared';
+import { SAQueryFilter } from '../models/outputSA.models.ts/sa-query-filter';
 import { SAViewType } from '../models/user.view.models/userAdmin.view-type';
-import { getQueryPagination } from '../../../../../../../libs/shared/query-pagination';
-import { PaginationViewModel } from '../../../../../../../libs/shared/sorting-base-filter';
 
 @Injectable()
 export class UsersQueryRepo {
@@ -22,7 +20,7 @@ export class UsersQueryRepo {
     const { searchEmailTerm, searchNameTerm } = queryOptions;
 
     const { pageNumber, pageSize, skip, sortBy, sortDirection } =
-      getQueryPagination(queryOptions);
+      PaginationViewModel.parseQuery(queryOptions);
 
     const [name, email] = [
       `%${searchNameTerm || ''}%`,

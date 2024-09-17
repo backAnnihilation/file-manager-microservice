@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { passwordMatch } from '@shared/validation/input-constants';
+import { passwordMatch } from '@app/shared';
 
 export const PasswordDescription = () =>
   ApiProperty({

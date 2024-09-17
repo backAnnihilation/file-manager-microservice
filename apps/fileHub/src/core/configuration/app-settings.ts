@@ -1,13 +1,9 @@
-import { useContainer } from 'class-validator';
-import * as cookieParser from 'cookie-parser';
 import { INestApplication, INestMicroservice } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { Environment } from '@shared/environment.enum';
+import { useContainer } from 'class-validator';
 import { AppModule } from '../../app.module';
-import { EnvironmentVariables } from './configuration';
 import { exceptionFilterSetup } from './exception-filter.setup';
 import { pipesSetup } from './pipes.setup';
-import { swaggerSetup } from './swagger.setup';
 
 export const applyAppSettings = (app: INestApplication | INestMicroservice) => {
   const currentENV = app.get(ConfigService).getOrThrow('ENV');

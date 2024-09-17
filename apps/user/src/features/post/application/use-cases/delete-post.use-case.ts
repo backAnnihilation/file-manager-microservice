@@ -1,16 +1,8 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-
-import { OutputId } from '../../../../../../../libs/shared/models/output-id.dto';
-import {
-  GetErrors,
-  LayerNoticeInterceptor,
-} from '../../../../../../../libs/shared/notification';
-// import { IEditPostCommand } from '../../api/models/input/edit-profile.model';
-// import { ProfilesRepository } from '../../infrastructure/profiles.repository';
+import { LayerNoticeInterceptor, OutputId } from '@app/shared';
 import { IDeletePostCommand } from '../../api/models/input/delete-profile.model';
 import { UsersRepository } from '../../../admin/infrastructure/users.repo';
-import { PostsRepository } from '../../infrastructure/posts.repo';
-('../../api/models/input-models/fill-profile.model');
+import { PostsRepository } from '../../infrastructure/posts.repository';
 
 export class DeletePostCommand {
   constructor(public deleteDto: IDeletePostCommand) {}
@@ -39,7 +31,7 @@ export class DeletePostUseCase implements ICommandHandler<DeletePostCommand> {
       notice.addError(
         'not found post with id: ' + postId,
         this.location,
-        GetErrors.NotFound,
+        notice.errorCodes.ResourceNotFound,
       );
       return notice;
     }
@@ -47,8 +39,8 @@ export class DeletePostUseCase implements ICommandHandler<DeletePostCommand> {
     if (post.userId !== userId) {
       notice.addError(
         'User is not the owner of the post',
-        null,
-        GetErrors.Forbidden,
+        this.location,
+        notice.errorCodes.AccessForbidden,
       );
       return notice;
     }

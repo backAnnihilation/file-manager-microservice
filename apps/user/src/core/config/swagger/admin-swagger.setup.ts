@@ -1,5 +1,5 @@
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { RoutingEnum } from '@shared/routing';
+import { RoutingEnum } from '@app/shared';
 import { INestApplication } from '@nestjs/common';
 
 export const adminSwaggerSetup = (app: INestApplication) => {

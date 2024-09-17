@@ -4,7 +4,7 @@ module.exports = {
     '<rootDir>/apps/user/test/jest-e2e.json',
   ],
   moduleNameMapper: {
-    '^@shared/(.*)$': '<rootDir>/libs/shared/$1',
+    '^@app/shared/(.*)$': '<rootDir>/libs/shared/src/$1',
     '^@models/(.*)$': '<rootDir>/libs/shared/models/$1',
     '^@config/(.*)$': '<rootDir>/libs/shared/config/$1',
     '^@user/core/(.*)$': '<rootDir>/apps/user/src/core/$1',

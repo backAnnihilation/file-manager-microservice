@@ -1,12 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
-
+import { LayerNoticeInterceptor } from '@app/shared';
 import { CreateSessionCommand } from '../../security/application/use-cases/commands/create-session.command';
 import { JwtTokens } from '../api/models/auth-input.models.ts/jwt.types';
 import { DeleteActiveSessionCommand } from '../../security/application/use-cases/commands/delete-active-session.command';
-import { handleErrors } from '../../../../../../libs/shared/handle-response-errors';
-import { LayerNoticeInterceptor } from '../../../../../../libs/shared/notification';
-
 import { UpdateIssuedTokenCommand } from './use-cases/commands/update-Issued-token.command';
 import { ConfirmEmailCommand } from './use-cases/commands/confirm-email.command';
 import { UpdateConfirmationCodeCommand } from './use-cases/commands/update-confirmation-code.command';
@@ -24,11 +21,7 @@ export class BaseAuthenticationApiService<TCommand, TResponse> {
     >(command);
 
     if (notification.hasError) {
-      const { error } = handleErrors(
-        notification.code,
-        notification.extensions[0],
-      );
-      throw error;
+      throw notification.generateErrorResponse;
     }
 
     return notification.data;

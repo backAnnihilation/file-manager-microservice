@@ -1,20 +1,24 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { ImageViewModelType } from '@models/file.models';
-
 import {
-  FileMeta,
-  FileMetaDocument,
-  FileMetaModel,
-} from '../domain/entities/file-meta.schema';
+  IPostImageViewModelType,
+  IProfileImageViewModelType,
+} from '@app/shared';
+import {
+  PostImageMeta,
+  PostImageMetaModel,
+  PostImageMetaDocument,
+} from '../domain/entities/post-image-meta.schema';
 
 @Injectable()
 export class FilesQueryRepository {
-  constructor(@InjectModel(FileMeta.name) private fileModel: FileMetaModel) {}
+  constructor(
+    @InjectModel(PostImageMeta.name) private fileModel: PostImageMetaModel,
+  ) {}
 
-  async getById(fileId: string) {
+  async getById(id: string) {
     try {
-      const result = await this.fileModel.findById(fileId);
+      const result = await this.fileModel.findById(id);
       if (!result) return null;
       return this.fileToViewModel(result);
     } catch (error) {
@@ -23,10 +27,19 @@ export class FilesQueryRepository {
     }
   }
 
-  private fileToViewModel = (file: FileMetaDocument): ImageViewModelType => ({
+  private fileToViewModel = (file: any): IProfileImageViewModelType => ({
     id: file._id.toString(),
     url: file.fileUrl,
     profileId: file.profileId,
     createdAt: file.createdAt.toString(),
+  });
+
+  private postImageToViewModel = (
+    image: PostImageMetaDocument,
+  ): IPostImageViewModelType => ({
+    id: image._id.toString(),
+    url: image.url,
+    postId: image.postId,
+    createdAt: image.createdAt.toString(),
   });
 }

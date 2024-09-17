@@ -3,17 +3,15 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { TestingModuleBuilder } from '@nestjs/testing';
 import { v4 as uuidv4 } from 'uuid';
-
 import { EnvironmentVariables } from '../../src/core/config/configuration';
-import { DatabaseService } from '../../src/core/db/prisma/prisma.service';
 import { EmailManager } from '../../src/core/managers/email-manager';
-import { ErrorField } from '../../src/core/utils/error-handler';
 import { JwtTokens } from '../../src/features/auth/api/models/auth-input.models.ts/jwt.types';
 import { AuthService } from '../../src/features/auth/application/auth.service';
 import { CaptureGuard } from '../../src/features/auth/infrastructure/guards/validate-capture.guard';
 import { databaseService, dbCleaner } from '../setupTests.e2e';
 import { initSettings } from '../tools/initSettings';
 import { UsersTestManager } from '../tools/managers/UsersTestManager';
+import { mockedCaptureGuard } from '../tools/mock/capture-guard.mock';
 import { EmailManagerMock } from '../tools/mock/email-manager.mock';
 import {
   aDescribe,
@@ -21,9 +19,11 @@ import {
   skipSettings,
 } from '../tools/skipSettings';
 import { wait } from '../tools/utils/delayUtils';
-import { constructErrorMessages } from '../tools/utils/make-errors-messages';
+import {
+  constructErrorMessages,
+  ErrorField,
+} from '../tools/utils/make-errors-messages';
 import { constantsTesting } from '../tools/utils/test-constants';
-import { mockedCaptureGuard } from '../tools/mock/capture-guard.mock';
 
 aDescribe(skipSettings.for(e2eTestNamesEnum.AUTH))('AuthController', () => {
   let app: INestApplication;

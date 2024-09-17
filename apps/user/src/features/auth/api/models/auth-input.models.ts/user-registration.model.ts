@@ -1,13 +1,12 @@
-import { IsOptional } from 'class-validator';
 import {
+  iSValidField,
   userNameLength,
   stringMatch,
   passwordLength,
   passwordMatch,
   frequentLength,
   emailMatches,
-} from '@shared/validation/input-constants';
-import { iSValidField } from '@shared/validation/validate-input-fields';
+} from '@app/shared';
 
 export class CreateUserDto {
   /**
@@ -27,7 +26,4 @@ export class CreateUserDto {
    */
   @iSValidField(frequentLength, emailMatches)
   email: string;
-
-  @IsOptional()
-  captureToken?: string;
 }

@@ -1,6 +1,6 @@
 import { INestApplication } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { Environment } from '@shared/environment.enum';
+import { Environment } from '@app/shared';
 import { useContainer } from 'class-validator';
 import * as cookieParser from 'cookie-parser';
 import { AppModule } from '../../app.module';

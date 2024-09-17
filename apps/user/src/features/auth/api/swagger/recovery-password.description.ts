@@ -7,7 +7,7 @@ import {
   ApiSecurity,
 } from '@nestjs/swagger';
 
-import { emailMatches } from '../../../../../../../libs/shared/validation/input-constants';
+import { emailMatches } from '../../../../../../../libs/shared/src/validation/input-constants';
 
 import { TooManyRequestsApiResponse } from './shared/too-many-requests-api-response';
 import { CaptchaHeader } from './shared/capture-using';

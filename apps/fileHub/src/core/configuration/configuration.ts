@@ -8,7 +8,7 @@ import {
   Min,
   validateSync,
 } from 'class-validator';
-import { Environment } from '@shared/environment.enum';
+import { Environment } from '@app/shared';
 import { registerAs } from '@nestjs/config';
 
 export type AwsConfigType = { aws: ReturnType<typeof awsConfig> };

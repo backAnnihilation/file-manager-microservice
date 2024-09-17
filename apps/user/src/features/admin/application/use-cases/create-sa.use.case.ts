@@ -1,14 +1,10 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-
-import { BcryptAdapter } from '../../../../core/adapters/bcrypt.adapter';
+import { LayerNoticeInterceptor } from '@app/shared';
+import { BcryptAdapter } from '@user/core/adapters/bcrypt.adapter';
 import { ResponseIdType } from '../../api/models/outputSA.models.ts/user-models';
 import { UsersRepository } from '../../infrastructure/users.repo';
 import { CreateSACommand } from '../commands/create-sa.command';
 import { UserModelDTO } from '../dto/create-user.dto';
-import {
-  GetErrors,
-  LayerNoticeInterceptor,
-} from '../../../../../../../libs/shared/notification';
 
 @CommandHandler(CreateSACommand)
 export class CreateSAUseCase implements ICommandHandler<CreateSACommand> {
@@ -29,7 +25,11 @@ export class CreateSAUseCase implements ICommandHandler<CreateSACommand> {
     );
 
     if (theSameUser) {
-      notice.addError('User already exists', 'sa', GetErrors.IncorrectModel);
+      notice.addError(
+        'User already exists',
+        'sa',
+        notice.errorCodes.ValidationError,
+      );
       return notice;
     }
 

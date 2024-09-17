@@ -1,11 +1,7 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-
+import { LayerNoticeInterceptor } from '@app/shared';
 import { UsersRepository } from '../../infrastructure/users.repo';
 import { DeleteSACommand } from '../commands/delete-sa.command';
-import {
-  LayerNoticeInterceptor,
-  GetErrors,
-} from '../../../../../../../libs/shared/notification';
 
 @CommandHandler(DeleteSACommand)
 export class DeleteSAUseCase implements ICommandHandler<DeleteSACommand> {
@@ -21,7 +17,7 @@ export class DeleteSAUseCase implements ICommandHandler<DeleteSACommand> {
       notice.addError(
         'User not found',
         this.constructor.name,
-        GetErrors.NotFound,
+        notice.errorCodes.ResourceNotFound,
       );
     }
     return notice;

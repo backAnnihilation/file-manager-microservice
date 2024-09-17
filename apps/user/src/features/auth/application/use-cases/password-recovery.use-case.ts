@@ -1,12 +1,7 @@
 import { CommandHandler, EventBus, ICommandHandler } from '@nestjs/cqrs';
-
 import { AuthRepository } from '../../infrastructure/auth.repository';
 import { createRecoveryCode } from '../helpers/create-recovery-message.helper';
-import {
-  LayerNoticeInterceptor,
-  GetErrors,
-} from '../../../../../../../libs/shared/notification';
-
+import { LayerNoticeInterceptor } from '@app/shared';
 import { PasswordRecoveryCommand } from './commands/password-recovery.command';
 import { SendRecoveryMessageEvent } from './send-recovery-msg.event';
 
@@ -31,7 +26,7 @@ export class PasswordRecoveryUseCase
       notice.addError(
         `User with this email ${email} doesn't exist`,
         this.location,
-        GetErrors.NotFound,
+        notice.errorCodes.ResourceNotFound,
       );
       return notice;
     }

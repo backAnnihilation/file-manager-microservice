@@ -1,19 +1,11 @@
 import {
-  FileMeta,
-  FileMetaSchema,
-} from '../../features/profile/domain/entities/file-meta.schema';
-import {
-  PostFileMeta,
-  PostFileMetaSchema,
-} from '../../features/profile/domain/entities/post-file-meta.schema';
+  PostImageMeta,
+  PostImageMetaSchema,
+} from '../../features/file/domain/entities/post-image-meta.schema';
 
 export const schemas = [
   {
-    name: FileMeta.name,
-    schema: FileMetaSchema,
-  },
-  {
-    name: PostFileMeta.name,
-    schema: PostFileMetaSchema,
+    name: PostImageMeta.name,
+    schema: PostImageMetaSchema,
   },
 ];

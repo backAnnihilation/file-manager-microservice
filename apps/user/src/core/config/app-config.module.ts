@@ -1,15 +1,14 @@
 import { ConfigModule } from '@nestjs/config';
 import { Global, Module } from '@nestjs/common';
 import { validate } from './configuration';
-import { rmqConfig } from '@config/rmq.config';
-import { Environment } from '@shared/environment.enum';
+import { Environment } from '@app/shared';
 
 @Global()
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [rmqConfig],
+      load: [],
       validate,
       cache: true,
       expandVariables: true,

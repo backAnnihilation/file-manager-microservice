@@ -4,7 +4,7 @@ module.exports = {
   resolve: {
     extensions: ['.ts', '.js'],
     alias: {
-      '@shared': resolve(__dirname, './libs/shared/'),
+      '@app/shared': resolve(__dirname, './libs/shared/src/.'),
       '@models': resolve(__dirname, './libs/shared/models/'),
       '@config': resolve(__dirname, './libs/shared/config/'),
       '@user/core': resolve(__dirname, './apps/user/src/core/'),

@@ -1,4 +1,9 @@
-import { FileType, ImageViewModelType } from '@models/file.models';
+import {
+  ApiTagsEnum,
+  IProfileImageViewModelType,
+  RoutingEnum,
+  FileMetadata,
+} from '@app/shared';
 import {
   Body,
   Controller,
@@ -13,21 +18,19 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { CommandBus } from '@nestjs/cqrs';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiExcludeEndpoint, ApiTags } from '@nestjs/swagger';
-import { ApiTagsEnum, RoutingEnum } from '@shared/routing';
+import { CurrentUserId } from '@user/core/decorators/current-user-id.decorator';
 import { UserNavigate } from '@user/core/routes/user-navigate';
 import { UserPayload } from '../../auth/infrastructure/decorators/user-payload.decorator';
 import { AccessTokenGuard } from '../../auth/infrastructure/guards/accessToken.guard';
+import { UserIdExtractor } from '../../auth/infrastructure/guards/set-user-id.guard';
 import { UserSessionDto } from '../../security/api/models/security-input.models/security-session-info.model';
 import { UserProfileService } from '../application/services/profile.service';
 import { UserProfilesApiService } from '../application/services/user-api.service';
 import { EditProfileCommand } from '../application/use-cases/edit-profile.use-case';
 import { FillOutProfileCommand } from '../application/use-cases/fill-out-profile.use-case';
 import { ImageFilePipe } from '../infrastructure/validation/upload-photo-format';
-import { SetUserIdGuard } from '../../auth/infrastructure/guards/set-user-id.guard';
-import { ExtractUserId } from '../../auth/infrastructure/decorators/current-user-id.decorator';
 import { EditProfileInputModel } from './models/input/edit-profile.model';
 import { FillOutProfileInputModel } from './models/input/fill-out-profile.model';
 import { UserProfileViewModel } from './models/output/profile.view.model';
@@ -40,17 +43,16 @@ import { GetUserProfileEndpoint } from './swagger/get-profile.description';
 @Controller(RoutingEnum.profiles)
 export class UserProfilesController {
   constructor(
-    private commandBus: CommandBus,
     private userProfilesApiService: UserProfilesApiService,
     private profilesQueryRepo: ProfilesQueryRepo,
     private profileService: UserProfileService,
   ) {}
 
   @GetUserProfileEndpoint()
-  @UseGuards(SetUserIdGuard)
+  @UseGuards(UserIdExtractor)
   @Get(UserNavigate.GetProfile)
   async getUserProfile(
-    @ExtractUserId() userId: string,
+    @CurrentUserId() userId: string,
     @Param('id') profileId: string,
   ): Promise<UserProfileViewModel> {
     const profile = await this.profilesQueryRepo.getById(profileId);
@@ -65,8 +67,10 @@ export class UserProfilesController {
   async uploadProfilePhoto(
     @UserPayload() userPayload: UserSessionDto,
     @UploadedFile(ImageFilePipe)
-    image: FileType,
-  ): Promise<ImageViewModelType> {
+    image: FileMetadata,
+  ): Promise<IProfileImageViewModelType> {
+    // const command = new UploadProfileImageCommand();
+    // const command = new UploadFileCommand()
     const result = await this.profileService.uploadProfileImage({
       image,
       userId: userPayload.userId,

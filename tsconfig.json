@@ -19,7 +19,7 @@
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
     "paths": {
-      "@shared/*": ["libs/shared/*"],
+      "@app/shared": ["libs/shared/src/."],
       "@models/*": ["libs/shared/models/*"],
       "@config/*": ["libs/shared/config/*"],
       "@user/core/*": ["apps/user/src/core/*"],

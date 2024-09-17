@@ -3,8 +3,8 @@ import { IsString } from 'class-validator';
 import {
   frequentLength,
   passwordLength,
-} from '../../../../../../../../libs/shared/validation/input-constants';
-import { iSValidField } from '../../../../../../../../libs/shared/validation/validate-input-fields';
+} from '../../../../../../../../libs/shared/src/validation/input-constants';
+import { iSValidField } from '../../../../../../../../libs/shared/src/validation/validate-input-fields';
 
 export class UserCredentialsDto {
   /**

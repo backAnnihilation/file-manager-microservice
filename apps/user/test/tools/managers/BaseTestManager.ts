@@ -1,6 +1,5 @@
 import { HttpServer, INestApplication } from '@nestjs/common';
-import { SortDirection } from '@shared/sorting-base-filter';
-
+import { SortDirection } from '@app/shared';
 import { AuthConstantsType, constantsTesting } from '../utils/test-constants';
 
 export class BaseTestManager {

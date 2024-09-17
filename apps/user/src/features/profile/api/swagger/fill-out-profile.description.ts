@@ -13,7 +13,7 @@ import {
   nameInitials,
   nameInitialsMatch,
   passwordLength,
-} from '@shared/validation/input-constants';
+} from '@app/shared';
 import { UnauthorizedViaTokenApiResponse } from '../../../auth/api/swagger/shared/authorization.response';
 import { Gender } from '../models/enum/profile.enums';
 import { UserProfileResponseType } from './get-profile.description';

@@ -1,5 +1,5 @@
-import { Environment } from '@shared/environment.enum';
 import { plainToInstance } from 'class-transformer';
+import { Environment } from '@app/shared';
 import {
   IsEnum,
   IsNumber,
@@ -58,12 +58,6 @@ export class EnvironmentVariables {
 
   @IsString()
   CAPTURE_SITE_KEY: string;
-
-  @IsOptional()
-  FILES_SERVICE_URL: string;
-
-  @IsOptional()
-  API_KEY: string;
 
   @IsString()
   RMQ_URL: string;

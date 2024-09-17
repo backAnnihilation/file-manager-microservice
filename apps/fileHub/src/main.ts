@@ -1,8 +1,7 @@
 import { applyAppSettings } from '@file/core/configuration/app-settings';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
-import { QUEUE_NAME } from '@shared/models/enum/queue-tokens';
-import { RmqService } from '@shared/src';
+import { RmqService, QUEUE_NAME } from '@app/shared';
 import { AppModule } from './app.module';
 
 (async () => {

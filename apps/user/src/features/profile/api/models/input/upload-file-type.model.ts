@@ -1,14 +1,12 @@
-import { FileType } from '@models/file.models';
-
-import { FileFormat, ImageType } from '../enum/file-format.enums';
+import { FileMetadata, ImageType, MediaType } from '@app/shared';
 
 export type UploadFileDto = {
-  image: FileType;
+  image: FileMetadata;
   userId: string;
 };
 
 export type ProfileImageToSendType = {
-  fileFormat: FileFormat;
-  image: FileType;
+  fileFormat: MediaType;
+  image: FileMetadata;
   fileType: ImageType;
 };

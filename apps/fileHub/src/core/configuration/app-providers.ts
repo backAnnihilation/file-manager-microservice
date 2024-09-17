@@ -10,11 +10,8 @@ import { ApiKeyGuard } from '../../features/file/infrastructure/guards/api-key.g
 import { FileExtractPipe } from '../../features/file/infrastructure/pipes/extract-file-characters.pipe';
 import { FilesStorageAdapter } from '../adapters/local-files-storage.adapter';
 import { S3FilesStorageAdapter } from '../adapters/s3-files-storage.adapter';
-import { UploadProfileImageUseCase } from '../../features/profile/application/use-cases/upload-profile-image.use-case';
-import {
-  UploadPostImageCommand,
-  UploadPostImageUseCase,
-} from '../../features/profile/application/use-cases/upload-post-image.use-case';
+import { UploadProfileImageUseCase } from '../../features/file/application/use-cases/upload-profile-image.use-case';
+import { UploadPostImageUseCase } from '../../features/file/application/use-cases/upload-post-image.use-case';
 
 export const providers: Provider[] = [
   FilesRepository,
@@ -26,7 +23,6 @@ export const providers: Provider[] = [
   FilesBaseApiService,
   FilesQueryRepository,
   UploadProfileImageUseCase,
-  UploadPostImageCommand,
   UploadPostImageUseCase,
   {
     provide: FilesStorageAdapter,

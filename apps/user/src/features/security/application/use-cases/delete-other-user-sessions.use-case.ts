@@ -1,7 +1,7 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 
 import { SecurityRepository } from '../../infrastructure/security.repository';
-import { LayerNoticeInterceptor } from '../../../../../../../libs/shared/notification';
+import { LayerNoticeInterceptor } from '../../../../../../../libs/shared/src/interceptors/notification';
 
 import { DeleteOtherUserSessionsCommand } from './commands/delete-other-user-sessions.command';
 

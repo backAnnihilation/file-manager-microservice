@@ -11,16 +11,11 @@ import {
 } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 import { ApiTags } from '@nestjs/swagger';
-
 import { UserPayload } from '../../auth/infrastructure/decorators/user-payload.decorator';
 import { RefreshTokenGuard } from '../../auth/infrastructure/guards/refreshToken.guard';
 import { DeleteActiveSessionCommand } from '../application/use-cases/commands/delete-active-session.command';
 import { DeleteOtherUserSessionsCommand } from '../application/use-cases/commands/delete-other-user-sessions.command';
-import {
-  ApiTagsEnum,
-  RoutingEnum,
-} from '../../../../../../libs/shared/routing';
-
+import { ApiTagsEnum, RoutingEnum } from '@app/shared';
 import { UserSessionDto } from './models/security-input.models/security-session-info.model';
 import { SecurityInterface } from './models/security-input.models/security.interface';
 import { SecurityViewDeviceModel } from './models/security.view.models/security.view.types';
@@ -54,6 +49,7 @@ export class SecurityController implements SecurityInterface {
     await this.commandBus.execute(command);
   }
 
+  // toDo move logic into use-case
   @DeleteSessionEndpoint()
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)

@@ -1,17 +1,12 @@
 import { CommandHandler, EventBus, ICommandHandler } from '@nestjs/cqrs';
-
-import { BcryptAdapter } from '../../../../core/adapters/bcrypt.adapter';
 import { UserIdType } from '../../../admin/api/models/outputSA.models.ts/user-models';
 import { UsersRepository } from '../../../admin/infrastructure/users.repo';
 import { UserModelDTO } from '../../../admin/application/dto/create-user.dto';
 import { AuthRepository } from '../../infrastructure/auth.repository';
-import {
-  GetErrors,
-  LayerNoticeInterceptor,
-} from '../../../../../../../libs/shared/notification';
-
+import { LayerNoticeInterceptor } from '@app/shared';
 import { EmailNotificationEvent } from './events/email-notification-event';
 import { CreateUserCommand } from './commands/create-user.command';
+import { BcryptAdapter } from '@user/core/adapters';
 
 @CommandHandler(CreateUserCommand)
 export class CreateUserUseCase implements ICommandHandler<CreateUserCommand> {
@@ -35,18 +30,19 @@ export class CreateUserUseCase implements ICommandHandler<CreateUserCommand> {
     });
 
     if (confirmedUser) {
+      const error = notice.errorCodes.ValidationError;
       if (confirmedUser.email === email) {
         notice.addError(
           `User with email ${email} already confirmed`,
           this.location,
-          GetErrors.IncorrectModel,
+          error,
         );
       }
       if (confirmedUser.userName === userName) {
         notice.addError(
           `User with userName ${userName} already confirmed`,
           this.location,
-          GetErrors.IncorrectModel,
+          error,
         );
       }
       return notice;

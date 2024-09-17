@@ -1,26 +1,20 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { OutputId, OutputIdAndUrl } from '@models/output-id.dto';
-
 import {
-  FileMeta,
-  FileMetaDocument,
-  FileMetaModel,
-} from '../domain/entities/file-meta.schema';
-import {
-  PostFileMeta,
-  PostFileMetaDocument,
-  PostFileMetaModel,
-} from '../domain/entities/post-file-meta.schema';
+  PostImageMeta,
+  PostImageMetaDocument,
+  PostImageMetaModel,
+} from '../domain/entities/post-image-meta.schema';
+import { BaseFileMetaDocument } from '../domain/entities/base-image-meta.schema';
+import { OutputId, OutputIdAndUrl } from '@app/shared';
 
 @Injectable()
 export class FilesRepository {
   constructor(
-    @InjectModel(FileMeta.name) private fileModel: FileMetaModel,
-    @InjectModel(PostFileMeta.name) private postFileModel: PostFileMetaModel,
+    @InjectModel(PostImageMeta.name) private postFileModel: PostImageMetaModel,
   ) {}
 
-  async save(fileDto: FileMetaDocument): Promise<OutputId> {
+  async save<T extends BaseFileMetaDocument>(fileDto: T): Promise<OutputId> {
     try {
       const result = await fileDto.save();
       return { id: result._id.toString() };
@@ -30,7 +24,7 @@ export class FilesRepository {
     }
   }
   async savePostFIle(
-    postFileDto: PostFileMetaDocument,
+    postFileDto: PostImageMetaDocument,
   ): Promise<OutputIdAndUrl> {
     try {
       const result = await postFileDto.save();
@@ -43,7 +37,7 @@ export class FilesRepository {
 
   async getById(fileId: string): Promise<any> {
     try {
-      const result = await this.fileModel.findById(fileId).lean();
+      const result = await this.postFileModel.findById(fileId).lean();
 
       if (!result) return null;
 
@@ -53,4 +47,6 @@ export class FilesRepository {
       return null;
     }
   }
+
+  getModel() {}
 }

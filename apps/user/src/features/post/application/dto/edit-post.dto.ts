@@ -1,4 +1,3 @@
-// eslint-disable-next-line import/namespace
 import { IEditPostCommand } from '../../api/models/input/edit-profile.model';
 
 export class EditUserPostDTO {

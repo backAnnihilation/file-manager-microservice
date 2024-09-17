@@ -7,7 +7,7 @@
     "^.+\\.(t|j)s$": "ts-jest"
   },
   "moduleNameMapper": {
-    "^@shared/(.*)$": "<rootDir>/../../../libs/shared/$1",
+    "^@app/shared/(.*)$": "<rootDir>/../../../libs/shared/$1",
     "^@config/(.*)$": "<rootDir>/../../../libs/shared/config/$1",
     "^@models/(.*)$": "<rootDir>/../../../libs/shared/models/$1",
     "^@file/core/(.*)$": "<rootDir>/../src/core/$1"

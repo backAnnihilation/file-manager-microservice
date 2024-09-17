@@ -1,14 +1,9 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-
-import { OutputId } from '../../../../../../../libs/shared/models/output-id.dto';
-import {
-  GetErrors,
-  LayerNoticeInterceptor,
-} from '../../../../../../../libs/shared/notification';
+import { OutputId } from '@app/shared';
+import { LayerNoticeInterceptor } from '@app/shared';
 import { IEditProfile } from '../../api/models/input/edit-profile.model';
 import { ProfilesRepository } from '../../infrastructure/profiles.repository';
 import { EditUserProfileDTO } from '../dto/edit-profile.dto';
-('../../api/models/input-models/fill-profile.model');
 
 export class EditProfileCommand {
   constructor(public profileDto: IEditProfile) {}
@@ -30,7 +25,7 @@ export class EditProfileUseCase implements ICommandHandler<EditProfileCommand> {
       notice.addError(
         'profile does not exist',
         this.location,
-        GetErrors.IncorrectModel,
+        notice.errorCodes.ValidationError,
       );
       return notice;
     }

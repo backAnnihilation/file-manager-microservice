@@ -6,7 +6,7 @@ import {
   ApiResponse,
   ApiSecurity,
 } from '@nestjs/swagger';
-import { emailMatches } from '@shared/validation/input-constants';
+import { emailMatches } from '@app/shared';
 
 import { TooManyRequestsApiResponse } from './shared/too-many-requests-api-response';
 import { CaptchaHeader } from './shared/capture-using';

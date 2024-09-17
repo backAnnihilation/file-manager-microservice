@@ -1,31 +1,9 @@
-import { FileType } from '@models/file.models';
-import { IsEnum, IsObject, IsString } from 'class-validator';
-import { FileFormat, ImageType } from '../enums/file-details.enum';
+import { IsString } from 'class-validator';
+import { BaseImageDto } from './base-image.model';
 
-export class UploadProfileImageDto {
-  @IsObject()
-  image: FileType;
-
-  @IsEnum(FileFormat)
-  fileFormat: FileFormat;
-
-  @IsEnum(ImageType)
-  fileType: ImageType;
-
+export class InputProfileImageDto extends BaseImageDto {
+  // @IsEnum(FileFormat)
+  // fileFormat: FileFormat;
   @IsString()
   profileId: string;
-}
-
-export class UploadPostImageDto {
-  @IsObject()
-  image: Express.Multer.File;
-
-  @IsEnum(FileFormat)
-  fileFormat: FileFormat;
-
-  @IsEnum(ImageType)
-  fileType: ImageType;
-
-  @IsString()
-  userId: string;
 }

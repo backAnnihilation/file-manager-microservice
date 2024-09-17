@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 import { ApiExcludeEndpoint, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
-import { ApiTagsEnum, RoutingEnum } from '@shared/routing';
+import { ApiTagsEnum, RoutingEnum } from '@app/shared';
 import { CustomThrottlerGuard } from '@user/core/infrastructure/guards/custom-throttler.guard';
 import { AuthNavigate } from '@user/core/routes/auth-navigate';
 import { UserSessionDto } from '../../../security/api/models/security-input.models/security-session-info.model';

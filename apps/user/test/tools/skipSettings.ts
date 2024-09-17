@@ -5,7 +5,7 @@ const skip = true;
 const run = false;
 
 export const skipSettings = {
-  run_all_tests: skip,
+  run_all_tests: run,
 
   auth: skip,
   profile: run,

@@ -1,18 +1,18 @@
 import { applyDecorators, HttpStatus } from '@nestjs/common';
 import {
-    ApiBearerAuth,
-    ApiBody,
-    ApiOperation,
-    ApiPropertyOptional,
-    ApiResponse,
+  ApiBearerAuth,
+  ApiBody,
+  ApiOperation,
+  ApiPropertyOptional,
+  ApiResponse,
 } from '@nestjs/swagger';
 import {
-    aboutLength,
-    frequentLength,
-    nameInitials,
-    nameInitialsMatch,
-    passwordLength,
-} from '@shared/validation/input-constants';
+  aboutLength,
+  frequentLength,
+  nameInitials,
+  nameInitialsMatch,
+  passwordLength,
+} from '@app/shared';
 import { UnauthorizedViaTokenApiResponse } from '../../../auth/api/swagger/shared/authorization.response';
 import { Gender } from '../models/enum/profile.enums';
 import { ErrorResponseDto } from './fill-out-profile.description';
