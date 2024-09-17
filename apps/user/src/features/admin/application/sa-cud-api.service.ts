@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 import { SAViewType } from '../api/models/user.view.models/userAdmin.view-type';
 import { UsersQueryRepo } from '../api/query-repositories/user-account.query.repo';
-import { BaseCUDApiService } from '../../../../../../libs/shared/src/api/services/base-cud-api.service';
+import { BaseCUDApiService } from '@app/shared';
 import { CreateSACommand } from './commands/create-sa.command';
 import { DeleteSACommand } from './commands/delete-sa.command';
 
