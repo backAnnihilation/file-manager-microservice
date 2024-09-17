@@ -15,3 +15,17 @@ export class UploadProfileImageDto {
   @IsString()
   profileId: string;
 }
+
+export class UploadPostImageDto {
+  @IsObject()
+  image: Express.Multer.File;
+
+  @IsEnum(FileFormat)
+  fileFormat: FileFormat;
+
+  @IsEnum(ImageType)
+  fileType: ImageType;
+
+  @IsString()
+  userId: string;
+}

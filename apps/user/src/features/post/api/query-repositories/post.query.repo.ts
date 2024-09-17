@@ -1,25 +1,39 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { DefaultArgs } from '@prisma/client/runtime/library';
 import { DatabaseService } from '@user/core/db/prisma/prisma.service';
 
+import { UserPostViewModel } from '../models/output/post.view.model';
+import { getPostViewModel } from '../models/output/post.output.model';
+
 @Injectable()
-export class PostsQueryRepo {
-  private readonly profiles: Prisma.UserProfileDelegate<DefaultArgs>;
+export class PostQueryRepo {
+  private readonly userPostsRepo: Prisma.UserPostDelegate<DefaultArgs>;
   constructor(private prisma: DatabaseService) {
-    this.profiles = this.prisma.userProfile;
+    this.userPostsRepo = this.prisma.userPost;
   }
 
-  // async getById(id: string): Promise<UserProfileViewModel | null> {
-  //   try {
-  //     const result = await this.profiles.findUnique({ where: { id } });
+  async getUsersPosts(userId: string): Promise<UserPostViewModel[] | []> {
+    try {
+      const posts = await this.userPostsRepo.findMany({
+        where: { userId: userId },
+      });
 
-  //     if (!result) return null;
+      if (!posts) return [];
 
-  //     return getUserProfileViewModel(result);
-  //   } catch (error) {
-  //     console.error('Database fails operate with find user profile', error);
-  //     return null;
-  //   }
-  // }
+      return posts.map(getPostViewModel);
+    } catch (error) {
+      console.error('Database fails operate with find user posts', error);
+    }
+  }
+  async getPost(id: string): Promise<UserPostViewModel> {
+    try {
+      const post = await this.userPostsRepo.findUnique({ where: { id: id } });
+
+      return getPostViewModel(post);
+    } catch (error) {
+      console.error('Database fails operate with find user post', error);
+      throw new NotFoundException();
+    }
+  }
 }

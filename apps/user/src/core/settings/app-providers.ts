@@ -46,6 +46,12 @@ import { CaptureAdapter } from '../adapters/capture.adapter';
 import { EmailAdapter } from '../adapters/email.adapter';
 import { RMQAdapter } from '../adapters/rmq.adapter';
 import { EmailManager } from '../managers/email-manager';
+import { UserPostApiService } from '../../features/post/application/services/user-api.service';
+import { PostQueryRepo } from '../../features/post/api/query-repositories/post.query.repo';
+import { EditPostUseCase } from '../../features/post/application/use-cases/edit-post.use-case';
+import { DeletePostUseCase } from '../../features/post/application/use-cases/delete-post.use-case';
+import { CreatePostUseCase } from '../../features/post/application/use-cases/create-post.use-case';
+import { PostsRepository } from '../../features/post/infrastructure/posts.repo';
 
 
 const adapters: Provider[] = [
@@ -100,4 +106,10 @@ export const providers: Provider[] = [
   EditProfileUseCase,
   ImageFilePipe,
   UserProfileService,
+  UserPostApiService,
+  EditPostUseCase,
+  DeletePostUseCase,
+  CreatePostUseCase,
+  PostQueryRepo,
+  PostsRepository
 ];

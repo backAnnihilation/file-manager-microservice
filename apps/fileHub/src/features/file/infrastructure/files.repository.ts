@@ -1,21 +1,40 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { OutputId } from '@models/output-id.dto';
+import { OutputId, OutputIdAndUrl } from '@models/output-id.dto';
 
 import {
   FileMeta,
   FileMetaDocument,
   FileMetaModel,
 } from '../domain/entities/file-meta.schema';
+import {
+  PostFileMeta,
+  PostFileMetaDocument,
+  PostFileMetaModel,
+} from '../domain/entities/post-file-meta.schema';
 
 @Injectable()
 export class FilesRepository {
-  constructor(@InjectModel(FileMeta.name) private fileModel: FileMetaModel) {}
+  constructor(
+    @InjectModel(FileMeta.name) private fileModel: FileMetaModel,
+    @InjectModel(PostFileMeta.name) private postFileModel: PostFileMetaModel,
+  ) {}
 
   async save(fileDto: FileMetaDocument): Promise<OutputId> {
     try {
       const result = await fileDto.save();
       return { id: result._id.toString() };
+    } catch (error) {
+      console.log(`failed save profile`);
+      throw new Error(error);
+    }
+  }
+  async savePostFIle(
+    postFileDto: PostFileMetaDocument,
+  ): Promise<OutputIdAndUrl> {
+    try {
+      const result = await postFileDto.save();
+      return { id: result._id.toString(), url: result.fileUrl };
     } catch (error) {
       console.log(`failed save profile`);
       throw new Error(error);

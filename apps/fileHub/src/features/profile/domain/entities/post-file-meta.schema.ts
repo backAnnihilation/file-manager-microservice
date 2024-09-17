@@ -7,19 +7,9 @@ import {
   ImageType,
 } from '../../api/models/enums/file-details.enum';
 
-export type FileMetaDocument = HydratedDocument<FileMeta>;
-export type FileMetaModel = Model<FileMetaDocument> & FileMetaStatics;
-
-export type CreateFileMetaDto = {
-  fileName: string;
-  fileUrl: string;
-  fileId: string;
-  fileSize: number;
-  userId?: string;
-  profileId: string;
-  fileFormat: FileFormat;
-  fileType: ImageType;
-};
+export type PostFileMetaDocument = HydratedDocument<PostFileMeta>;
+export type PostFileMetaModel = Model<PostFileMetaDocument> &
+  PostFileMetaStatics;
 
 export type CreatePostFileMetaDto = {
   fileName: string;
@@ -31,27 +21,27 @@ export type CreatePostFileMetaDto = {
   fileType: ImageType;
 };
 
-const FileDetails = {
+const PostFileDetails = {
   fileFormat: { type: String, enum: FileFormat, required: true },
   fileType: { type: String, enum: ImageType, required: true },
   resolution: { type: String, required: false },
   duration: { type: String, required: false },
 };
-type FileDetailsType = {
+type PostFileDetailsType = {
   fileFormat: FileFormat;
   fileType: ImageType;
 };
 
 @Schema({ timestamps: true })
-export class FileMeta {
+export class PostFileMeta {
   @Prop({ required: true })
   fileName: string;
 
   @Prop({ required: true })
   fileUrl: string;
 
-  @Prop({ _id: false, type: FileDetails })
-  fileDetails: FileDetailsType;
+  @Prop({ _id: false, type: PostFileDetails })
+  fileDetails: PostFileDetailsType;
 
   @Prop({ type: String, required: true })
   fileId: string;
@@ -59,18 +49,15 @@ export class FileMeta {
   @Prop({ required: true })
   fileSize: number;
 
-  @Prop({ required: true })
-  profileId: string;
-
   createdAt: Date;
   updatedAt: Date;
 
   static async makeInstance(
-    uploadFileDto: CreateFileMetaDto,
-  ): Promise<LayerNoticeInterceptor<FileMetaDocument>> {
-    const notice = new LayerNoticeInterceptor<FileMetaDocument>();
+    uploadFileDto: CreatePostFileMetaDto,
+  ): Promise<LayerNoticeInterceptor<PostFileMetaDocument>> {
+    const notice = new LayerNoticeInterceptor<PostFileMetaDocument>();
     const { fileFormat, fileType, ...mainFileDetails } = uploadFileDto;
-    const fileMeta = new this() as FileMetaDocument;
+    const fileMeta = new this() as PostFileMetaDocument;
     Object.assign(fileMeta, mainFileDetails);
     fileMeta.fileDetails = { fileFormat, fileType };
 
@@ -79,9 +66,9 @@ export class FileMeta {
     return notice;
   }
 }
-export const FileMetaSchema = SchemaFactory.createForClass(FileMeta);
-export const FileMetaStatics = {
-  makeInstance: FileMeta.makeInstance,
+export const PostFileMetaSchema = SchemaFactory.createForClass(PostFileMeta);
+export const PostFileMetaStatics = {
+  makeInstance: PostFileMeta.makeInstance,
 };
-type FileMetaStatics = typeof FileMetaStatics;
-FileMetaSchema.statics = FileMetaStatics;
+type PostFileMetaStatics = typeof PostFileMetaStatics;
+PostFileMetaSchema.statics = PostFileMetaStatics;

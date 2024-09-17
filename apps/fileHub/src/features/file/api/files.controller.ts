@@ -22,17 +22,20 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiTags } from '@nestjs/swagger';
 import { ApiTagsEnum, RoutingEnum } from '@shared/routing';
+import { RmqService } from '@shared/src';
+
 import { FilesBaseApiService } from '../application/services/file.base.service';
 import { UploadFileCommand } from '../application/use-cases/upload-file.use-case';
 import { ApiKeyGuard } from '../infrastructure/guards/api-key.guard';
 import { FileExtractPipe } from '../infrastructure/pipes/extract-file-characters.pipe';
+import { UploadProfileImageCommand } from '../application/use-cases/upload-profile-image.use-case';
+
 import {
   FileExtractedType,
   InputFileTypesDto,
 } from './models/input-models/extracted-file-types';
-import { RmqService } from '@shared/src';
-import { UploadProfileImageDto } from './models/input-models/profile-image.model';
-import { UploadProfileImageCommand } from '../application/use-cases/upload-profile-image.use-case';
+import { UploadPostImageDto, UploadProfileImageDto } from './models/input-models/profile-image.model';
+import { UploadPostImageCommand } from '../application/use-cases/upload-post-image.use-case';
 
 @ApiTags(ApiTagsEnum.Files)
 @Controller(RoutingEnum.files)
@@ -67,6 +70,16 @@ export class FilesController {
     this.rmqService.ack(context);
     const command = new UploadProfileImageCommand(data);
     return this.filesApiService.create(command);
+  }
+
+  @MessagePattern('POST_CREATED')
+  handleUploadPostImage(
+    @Payload() data?: UploadPostImageDto,
+    @Ctx() context?: RmqContext,
+  ) {
+    this.rmqService.ack(context);
+    const command = new UploadPostImageCommand(data);
+    return this.filesApiService.createPost(command);
   }
 
   @EventPattern('emit')
