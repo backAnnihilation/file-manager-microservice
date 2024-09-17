@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import axios, { AxiosInstance } from 'axios';
 import * as FormData from 'form-data';
-import { ImageViewModelType } from '@app/shared';
+import { IPostImageViewModelType } from '@app/shared';
 import { EnvironmentVariables } from '../config/configuration';
 import { ProfileImageToSendType } from '../../features/profile/api/models/input/upload-file-type.model';
 
@@ -23,7 +23,7 @@ export class AxiosAdapter {
   async sendPostRequest(
     url: string,
     fileDto: ProfileImageToSendType,
-  ): Promise<ImageViewModelType> {
+  ): Promise<IPostImageViewModelType> {
     try {
       const formData = new FormData();
       const { image, ...fileTypes } = fileDto;
