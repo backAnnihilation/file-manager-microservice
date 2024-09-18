@@ -1,81 +1,68 @@
-import { FilesStorageAdapter } from '@file/core/adapters/local-files-storage.adapter';
+import {
+  ImageCategory,
+  LayerNoticeInterceptor,
+  OutputIdAndUrl,
+} from '@app/shared';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { LayerNoticeInterceptor, MediaType, OutputIdAndUrl } from '@app/shared';
-import { Bucket } from '../../api/models/enums/file-models.enum';
-import { UploadPostImageDto } from '../../api/models/input-models/profile-image.model';
-import { ContentType } from '../../api/models/output-models/file-output-types';
-import { FilesService } from '../services/file-metadata.service';
 import { InjectModel } from '@nestjs/mongoose';
+import { Bucket } from '../../api/models/enums/file-models.enum';
+import { InputPostImageDto } from '../../api/models/input-models/post-image.model';
 import {
   PostImageMeta,
+  PostImageMetaDocument,
+  PostImageMetaDto,
   PostImageMetaModel,
 } from '../../domain/entities/post-image-meta.schema';
+import { FilesRepository } from '../../infrastructure/files.repository';
+import { FilesService } from '../services/file-metadata.service';
 
 export class UploadPostImageCommand {
-  constructor(public uploadDto: UploadPostImageDto) {}
+  constructor(public imageDto: InputPostImageDto) {}
 }
 
 @CommandHandler(UploadPostImageCommand)
 export class UploadPostImageUseCase
   implements ICommandHandler<UploadPostImageCommand>
 {
-  private location = this.constructor.name;
   constructor(
     private filesService: FilesService,
-    private filesAdapter: FilesStorageAdapter,
-    @InjectModel(PostImageMeta.name) private PostModel: PostImageMetaModel,
+    private filesRepo: FilesRepository<PostImageMetaDocument>,
+    @InjectModel(PostImageMeta.name) private PostImageModel: PostImageMetaModel,
   ) {}
 
-  async execute(command: UploadPostImageCommand) {
-    // : Promise<LayerNoticeInterceptor<OutputIdAndUrl>>
-    const { userId, fileType, image } = command.uploadDto;
-    const { buffer, mimetype, originalname, size } = image;
-    const { ContentType, Key } = this.filesService.generatePostImageKey({
-      contentType: mimetype as ContentType,
-      fileName: originalname,
-      imageType: fileType,
-      userId,
+  async execute(
+    command: UploadPostImageCommand,
+  ): Promise<LayerNoticeInterceptor<OutputIdAndUrl>> {
+    const { userId, image, postId } = command.imageDto;
+    const { originalname, size } = image;
+
+    const { url, id: storageId } = await this.filesService.uploadFileInStorage({
+      image,
+      bucket: Bucket.Inst,
+      imageCategory: ImageCategory.POST,
+      postId,
     });
 
-    const postDto = PostImageMeta.makeInstance({
+    const createdPostImageNotice = await this.PostImageModel.makeInstance<
+      PostImageMetaDto,
+      PostImageMeta
+    >({
       userId,
-      fileId: '1',
-      fileFormat: MediaType.IMAGE,
-      fileName: originalname,
-      fileSize: size,
-      fileType,
-      fileUrl: Key,
+      storageId,
+      category: ImageCategory.POST,
+      name: originalname,
+      size,
+      url,
+      postId,
     });
 
-    const buf = Buffer.from((buffer as any).data);
+    if (createdPostImageNotice.hasError)
+      return createdPostImageNotice as LayerNoticeInterceptor;
 
-    const convertedBuffer =
-      await this.filesService.convertPhotoToStorageFormat(buf);
+    const postImageDto = createdPostImageNotice.data;
+    const savedPostImageId = await this.filesRepo.save(postImageDto);
 
-    const bucketParams = {
-      Bucket: Bucket.Inst,
-      Key,
-      Body: convertedBuffer,
-      ContentType,
-    };
-
-    const uploadedFileInStorage =
-      await this.filesAdapter.uploadFile(bucketParams);
-    const { url: fileUrl, id: fileId } = uploadedFileInStorage;
-
-    // const savedFileNotice = await this.filesService.savePostFileMeta({
-    //   userId,
-    //   fileFormat,
-    //   fileId,
-    //   fileName: originalname,
-    //   fileSize: size,
-    //   fileType,
-    //   fileUrl,
-    // });
-
-    // if (savedFileNotice.hasError)
-    //   return savedFileNotice as LayerNoticeInterceptor;
-
-    // return new LayerNoticeInterceptor(savedFileNotice.data);
+    const result = { id: savedPostImageId.id, url };
+    return new LayerNoticeInterceptor(result);
   }
 }

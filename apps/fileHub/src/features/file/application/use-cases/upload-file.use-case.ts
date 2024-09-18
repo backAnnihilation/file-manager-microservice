@@ -23,37 +23,37 @@ export class UploadFileUseCase implements ICommandHandler<UploadFileCommand> {
     const { fileFormat, buffer, fileType, mimetype, originalname, size } =
       fileCharacters;
 
-    const { ContentType, Key } = this.filesService.generateImageKey({
-      contentType: mimetype,
-      fileName: originalname,
-      imageType: fileType,
-      profileId,
-    });
+    // const { ContentType, Key } = this.filesService.generateImageKey({
+    //   contentType: mimetype,
+    //   fileName: originalname,
+    //   imageType: fileType,
+    //   profileId,
+    // });
 
-    const bucketParams = {
-      Bucket: Bucket.Inst,
-      Key,
-      Body: buffer,
-      ContentType,
-    };
+    // const bucketParams = {
+    //   Bucket: Bucket.Inst,
+    //   Key,
+    //   Body: buffer,
+    //   ContentType,
+    // };
 
-    const uploadedFileInStorage =
-      await this.filesAdapter.uploadFile(bucketParams);
-    const { url: fileUrl, id: fileId } = uploadedFileInStorage;
+    // const uploadedFileInStorage =
+    //   await this.filesAdapter.uploadFile(bucketParams);
+    // const { url: fileUrl, id: fileId } = uploadedFileInStorage;
 
-    const savedFileNotice = await this.filesService.saveFileMeta({
-      profileId,
-      fileFormat,
-      fileId,
-      fileName: originalname,
-      fileSize: size,
-      fileType,
-      fileUrl,
-    });
+    // const savedFileNotice = await this.filesService.saveFileMeta({
+    //   profileId,
+    //   fileFormat,
+    //   fileId,
+    //   fileName: originalname,
+    //   fileSize: size,
+    //   fileType,
+    //   fileUrl,
+    // });
 
-    if (savedFileNotice.hasError)
-      return savedFileNotice as LayerNoticeInterceptor;
+    // if (savedFileNotice.hasError)
+    //   return savedFileNotice as LayerNoticeInterceptor;
 
-    return new LayerNoticeInterceptor(savedFileNotice.data);
+    return new LayerNoticeInterceptor({ id: '123' });
   }
 }

@@ -16,9 +16,9 @@ export class FilesQueryRepository {
     @InjectModel(PostImageMeta.name) private fileModel: PostImageMetaModel,
   ) {}
 
-  async getById(id: string) {
+  async getById(id: string): Promise<IProfileImageViewModelType | null> {
     try {
-      const result = await this.fileModel.findById(id);
+      const result = await this.fileModel.findById(id).lean();
       if (!result) return null;
       return this.fileToViewModel(result);
     } catch (error) {

@@ -3,6 +3,7 @@ import {
   ForbiddenException,
   InternalServerErrorException,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { validateOrReject, ValidationError } from 'class-validator';
 
@@ -80,7 +81,7 @@ export class LayerNoticeInterceptor<D = null> {
       ),
       [errorCodes.ResourceNotFound]: new NotFoundException(errorObject),
       [errorCodes.AccessForbidden]: new ForbiddenException(errorObject),
-      [errorCodes.UnauthorizedAccess]: new ForbiddenException(errorObject),
+      [errorCodes.UnauthorizedAccess]: new UnauthorizedException(errorObject),
       [errorCodes.ValidationError]: new BadRequestException(errorObject),
     };
 

@@ -1,9 +1,19 @@
-import { FilesStorageAdapter } from '@file/core/adapters/local-files-storage.adapter';
+import {
+  ImageCategory,
+  LayerNoticeInterceptor,
+  OutputIdAndUrl,
+} from '@app/shared';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { LayerNoticeInterceptor, OutputId } from '@app/shared';
+import { InjectModel } from '@nestjs/mongoose';
 import { Bucket } from '../../api/models/enums/file-models.enum';
 import { InputProfileImageDto } from '../../api/models/input-models/profile-image.model';
-import { ContentType } from '../../api/models/output-models/file-output-types';
+import {
+  ProfileImageDocument,
+  ProfileImageMeta,
+  ProfileImageMetaDto,
+  ProfileImageModel,
+} from '../../domain/entities/user-profile-image-meta.schema';
+import { FilesRepository } from '../../infrastructure/files.repository';
 import { FilesService } from '../services/file-metadata.service';
 
 export class UploadProfileImageCommand {
@@ -14,54 +24,45 @@ export class UploadProfileImageCommand {
 export class UploadProfileImageUseCase
   implements ICommandHandler<UploadProfileImageCommand>
 {
-  private location = this.constructor.name;
   constructor(
     private filesService: FilesService,
-    private filesAdapter: FilesStorageAdapter,
+    private filesRepo: FilesRepository<ProfileImageDocument>,
+    @InjectModel(ProfileImageMeta.name)
+    private ProfileImageModel: ProfileImageModel,
   ) {}
 
   async execute(
     command: UploadProfileImageCommand,
-  ): Promise<LayerNoticeInterceptor<OutputId>> {
+  ): Promise<LayerNoticeInterceptor<OutputIdAndUrl>> {
     const { profileId, image } = command.imageDto;
-    const { buffer, mimetype, originalname, size } = image;
-    const fileFormat = 'IMAGE';
-    const { ContentType, Key } = this.filesService.generateImageKey({
-      contentType: mimetype as ContentType,
-      fileName: originalname,
-      imageType: fileType,
+    const { originalname, size } = image;
+
+    const { url, id: storageId } = await this.filesService.uploadFileInStorage({
+      image,
+      bucket: Bucket.Inst,
+      imageCategory: ImageCategory.PROFILE,
       profileId,
     });
 
-    const buf = Buffer.from((buffer as any).data);
-
-    const convertedBuffer =
-      await this.filesService.convertPhotoToStorageFormat(buf);
-
-    const bucketParams = {
-      Bucket: Bucket.Inst,
-      Key,
-      Body: convertedBuffer,
-      ContentType,
-    };
-
-    const uploadedFileInStorage =
-      await this.filesAdapter.uploadFile(bucketParams);
-    const { url: fileUrl, id: fileId } = uploadedFileInStorage;
-
-    const savedFileNotice = await this.filesService.saveFileMeta({
+    const createdProfileImageNotice = await this.ProfileImageModel.makeInstance<
+      ProfileImageMetaDto,
+      ProfileImageMeta
+    >({
+      storageId,
+      category: ImageCategory.POST,
+      name: originalname,
+      size,
+      url,
       profileId,
-      fileFormat,
-      fileId,
-      fileName: originalname,
-      fileSize: size,
-      fileType,
-      fileUrl,
     });
 
-    if (savedFileNotice.hasError)
-      return savedFileNotice as LayerNoticeInterceptor;
+    if (createdProfileImageNotice.hasError)
+      return createdProfileImageNotice as LayerNoticeInterceptor;
 
-    return new LayerNoticeInterceptor(savedFileNotice.data);
+    const profileImageDto = createdProfileImageNotice.data;
+    const savedProfileImageId = await this.filesRepo.save(profileImageDto);
+
+    const result = { id: savedProfileImageId.id, url };
+    return new LayerNoticeInterceptor(result);
   }
 }

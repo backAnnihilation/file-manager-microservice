@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { PutObjectCommandInput } from '@aws-sdk/client-s3';
-
 import { UploadFileOutputType } from '../../features/file/api/models/output-models/file-output-types';
 
 @Injectable()

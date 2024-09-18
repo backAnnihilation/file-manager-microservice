@@ -4,6 +4,8 @@ import {
   MediaType,
   LayerNoticeInterceptor,
   OutputId,
+  EVENT_COMMANDS,
+  EVENT_NAME,
 } from '@app/shared';
 import { RMQAdapter } from '@user/core/adapters/rmq.adapter';
 import { ICreatePostCommand } from '../../api/models/input/create-post.model';
@@ -37,8 +39,7 @@ export class CreatePostUseCase implements ICommandHandler<CreatePostCommand> {
       userId,
     };
 
-    const commandName = 'POST_CREATED';
-
+    const commandName = EVENT_COMMANDS.POST_CREATED;
     const result = await this.rmqAdapter.sendMessage(imagePayload, commandName);
 
     if (!result) {

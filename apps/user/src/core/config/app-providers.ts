@@ -6,7 +6,6 @@ import { CleanUpDatabaseRepository } from '../../features/admin/infrastructure/c
 import { UsersRepository } from '../../features/admin/infrastructure/users.repo';
 import { AuthQueryRepository } from '../../features/auth/api/query-repositories/auth.query.repo';
 import { AuthenticationApiService } from '../../features/auth/application/services/auth-token-response.service';
-import { AuthService } from '../../features/auth/application/auth.service';
 import { ConfirmRegistrationUseCase } from '../../features/auth/application/use-cases/confirm-registration.use-case';
 import { CreateOAuthUserUseCase } from '../../features/auth/application/use-cases/create-oauth-user.use-case';
 import { CreateUserUseCase } from '../../features/auth/application/use-cases/create-user.use-case';
@@ -52,6 +51,7 @@ import { EditPostUseCase } from '../../features/post/application/use-cases/edit-
 import { DeletePostUseCase } from '../../features/post/application/use-cases/delete-post.use-case';
 import { CreatePostUseCase } from '../../features/post/application/use-cases/create-post.use-case';
 import { PostsRepository } from '../../features/post/infrastructure/posts.repository';
+import { AuthService } from '../../features/auth/application/services/auth.service';
 
 const adapters: Provider[] = [
   BcryptAdapter,

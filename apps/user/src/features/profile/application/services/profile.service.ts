@@ -58,7 +58,7 @@ export class UserProfileService {
       profileId: profile.id,
     };
 
-    const commandName = EVENT_COMMANDS.PHOTO_UPLOAD;
+    const commandName = EVENT_COMMANDS.PROFILE_IMAGE_UPLOAD;
     const result = await this.rmqAdapter.sendMessage(imagePayload, commandName);
 
     if (!result) {

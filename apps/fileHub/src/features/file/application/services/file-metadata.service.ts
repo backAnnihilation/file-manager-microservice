@@ -1,72 +1,56 @@
+import { FileMetadata, ImageCategory } from '@app/shared';
 import { FilesStorageAdapter } from '@file/core/adapters/local-files-storage.adapter';
 import { Injectable } from '@nestjs/common';
-import { InjectConnection, InjectModel } from '@nestjs/mongoose';
-import { ImageCategory, LayerNoticeInterceptor } from '@app/shared';
 import * as sharp from 'sharp';
-import { ContentType } from '../../api/models/output-models/file-output-types';
-import { FilesRepository } from '../../infrastructure/files.repository';
-import { ImageType, OutputId, OutputIdAndUrl } from '@app/shared';
+import { Bucket } from '../../api/models/enums/file-models.enum';
 import {
-  PostImageMeta,
-  PostImageMetaModel,
-} from '../../domain/entities/post-image-meta.schema';
-import { Connection, Model } from 'mongoose';
-import {
-  BaseImageMeta,
-  BaseImageMetaModel,
-} from '../../domain/entities/base-image-meta.schema';
-import { ProfileImageMeta } from '../../domain/entities/user-profile-image-meta.schema';
+  ContentType,
+  UploadFileOutputType,
+} from '../../api/models/output-models/file-output-types';
+
+export type UploadImageType = {
+  image: FileMetadata;
+  imageCategory: ImageCategory;
+  profileId?: string;
+  postId?: string;
+  bucket: Bucket;
+};
 
 @Injectable()
 export class FilesService {
-  private readonly location: string;
-  constructor(
-    private readonly filesRepo: FilesRepository,
-    private readonly filesAdapter: FilesStorageAdapter,
+  constructor(private readonly filesAdapter: FilesStorageAdapter) {}
 
-    @InjectModel(PostImageMeta.name)
-    private PostFileMetadata: PostImageMetaModel,
-    @InjectConnection() private readonly connection: Connection,
-  ) {
-    this.location = this.constructor.name;
+  async uploadFileInStorage(
+    uploadFileDto: UploadImageType,
+  ): Promise<UploadFileOutputType> {
+    const {
+      image: { buffer, mimetype, originalname },
+      imageCategory,
+      postId,
+      profileId,
+      bucket: Bucket,
+    } = uploadFileDto;
+
+    const { ContentType, Key } = this.generateImageKey({
+      contentType: mimetype as ContentType,
+      fileName: originalname,
+      imageCategory,
+      profileId,
+      postId,
+    });
+
+    const buf = Buffer.from((buffer as any).data);
+    const convertedBuffer = await this.convertPhotoToStorageFormat(buf);
+
+    const bucketParams = {
+      Bucket,
+      Key,
+      Body: convertedBuffer,
+      ContentType,
+    };
+
+    return this.filesAdapter.uploadFile(bucketParams);
   }
-
-  async saveFileMeta(
-    imageMetaDto: any,
-    // CreateFileMetaDto,
-  ): Promise<LayerNoticeInterceptor<OutputId>> {
-    try {
-      const { modelName } = imageMetaDto;
-      const model = this.getEntityModel(modelName);
-      
-      // const fileNotice = await this.PostFileMetadata.makeInstance(fileMetaDto);
-
-      // if (fileNotice.hasError) return fileNotice as LayerNoticeInterceptor;
-
-      // const result = await this.filesRepo.save(fileNotice.data);
-      const result = { id: '1' };
-      return new LayerNoticeInterceptor(result);
-    } catch (error) {
-      throw new Error(`${this.location}: ${error}`);
-    }
-  }
-
-  // toDo move to use-case. The service is used for reuse, not for expanding it with new logic, if the logic differs from the "basic" then we create a use case
-  // async savePostFileMeta(
-  //   postFileMetaDto: CreatePostFileMetaDto,
-  // ): Promise<LayerNoticeInterceptor<OutputIdAndUrl>> {
-  //   try {
-  //     const fileNotice =
-  //       await this.PostFileMetadata.makeInstance(postFileMetaDto);
-
-  //     if (fileNotice.hasError) return fileNotice as LayerNoticeInterceptor;
-
-  //     const result = await this.filesRepo.savePostFIle(fileNotice.data);
-  //     return new LayerNoticeInterceptor(result);
-  //   } catch (error) {
-  //     throw new Error(`${this.location}: ${error}`);
-  //   }
-  // }
 
   generateImageKey = (keyInfo: GenerateImageKeyType) => {
     const { profileId, imageCategory, contentType, fileName, postId } = keyInfo;
@@ -75,26 +59,27 @@ export class FilesService {
     const withExtension = fileName.endsWith(fileExtension);
     const fileSignature = withExtension ? fileName.split('.')[0] : fileName;
 
-    const entityId = this.extractEntityId(imageCategory, postId || profileId);
-    const generatedKey = `images/${imageCategory}/${entityId}/${fileSignature}${timeStamp}.${fileExtension}`;
+    const basePath = this.getBasePathForCategory(
+      imageCategory,
+      postId,
+      profileId,
+    );
+
+    const generatedKey = `${basePath}/${fileSignature}${timeStamp}.${fileExtension}`;
 
     return { Key: generatedKey, ContentType: contentType };
   };
 
-  private extractEntityId = (category: ImageCategory, entityId) => {
-    const categories = {
-      post: 'postId',
-      profile: 'profileId',
+  getBasePathForCategory = (
+    imageCategory: string,
+    postId?: string,
+    profileId?: string,
+  ) => {
+    const paths = {
+      [ImageCategory.POST]: `images/posts/${postId}`,
+      [ImageCategory.PRODUCT]: `images/profiles/${profileId}`,
     };
-    return `${categories[category]}-${entityId}`;
-  };
-
-  private getEntityModel = <T>(modelName: string): Model<T> => {
-    const modelMap = {
-      PostImageMeta: PostImageMeta,
-      ProfileImageMeta: ProfileImageMeta
-    }
-    return this.connection.model(modelName);
+    return paths[imageCategory];
   };
 
   convertPhotoToStorageFormat = async (buffer: any): Promise<Buffer> =>

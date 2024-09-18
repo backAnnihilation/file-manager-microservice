@@ -11,7 +11,7 @@ export class CaptureAdapter {
     this.secretKey = this.configService.get('GOOGLE_CAPTURE_SECRET');
     this.apiUrl = 'https://www.google.com/recaptcha/api/siteverify';
   }
-  async validateCaptureToken(captureToken: string) {
+  async isValidCaptchaToken(captureToken: string) {
     try {
       return await fetch(this.apiUrl, {
         headers: {

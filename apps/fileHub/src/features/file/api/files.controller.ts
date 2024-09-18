@@ -5,10 +5,10 @@ import {
   ImageType,
   IProfileImageViewModelType,
   MediaType,
+  POST_CREATED,
+  PROFILE_IMAGE,
   RmqService,
   RoutingEnum,
-  UPLOAD_FILE,
-  UPLOAD_PHOTO,
 } from '@app/shared';
 import {
   Body,
@@ -53,68 +53,26 @@ import { InputPostImageDto } from './models/input-models/post-image.model';
 @Controller(RoutingEnum.files)
 export class FilesController {
   constructor(
-    @InjectModel(PostImageMeta.name) private PostModel: PostImageMetaModel,
-    private commandBus: CommandBus,
     private filesApiService: FilesBaseApiService,
     private readonly rmqService: RmqService,
   ) {}
 
-  @Get('test')
-  async testModel() {
-    console.log({ start: 1 });
-
-    const notice = await this.PostModel.makeInstance<
-      PostImageMetaDto,
-      PostImageMeta
-    >({
-      userId: '1',
-      postId: '1',
-      storageId: '123',
-      name: 'file',
-      size: 123,
-      category: ImageCategory.PROFILE,
-      url: 'url',
-    });
-    const { data } = notice;
-    return data;
-  }
-
-  @Post(ProfileNavigate.UploadProfilePhoto)
-  @UseInterceptors(FileInterceptor('file'))
-  @UseGuards(ApiKeyGuard)
-  async uploadFile(
-    @Param('id') profileId: string,
-    @Body() fileDto: InputFileTypesDto,
-    @UploadedFile(FileExtractPipe) extractedFile: FileExtractedType,
-  ): Promise<IProfileImageViewModelType> {
-    const command = new UploadFileCommand({
-      ...extractedFile,
-      ...fileDto,
-      profileId,
-    });
-    return this.filesApiService.create(
-      command,
-    ) as Promise<IProfileImageViewModelType>;
-  }
-
-  @MessagePattern(UPLOAD_PHOTO)
+  @MessagePattern(PROFILE_IMAGE)
   handleUploadProfileImage(
     @Payload() data?: InputProfileImageDto,
     @Ctx() context?: RmqContext,
   ) {
-    this.rmqService.ack(context);
     const command = new UploadProfileImageCommand(data);
-    return this.filesApiService.create(command);
+    return this.filesApiService.handle(command, context);
   }
 
-  @MessagePattern('POST_CREATED')
+  @MessagePattern(POST_CREATED)
   handleUploadPostImage(
     @Payload() data?: InputPostImageDto,
     @Ctx() context?: RmqContext,
   ) {
-    // this.rmqService.ack(context);
     const command = new UploadPostImageCommand(data);
-    return this.filesApiService.create(command);
+    return this.filesApiService.handle(command, context);
   }
 
   @EventPattern('emit')
@@ -125,10 +83,5 @@ export class FilesController {
     console.log({ data });
 
     this.rmqService.ack(context);
-  }
-
-  @Get()
-  get() {
-    return 'Hello';
   }
 }

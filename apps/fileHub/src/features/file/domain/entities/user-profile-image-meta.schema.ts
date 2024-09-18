@@ -7,8 +7,8 @@ import {
   ImageMetaStatics,
 } from './base-image-meta.schema';
 
-export type UserProfileDocument = HydratedDocument<ProfileImageMeta>;
-export type UserProfileModel = Model<UserProfileDocument> & ImageMetaStatics;
+export type ProfileImageDocument = HydratedDocument<ProfileImageMeta>;
+export type ProfileImageModel = Model<ProfileImageDocument> & ImageMetaStatics;
 export type ProfileImageMetaDto = BaseImageMetaDto & {
   profileId: string;
 };

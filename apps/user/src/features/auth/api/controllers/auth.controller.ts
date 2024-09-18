@@ -70,7 +70,7 @@ export class AuthController {
   ) {}
 
   @SignInEndpoint()
-  @UseGuards(CustomThrottlerGuard, LocalAuthGuard, CaptureGuard)
+  @UseGuards(CaptureGuard, CustomThrottlerGuard, LocalAuthGuard)
   @HttpCode(HttpStatus.OK)
   @Post(AuthNavigate.Login)
   async login(

@@ -1,11 +1,11 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { UserSessionDTO } from '../../../auth/api/models/dtos/user-session.dto';
 import { SecurityRepository } from '../../infrastructure/security.repository';
-import { AuthService } from '../../../auth/application/auth.service';
 import { extractDeviceInfo } from '../../infrastructure/utils/device-info-extractor';
 import { JwtTokens } from '../../../auth/api/models/auth-input.models.ts/jwt.types';
 import { LayerNoticeInterceptor } from '@app/shared';
 import { CreateSessionCommand } from './commands/create-session.command';
+import { AuthService } from '../../../auth/application/services/auth.service';
 
 @CommandHandler(CreateSessionCommand)
 export class CreateUserSessionUseCase

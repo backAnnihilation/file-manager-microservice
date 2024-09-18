@@ -6,15 +6,8 @@ export class CaptureGuard implements CanActivate {
   constructor(private captureAdapter: CaptureAdapter) {}
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
-    const captchaToken = request.header['captchaToken'];
+    const captchaToken = request.headers['captchatoken'];
 
-    if (captchaToken) {
-      const validCapture =
-        await this.captureAdapter.validateCaptureToken(captchaToken);
-
-      if (!validCapture) return false;
-    }
-
-    return true;
+    return this.captureAdapter.isValidCaptchaToken(captchaToken);
   }
 }
