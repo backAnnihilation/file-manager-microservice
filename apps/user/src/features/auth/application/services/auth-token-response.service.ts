@@ -1,16 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 import { LayerNoticeInterceptor } from '@app/shared';
-import { CreateSessionCommand } from '../../security/application/use-cases/commands/create-session.command';
-import { JwtTokens } from '../api/models/auth-input.models.ts/jwt.types';
-import { DeleteActiveSessionCommand } from '../../security/application/use-cases/commands/delete-active-session.command';
-import { UpdateIssuedTokenCommand } from './use-cases/commands/update-Issued-token.command';
-import { ConfirmEmailCommand } from './use-cases/commands/confirm-email.command';
-import { UpdateConfirmationCodeCommand } from './use-cases/commands/update-confirmation-code.command';
-import { PasswordRecoveryCommand } from './use-cases/commands/password-recovery.command';
-import { UpdatePasswordCommand } from './use-cases/commands/update-password.command';
-import { CreateUserCommand } from './use-cases/commands/create-user.command';
-import { CreateOAuthUserCommand } from './use-cases/create-oauth-user.use-case';
+import { CreateSessionCommand } from '../../../security/application/use-cases/commands/create-session.command';
+import { JwtTokens } from '../../api/models/auth-input.models.ts/jwt.types';
+import { DeleteActiveSessionCommand } from '../../../security/application/use-cases/commands/delete-active-session.command';
+import { UpdateIssuedTokenCommand } from '../use-cases/commands/update-Issued-token.command';
+import { ConfirmEmailCommand } from '../use-cases/commands/confirm-email.command';
+import { UpdateConfirmationCodeCommand } from '../use-cases/commands/update-confirmation-code.command';
+import { PasswordRecoveryCommand } from '../use-cases/commands/password-recovery.command';
+import { UpdatePasswordCommand } from '../use-cases/commands/update-password.command';
+import { CreateUserCommand } from '../use-cases/commands/create-user.command';
+import { CreateOAuthUserCommand } from '../use-cases/create-oauth-user.use-case';
 
 export class BaseAuthenticationApiService<TCommand, TResponse> {
   constructor(private readonly commandBus: CommandBus) {}

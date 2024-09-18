@@ -1,7 +1,10 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 
 import { AuthRepository } from '../../infrastructure/auth.repository';
-import { UserService, userValidationOptions } from '../user.service';
+import {
+  UserService,
+  userValidationOptions,
+} from '../services/user-validation.service';
 import { LayerNoticeInterceptor } from '../../../../../../../libs/shared/src/interceptors/notification';
 
 import { ConfirmEmailCommand } from './commands/confirm-email.command';

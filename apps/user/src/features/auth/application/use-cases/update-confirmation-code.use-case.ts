@@ -2,7 +2,7 @@ import { CommandHandler, EventBus, ICommandHandler } from '@nestjs/cqrs';
 
 import { AuthRepository } from '../../infrastructure/auth.repository';
 import { createRecoveryCode } from '../helpers/create-recovery-message.helper';
-import { UserService } from '../user.service';
+import { UserService } from '../services/user-validation.service';
 import { LayerNoticeInterceptor } from '../../../../../../../libs/shared/src/interceptors/notification';
 
 import { EmailNotificationEvent } from './events/email-notification-event';

@@ -46,7 +46,7 @@ describe('LayerNoticeInterceptor', () => {
     const errorResponse = interceptor.generateErrorResponse;
     expect(errorResponse).toBeInstanceOf(InternalServerErrorException);
     expect(errorResponse.message).toBe('Internal error occurred');
-    errorResponse
+    errorResponse;
   });
 
   it('should generate correct error response for 404 (NotFound)', () => {
@@ -54,7 +54,6 @@ describe('LayerNoticeInterceptor', () => {
     const errorResponse = interceptor.generateErrorResponse;
     expect(errorResponse).toBeInstanceOf(NotFoundException);
     expect(errorResponse.message).toBe('Resource not found');
-    // expect(errorResponse.message.statusCode).toBe(404);
   });
 
   it('should generate correct error response for 400 (ValidationError)', () => {
@@ -62,7 +61,6 @@ describe('LayerNoticeInterceptor', () => {
     const errorResponse = interceptor.generateErrorResponse;
     expect(errorResponse).toBeInstanceOf(BadRequestException);
     expect(errorResponse.message).toBe('Validation error');
-    // expect(errorResponse.message.statusCode).toBe(400);
   });
 
   it('should generate correct error response for 403 (Forbidden)', () => {
@@ -70,17 +68,16 @@ describe('LayerNoticeInterceptor', () => {
     const errorResponse = interceptor.generateErrorResponse;
     expect(errorResponse).toBeInstanceOf(ForbiddenException);
     expect(errorResponse.message).toBe('Access forbidden');
-    // expect(errorResponse.message.statusCode).toBe(403);
   });
 
   it('should validate fields correctly and add validation error', async () => {
     const invalidModel = new TestModel();
-    invalidModel.testField = 123 as any; // Неправильный тип данных
+    invalidModel.testField = 123 as any;
 
     await interceptor.validateFields(invalidModel);
 
     expect(interceptor.extensions).toHaveLength(1);
-    expect(interceptor.code).toBe(400); // Код ошибки ValidationError
+    expect(interceptor.code).toBe(400);
     expect(interceptor.extensions[0].message).toContain('must be a string');
   });
 

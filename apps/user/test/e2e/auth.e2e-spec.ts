@@ -6,7 +6,6 @@ import { v4 as uuidv4 } from 'uuid';
 import { EnvironmentVariables } from '../../src/core/config/configuration';
 import { EmailManager } from '../../src/core/managers/email-manager';
 import { JwtTokens } from '../../src/features/auth/api/models/auth-input.models.ts/jwt.types';
-import { AuthService } from '../../src/features/auth/application/auth.service';
 import { CaptureGuard } from '../../src/features/auth/infrastructure/guards/validate-capture.guard';
 import { databaseService, dbCleaner } from '../setupTests.e2e';
 import { initSettings } from '../tools/initSettings';
@@ -24,6 +23,7 @@ import {
   ErrorField,
 } from '../tools/utils/make-errors-messages';
 import { constantsTesting } from '../tools/utils/test-constants';
+import { AuthService } from '../../src/features/auth/application/services/auth.service';
 
 aDescribe(skipSettings.for(e2eTestNamesEnum.AUTH))('AuthController', () => {
   let app: INestApplication;

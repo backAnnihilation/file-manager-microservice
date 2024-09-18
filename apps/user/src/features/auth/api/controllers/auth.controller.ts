@@ -17,7 +17,7 @@ import { AuthNavigate } from '@user/core/routes/auth-navigate';
 import { UserSessionDto } from '../../../security/api/models/security-input.models/security-session-info.model';
 import { CreateSessionCommand } from '../../../security/application/use-cases/commands/create-session.command';
 import { DeleteActiveSessionCommand } from '../../../security/application/use-cases/commands/delete-active-session.command';
-import { AuthenticationApiService } from '../../application/auth-token-response.service';
+import { AuthenticationApiService } from '../../application/services/auth-token-response.service';
 import { ConfirmEmailCommand } from '../../application/use-cases/commands/confirm-email.command';
 import { CreateUserCommand } from '../../application/use-cases/commands/create-user.command';
 import { PasswordRecoveryCommand } from '../../application/use-cases/commands/password-recovery.command';

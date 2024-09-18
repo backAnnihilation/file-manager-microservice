@@ -5,7 +5,7 @@ import { CreateSAUseCase } from '../../features/admin/application/use-cases/crea
 import { CleanUpDatabaseRepository } from '../../features/admin/infrastructure/clean-up.repo';
 import { UsersRepository } from '../../features/admin/infrastructure/users.repo';
 import { AuthQueryRepository } from '../../features/auth/api/query-repositories/auth.query.repo';
-import { AuthenticationApiService } from '../../features/auth/application/auth-token-response.service';
+import { AuthenticationApiService } from '../../features/auth/application/services/auth-token-response.service';
 import { AuthService } from '../../features/auth/application/auth.service';
 import { ConfirmRegistrationUseCase } from '../../features/auth/application/use-cases/confirm-registration.use-case';
 import { CreateOAuthUserUseCase } from '../../features/auth/application/use-cases/create-oauth-user.use-case';
@@ -18,7 +18,7 @@ import { UpdateConfirmationCodeUseCase } from '../../features/auth/application/u
 import { UpdateIssuedTokenUseCase } from '../../features/auth/application/use-cases/update-issued-token.use-case';
 import { UpdatePasswordUseCase } from '../../features/auth/application/use-cases/update-password.use-case';
 import { VerificationCredentialsUseCase } from '../../features/auth/application/use-cases/verification-credentials.use-case';
-import { UserService } from '../../features/auth/application/user.service';
+import { UserService } from '../../features/auth/application/services/user-validation.service';
 import { AuthRepository } from '../../features/auth/infrastructure/auth.repository';
 import { BasicSAAuthGuard } from '../../features/auth/infrastructure/guards/basic-auth.guard';
 import { AccessTokenStrategy } from '../../features/auth/infrastructure/guards/strategies/access-token.strategy';
