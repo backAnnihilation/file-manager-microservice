@@ -34,9 +34,9 @@ aDescribe(skipSettings.for(e2eTestNamesEnum.Profile))(
         (moduleBuilder: TestingModuleBuilder) =>
           moduleBuilder
             .overrideGuard(CaptureGuard)
-            .useValue(mockedCaptureGuard)
-            // .overrideProvider(RMQAdapter)
-            // .useValue(RmqAdapterMocked),
+            .useValue(mockedCaptureGuard),
+        // .overrideProvider(RMQAdapter)
+        // .useValue(RmqAdapterMocked),
       );
       app = testSettings.app;
       constants = constantsTesting.inputData;

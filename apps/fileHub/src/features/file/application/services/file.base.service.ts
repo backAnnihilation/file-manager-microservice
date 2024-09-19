@@ -1,26 +1,26 @@
-import {
-  IPostImageViewModelType,
-  IProfileImageViewModelType,
-  RmqService,
-} from '@app/shared';
-import { BaseEventsApiService } from '@file/core/api/services/base-events-api.service';
 import { Injectable } from '@nestjs/common';
-import { CommandBus } from '@nestjs/cqrs';
-import { FilesQueryRepository } from '../../api/files.query.repository';
-import { UploadFileCommand } from '../use-cases/upload-file.use-case';
-import { UploadPostImageCommand } from '../use-cases/upload-post-image.use-case';
-import { UploadProfileImageCommand } from '../use-cases/upload-profile-image.use-case';
+import { RmqContext } from '@nestjs/microservices';
+import { PostsApiService } from './posts-api.service';
+import { ProfilesApiService } from './profiles-api.service';
 
 @Injectable()
-export class FilesApiService extends BaseEventsApiService<
-  UploadFileCommand | UploadProfileImageCommand | UploadPostImageCommand,
-  IProfileImageViewModelType | IPostImageViewModelType
-> {
+export class FilesApiService {
   constructor(
-    rmqService: RmqService,
-    commandBus: CommandBus,
-    queryRepo: FilesQueryRepository,
-  ) {
-    super(rmqService, commandBus, queryRepo);
+    private readonly profileApiService: ProfilesApiService,
+    private readonly postsApiService: PostsApiService,
+  ) {}
+
+  uploadImage(command: any, context: RmqContext, service: Service) {
+    switch (service) {
+      case Service.PROFILE:
+        return this.profileApiService.handleEvent(command, context);
+      case Service.POST:
+        return this.postsApiService.handleEvent(command, context);
+    }
   }
+}
+
+export enum Service {
+  PROFILE = 'PROFILE',
+  POST = 'POST',
 }

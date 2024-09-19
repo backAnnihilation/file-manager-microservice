@@ -18,12 +18,14 @@ export class BaseEventsApiService<
     super(commandBus, queryRepo);
   }
 
-  async handle(command: TCommand, context: RmqContext): Promise<TViewModel> {
-    const responseModel = (await this.handleCommand(
-      command,
-    )) as Promise<TViewModel>;
+  async handleEvent(
+    command: TCommand,
+    context: RmqContext,
+  ): Promise<TViewModel> {
+    const shouldReturnValue = true;
+    const responseModel = await this.handleCommand(command, shouldReturnValue);
     this.rmqService.ack(context);
-    return responseModel;
+    return responseModel as Promise<TViewModel>;
   }
 }
 

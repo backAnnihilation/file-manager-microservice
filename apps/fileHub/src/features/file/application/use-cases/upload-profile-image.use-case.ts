@@ -13,8 +13,8 @@ import {
   ProfileImageMetaDto,
   ProfileImageModel,
 } from '../../domain/entities/user-profile-image-meta.schema';
-import { FilesRepository } from '../../infrastructure/files.repository';
 import { FilesService } from '../services/file-metadata.service';
+import { ProfilesRepository } from '../../infrastructure/profiles-image.repository';
 
 export class UploadProfileImageCommand {
   constructor(public imageDto: InputProfileImageDto) {}
@@ -26,7 +26,7 @@ export class UploadProfileImageUseCase
 {
   constructor(
     private filesService: FilesService,
-    private filesRepo: FilesRepository<ProfileImageDocument>,
+    private filesRepo: ProfilesRepository<ProfileImageDocument>,
     @InjectModel(ProfileImageMeta.name)
     private ProfileImageModel: ProfileImageModel,
   ) {}
@@ -49,7 +49,7 @@ export class UploadProfileImageUseCase
       ProfileImageMeta
     >({
       storageId,
-      category: ImageCategory.POST,
+      category: ImageCategory.PROFILE,
       name: originalname,
       size,
       url,
