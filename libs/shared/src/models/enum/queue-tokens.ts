@@ -11,12 +11,12 @@ export const FILES_SERVICE = QUEUE_NAME.FILES;
 
 export enum EVENT_NAME {
   FILE_UPLOAD = 'upload_file',
-  PROFILE_IMAGE_UPLOAD = 'upload_profile_photo',
+  PROFILE_IMAGE_UPLOAD = 'upload_profile_image',
   POST_CREATED = 'upload_post_image',
 }
 export const enum EVENT_COMMANDS {
   FILE_UPLOAD = 'FILE_UPLOAD',
-  PROFILE_IMAGE_UPLOAD = 'upload_profile_photo',
+  PROFILE_IMAGE_UPLOAD = 'upload_profile_image',
   POST_CREATED = 'upload_post_image',
 }
 

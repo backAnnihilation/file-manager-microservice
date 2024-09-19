@@ -42,6 +42,7 @@ export class UserProfileService {
     const notice = new LayerNoticeInterceptor<IProfileImageViewModelType>();
     const { image, userId } = uploadFileDto;
     const profile = await this.profilesRepo.getByUserId(userId);
+
     if (!profile) {
       notice.addError(
         `Profile wasn't found`,

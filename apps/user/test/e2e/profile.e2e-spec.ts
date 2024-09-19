@@ -14,6 +14,12 @@ import {
   InputConstantsType,
 } from '../tools/utils/test-constants';
 import { EditProfileInputModel } from '../../src/features/profile/api/models/input/edit-profile.model';
+import { TestingModuleBuilder } from '@nestjs/testing';
+import { CaptureGuard } from '../../src/features/auth/infrastructure/guards/validate-capture.guard';
+import { mockedCaptureGuard } from '../tools/mock/capture-guard.mock';
+import { RMQAdapter } from '../../src/core/adapters';
+import { RmqAdapterMocked } from '../tools/mock/rmq-adapter.mock';
+import { ImageNames } from '../tools/models/image-names.enum';
 
 aDescribe(skipSettings.for(e2eTestNamesEnum.Profile))(
   'UserProfileController',
@@ -24,7 +30,14 @@ aDescribe(skipSettings.for(e2eTestNamesEnum.Profile))(
     let constants: InputConstantsType;
 
     beforeAll(async () => {
-      const testSettings = await initSettings();
+      const testSettings = await initSettings(
+        (moduleBuilder: TestingModuleBuilder) =>
+          moduleBuilder
+            .overrideGuard(CaptureGuard)
+            .useValue(mockedCaptureGuard)
+            // .overrideProvider(RMQAdapter)
+            // .useValue(RmqAdapterMocked),
+      );
       app = testSettings.app;
       constants = constantsTesting.inputData;
       usersTestManager = testSettings.usersTestManager;
@@ -40,14 +53,13 @@ aDescribe(skipSettings.for(e2eTestNamesEnum.Profile))(
 
     describe('profile-testing', () => {
       afterAll(async () => {
-        // await dbCleaner();
+        await dbCleaner();
       });
 
       beforeAll(async () => {
         const inputData = usersTestManager.createInputData({});
         await usersTestManager.registration(inputData);
         const { accessToken } = await usersTestManager.signIn(inputData);
-        console.log({ accessToken });
 
         expect.setState({ accessToken });
       });
@@ -133,6 +145,35 @@ aDescribe(skipSettings.for(e2eTestNamesEnum.Profile))(
           profileDto,
           HttpStatus.BAD_REQUEST,
         );
+      });
+    });
+
+    describe.only('profile-photo-upload', () => {
+      afterAll(async () => {
+        await dbCleaner();
+      });
+
+      beforeAll(async () => {
+        const inputData = usersTestManager.createInputData({});
+        await usersTestManager.registration(inputData);
+        const { accessToken } = await usersTestManager.signIn(inputData);
+
+        await usersTestManager.fillOutProfile(accessToken, {
+          firstName: 'newFirstName',
+          lastName: 'newLastName',
+          dateOfBirth: '12.06.2011',
+        });
+
+        expect.setState({ accessToken });
+      });
+
+      it(`should upload profile photo`, async () => {
+        const { accessToken } = expect.getState();
+        const imageDto = await usersTestManager.retrieveImageMeta(
+          ImageNames.FRESCO,
+        );
+
+        await usersTestManager.uploadPhoto(accessToken, imageDto);
       });
     });
   },

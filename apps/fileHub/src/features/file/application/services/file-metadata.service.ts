@@ -30,6 +30,7 @@ export class FilesService {
       profileId,
       bucket: Bucket,
     } = uploadFileDto;
+    console.log(uploadFileDto);
 
     const { ContentType, Key } = this.generateImageKey({
       contentType: mimetype as ContentType,
@@ -54,6 +55,8 @@ export class FilesService {
 
   generateImageKey = (keyInfo: GenerateImageKeyType) => {
     const { profileId, imageCategory, contentType, fileName, postId } = keyInfo;
+    console.log({ contentType });
+
     const [, fileExtension] = contentType.split('/');
     const timeStamp = new Date().getTime();
     const withExtension = fileName.endsWith(fileExtension);

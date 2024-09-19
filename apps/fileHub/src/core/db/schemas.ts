@@ -1,9 +1,11 @@
-import { BaseImageMeta } from '../../features/file/domain/entities/base-image-meta.schema';
 import {
   PostImageMeta,
   PostImageMetaSchema,
 } from '../../features/file/domain/entities/post-image-meta.schema';
-import { ProfileImageMeta } from '../../features/file/domain/entities/user-profile-image-meta.schema';
+import {
+  ProfileImageMeta,
+  ProfileImageMetaSchema,
+} from '../../features/file/domain/entities/user-profile-image-meta.schema';
 
 export const schemas = [
   {
@@ -12,10 +14,6 @@ export const schemas = [
   },
   {
     name: ProfileImageMeta.name,
-    schema: ProfileImageMeta,
-  },
-  {
-    name: BaseImageMeta.name,
-    schema: BaseImageMeta,
+    schema: ProfileImageMetaSchema,
   },
 ];

@@ -3,7 +3,7 @@ import { Provider } from '@nestjs/common';
 import { FilesQueryRepository } from '../../features/file/api/files.query.repository';
 import { FilesScheduleService } from '../../features/file/application/services/file-metadata.schedule.service';
 import { FilesService } from '../../features/file/application/services/file-metadata.service';
-import { FilesBaseApiService } from '../../features/file/application/services/file.base.service';
+import { FilesApiService } from '../../features/file/application/services/file.base.service';
 import { UploadFileUseCase } from '../../features/file/application/use-cases/upload-file.use-case';
 import { FilesRepository } from '../../features/file/infrastructure/files.repository';
 import { ApiKeyGuard } from '../../features/file/infrastructure/guards/api-key.guard';
@@ -20,7 +20,7 @@ export const providers: Provider[] = [
   FilesScheduleService,
   FileExtractPipe,
   FilesService,
-  FilesBaseApiService,
+  FilesApiService,
   FilesQueryRepository,
   UploadProfileImageUseCase,
   UploadPostImageUseCase,

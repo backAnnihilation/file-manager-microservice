@@ -61,6 +61,7 @@ export class UserProfilesController {
   }
 
   @ApiExcludeEndpoint()
+  @HttpCode(HttpStatus.NO_CONTENT)
   @Post(UserNavigate.UploadPhoto)
   @UseInterceptors(FileInterceptor('image'))
   @UseGuards(AccessTokenGuard)
@@ -69,8 +70,6 @@ export class UserProfilesController {
     @UploadedFile(ImageFilePipe)
     image: FileMetadata,
   ): Promise<IProfileImageViewModelType> {
-    // const command = new UploadProfileImageCommand();
-    // const command = new UploadFileCommand()
     const result = await this.profileService.uploadProfileImage({
       image,
       userId: userPayload.userId,

@@ -9,8 +9,7 @@
   "setupFilesAfterEnv": ["./setupTests.e2e.ts"],
   "moduleNameMapper": {
     "^@app/shared(.*)$": "<rootDir>/../../../libs/shared/src/$1",
-    "^@config/(.*)$": "<rootDir>/../../../libs/shared/config/$1",
-    "^@models/(.*)$": "<rootDir>/../../../libs/shared/models/$1",
+    "^@app/utils(.*)$": "<rootDir>/../../../libs/shared/utils/$1",
     "^@user/core/(.*)$": "<rootDir>/../src/core/$1"
   }
 }

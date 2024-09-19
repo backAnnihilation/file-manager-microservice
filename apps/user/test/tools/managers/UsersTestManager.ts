@@ -2,7 +2,6 @@ import { HttpStatus, INestApplication } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { DefaultArgs } from '@prisma/client/runtime/library';
 import * as request from 'supertest';
-
 import { DatabaseService } from '../../../src/core/db/prisma/prisma.service';
 import { SAViewType } from '../../../src/features/admin/api/models/user.view.models/userAdmin.view-type';
 import { JwtTokens } from '../../../src/features/auth/api/models/auth-input.models.ts/jwt.types';
@@ -18,8 +17,17 @@ import { SAUsersRouting } from '../routes/sa-users.routing';
 import { SecurityRouting } from '../routes/security.routing';
 import { UserProfileViewModel } from '../../../src/features/profile/api/models/output/profile.view.model';
 import { EditProfileInputModel } from '../../../src/features/profile/api/models/input/edit-profile.model';
-
 import { BaseTestManager } from './BaseTestManager';
+import { readFile } from 'fs/promises';
+import { resolve } from 'node:path';
+import { ImageNames } from '../models/image-names.enum';
+import { basename } from 'path';
+
+type ImageDtoType = {
+  fileName: string;
+  contentType: string;
+  buffer: Buffer;
+};
 
 export class UsersTestManager extends BaseTestManager {
   protected readonly routing: AuthUsersRouting;
@@ -49,7 +57,7 @@ export class UsersTestManager extends BaseTestManager {
     } else {
       return {
         userName: (field as AuthUserType).userName || 'userName',
-        password: (field as AuthUserType).password || 'password',
+        password: (field as AuthUserType).password || 'validPassword0!',
         email: (field as AuthUserType).email || 'test@gmail.com',
       };
     }
@@ -300,6 +308,46 @@ export class UsersTestManager extends BaseTestManager {
       });
     return profile;
   }
+
+  async uploadPhoto(
+    accessToken: string,
+    imageDto: ImageDtoType,
+    expectedStatus = HttpStatus.NO_CONTENT,
+  ) {
+    let { buffer, contentType, fileName } = imageDto;
+    const filename = fileName || 'profile';
+    contentType = contentType || 'image/png';
+
+    await request(this.application)
+      .post(this.profileRouting.uploadPhoto())
+      .auth(accessToken, this.constants.authBearer)
+      .attach('image', buffer, { filename, contentType })
+      .expect(expectedStatus);
+  }
+
+  async retrieveImageMeta(imageName: ImageNames): Promise<ImageDtoType> {
+    const profileImages = {
+      fresco: '../images/fresco.jpg',
+      jpeg: '../images/jpeg.jpg',
+      insta: '../images/insta.png',
+    };
+    const imagePath = resolve(__dirname, profileImages[imageName]);
+    const baseName = basename(imagePath);
+    const contentType =
+      baseName === 'fresco.jpg'
+        ? 'image/jpeg'
+        : `image/${baseName.split('.')[1]}`;
+    const buffer = await this.retrieveFileBuffer(imagePath);
+    const fileName = this.parseFileName(baseName);
+
+    return {
+      fileName,
+      contentType,
+      buffer,
+    };
+  }
+  private retrieveFileBuffer = async (filePath: string) => readFile(filePath);
+  private parseFileName = (fileName: string) => fileName.split('.')[0];
 
   async editProfile(
     accessToken: string,

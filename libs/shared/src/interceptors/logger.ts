@@ -18,6 +18,7 @@ export const COLORS = {
   muted: '\x1b[0;37m', // grey
   highlighted: '\x1b[0;43m', // yellow
   inverse: '\x1b[0;7m', // white background; black text
+  reset: '\x1b[0m',
 };
 
 export class CustomLogger implements LoggerService {

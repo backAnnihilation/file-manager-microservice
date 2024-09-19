@@ -5,8 +5,7 @@ module.exports = {
     extensions: ['.ts', '.js'],
     alias: {
       '@app/shared': resolve(__dirname, './libs/shared/src/.'),
-      '@models': resolve(__dirname, './libs/shared/models/'),
-      '@config': resolve(__dirname, './libs/shared/config/'),
+      '@app/utils': resolve(__dirname, './libs/shared/utils/.'),
       '@user/core': resolve(__dirname, './apps/user/src/core/'),
       '@file/core': resolve(__dirname, './apps/fileHub/src/core/'),
     },
