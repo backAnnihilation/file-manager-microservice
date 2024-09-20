@@ -24,6 +24,7 @@ import {
 } from '@nestjs/microservices';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiTags } from '@nestjs/swagger';
+
 import { ProfileNavigate } from '../../../core/routes/profile-navigate';
 import { FilesApiService } from '../application/services/file.base.service';
 import { UploadFileCommand } from '../application/use-cases/upload-file.use-case';
@@ -31,6 +32,7 @@ import { UploadPostImageCommand } from '../application/use-cases/upload-post-ima
 import { UploadProfileImageCommand } from '../application/use-cases/upload-profile-image.use-case';
 import { ApiKeyGuard } from '../infrastructure/guards/api-key.guard';
 import { FileExtractPipe } from '../infrastructure/pipes/extract-file-characters.pipe';
+
 import {
   FileExtractedType,
   InputFileTypesDto,

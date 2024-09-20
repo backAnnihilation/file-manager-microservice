@@ -8,7 +8,7 @@ export class CreatePostInputModel {
 }
 
 export interface ICreatePostCommand extends CreatePostInputModel {
-  userId: string;
+  userId?: string;
   image: FileMetadata;
 }
 
@@ -16,4 +16,5 @@ export interface ICreatePostDTOModel extends CreatePostInputModel {
   userId: string;
   imageUrl: string;
   imageId: string;
+  id: string;
 }

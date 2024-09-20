@@ -56,6 +56,8 @@ export class UploadPostImageUseCase
       postId,
     });
 
+    console.log(createdPostImageNotice);
+
     if (createdPostImageNotice.hasError)
       return createdPostImageNotice as LayerNoticeInterceptor;
 
@@ -63,6 +65,7 @@ export class UploadPostImageUseCase
     const savedPostImageId = await this.filesRepo.save(postImageDto);
 
     const result = { id: savedPostImageId.id, url };
+
     return new LayerNoticeInterceptor(result);
   }
 }

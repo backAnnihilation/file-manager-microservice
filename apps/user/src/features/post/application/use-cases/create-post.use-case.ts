@@ -8,6 +8,8 @@ import {
   EVENT_NAME,
 } from '@app/shared';
 import { RMQAdapter } from '@user/core/adapters/rmq.adapter';
+import { v4 as uuidv4 } from 'uuid';
+
 import { ICreatePostCommand } from '../../api/models/input/create-post.model';
 import { CreatePostDTO } from '../dto/create-post.dto';
 import { PostsRepository } from '../../infrastructure/posts.repository';
@@ -32,11 +34,14 @@ export class CreatePostUseCase implements ICommandHandler<CreatePostCommand> {
 
     const { userId, description, image } = command.postDto;
 
+    const postId: string = uuidv4();
+
     const imagePayload = {
       fileFormat: MediaType.IMAGE,
       fileType: ImageType.MAIN,
       image,
       userId,
+      postId,
     };
 
     const commandName = EVENT_COMMANDS.POST_CREATED;
@@ -55,10 +60,18 @@ export class CreatePostUseCase implements ICommandHandler<CreatePostCommand> {
       description,
       userId,
       imageUrl: result.url,
-      imageId: result.postId,
+      imageId: result.id,
+      id: postId,
     });
 
     await this.postRepo.create(postDto);
+
+    const post = await this.postRepo.getPostById(postId)
+
+
+    console.log(111111)
+    console.log(post)
+    console.log(111111)
 
     return notice;
   }

@@ -1,13 +1,16 @@
 import { ConfigService } from '@nestjs/config';
 import { Test, TestingModuleBuilder } from '@nestjs/testing';
 import { print } from '@app/utils';
+
 import { AppModule } from '../../src/app.module';
 import { applyAppSettings } from '../../src/core/config/app-settings';
 import { EnvironmentVariables } from '../../src/core/config/configuration';
 import { EmailManager } from '../../src/core/managers/email-manager';
 import { databaseService } from '../setupTests.e2e';
+
 import { UsersTestManager } from './managers/UsersTestManager';
 import { EmailManagerMock } from './mock/email-manager.mock';
+import { PostsTestManager } from './managers/PostsTestManager';
 
 export const initSettings = async (
   addSettingsToModuleBuilder?: (moduleBuilder: TestingModuleBuilder) => void,
@@ -39,6 +42,7 @@ export const initSettings = async (
     await app.init();
 
     const usersTestManager = new UsersTestManager(app, databaseService);
+    const postsTestManager = new PostsTestManager(app, databaseService);
 
     const httpServer = app.getHttpServer();
 
@@ -48,6 +52,7 @@ export const initSettings = async (
       httpServer,
       usersTestManager,
       testingAppModule,
+      postsTestManager,
     };
   } catch (error) {
     console.error('initSettings:', error);

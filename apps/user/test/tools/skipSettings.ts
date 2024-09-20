@@ -8,7 +8,8 @@ export const skipSettings = {
   run_all_tests: skip,
 
   auth: skip,
-  profile: run,
+  profile: skip,
+  posts: run,
 
   for(testName: e2eTestNamesEnum): boolean {
     if (!this.run_all_tests) return false;
@@ -31,4 +32,5 @@ export const skipSettings = {
 export enum e2eTestNamesEnum {
   AUTH = 'auth',
   Profile = 'profile',
+  Posts = 'posts',
 }

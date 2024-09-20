@@ -1,4 +1,6 @@
 import { HttpStatus, INestApplication } from '@nestjs/common';
+import { TestingModuleBuilder } from '@nestjs/testing';
+
 import { DatabaseService } from '../../src/core/db/prisma/prisma.service';
 import { initSettings } from '../tools/initSettings';
 import { UsersTestManager } from '../tools/managers/UsersTestManager';
@@ -14,7 +16,6 @@ import {
   InputConstantsType,
 } from '../tools/utils/test-constants';
 import { EditProfileInputModel } from '../../src/features/profile/api/models/input/edit-profile.model';
-import { TestingModuleBuilder } from '@nestjs/testing';
 import { CaptureGuard } from '../../src/features/auth/infrastructure/guards/validate-capture.guard';
 import { mockedCaptureGuard } from '../tools/mock/capture-guard.mock';
 import { RMQAdapter } from '../../src/core/adapters';
@@ -34,9 +35,9 @@ aDescribe(skipSettings.for(e2eTestNamesEnum.Profile))(
         (moduleBuilder: TestingModuleBuilder) =>
           moduleBuilder
             .overrideGuard(CaptureGuard)
-            .useValue(mockedCaptureGuard)
-            // .overrideProvider(RMQAdapter)
-            // .useValue(RmqAdapterMocked),
+            .useValue(mockedCaptureGuard),
+        // .overrideProvider(RMQAdapter)
+        // .useValue(RmqAdapterMocked),
       );
       app = testSettings.app;
       constants = constantsTesting.inputData;

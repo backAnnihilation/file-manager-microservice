@@ -55,7 +55,6 @@ export class FilesService {
 
   generateImageKey = (keyInfo: GenerateImageKeyType) => {
     const { profileId, imageCategory, contentType, fileName, postId } = keyInfo;
-    console.log({ contentType });
 
     const [, fileExtension] = contentType.split('/');
     const timeStamp = new Date().getTime();

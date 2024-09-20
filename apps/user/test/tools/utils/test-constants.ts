@@ -52,3 +52,16 @@ export const feedbacksConstants = {
     'content include discussion about neurobiology',
   ],
 };
+
+export const mockImage: Express.Multer.File = {
+  fieldname: 'file',
+  originalname: 'example.png',
+  encoding: '7bit',
+  mimetype: 'image/png',
+  size: 1234,
+  destination: './uploads/',
+  filename: 'example-1234.png',
+  path: './uploads/example-1234.png',
+  buffer: Buffer.alloc(1234),
+  stream: null,
+};
