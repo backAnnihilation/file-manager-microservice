@@ -1,6 +1,5 @@
 import {
   ApiTagsEnum,
-  IProfileImageViewModelType,
   POST_CREATED,
   PROFILE_IMAGE,
   RmqService,
@@ -12,8 +11,11 @@ import {
   Param,
   Post,
   UploadedFile,
+  UseFilters,
   UseGuards,
   UseInterceptors,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import {
   Ctx,
@@ -21,15 +23,16 @@ import {
   MessagePattern,
   Payload,
   RmqContext,
+  RpcException,
 } from '@nestjs/microservices';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiTags } from '@nestjs/swagger';
+import { MicroserviceExceptionFilter } from '../../../core/configuration/rpc-exception-filter';
 import { ProfileNavigate } from '../../../core/routes/profile-navigate';
 import {
   FilesApiService,
   Service,
 } from '../application/services/file.base.service';
-import { ProfilesApiService } from '../application/services/profiles-api.service';
 import { UploadFileCommand } from '../application/use-cases/upload-file.use-case';
 import { UploadPostImageCommand } from '../application/use-cases/upload-post-image.use-case';
 import { UploadProfileImageCommand } from '../application/use-cases/upload-profile-image.use-case';
@@ -41,6 +44,7 @@ import {
 } from './models/input-models/extracted-file-types';
 import { InputPostImageDto } from './models/input-models/post-image.model';
 import { InputProfileImageDto } from './models/input-models/profile-image.model';
+import { HttpExceptionFilter } from '../../../core/configuration/exception-filter';
 import { validateOrReject } from 'class-validator';
 import { plainToClass } from 'class-transformer';
 
@@ -79,11 +83,39 @@ export class FilesController {
     return this.filesApiService.uploadImage(command, context, Service.PROFILE);
   }
 
+  @UseFilters(
+    // new HttpExceptionFilter('TESTING'),
+    new MicroserviceExceptionFilter(),
+  )
+  // @UsePipes(
+  //   new ValidationPipe({
+  //     transform: true,
+  //     // whitelist: true,
+  //     // forbidNonWhitelisted: true,
+  //     // exceptionFactory: (errors) => new RpcException(errors),
+  //   }),
+  // )
   @MessagePattern(POST_CREATED)
   async handleUploadPostImage(
-    @Payload() data: InputPostImageDto,
+    @Payload() // 'InputPostImageDto',
+    //   forbidNonWhitelisted: true,
+    data // new ValidationPipe({
+    //   exceptionFactory: (errors) => new RpcException(errors),
+    // }),
+    : InputPostImageDto,
     @Ctx() context: RmqContext,
   ) {
+    console.log({ data });
+
+    try {
+      const body = plainToClass(InputPostImageDto, data);
+      console.log(body instanceof InputPostImageDto);
+      await validateOrReject(body);
+    } catch (e) {
+      console.log(e);
+      throw new RpcException(e);
+    }
+
     const command = new UploadPostImageCommand(data);
     return this.filesApiService.uploadImage(command, context, Service.POST);
   }

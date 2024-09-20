@@ -28,11 +28,15 @@ export class UploadPostImageUseCase
     private filesService: FilesService,
     private filesRepo: PostsRepository<PostImageMetaDocument>,
     @InjectModel(PostImageMeta.name) private PostImageModel: PostImageMetaModel,
-  ) {}
+  ) {
+
+  }
 
   async execute(
     command: UploadPostImageCommand,
   ): Promise<LayerNoticeInterceptor<OutputIdAndUrl>> {
+    const notice = new LayerNoticeInterceptor()
+    notice.validateFields
     const { userId, image, postId } = command.imageDto;
     const { originalname, size } = image;
 
