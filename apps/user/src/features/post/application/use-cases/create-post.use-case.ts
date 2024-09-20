@@ -66,13 +66,6 @@ export class CreatePostUseCase implements ICommandHandler<CreatePostCommand> {
 
     await this.postRepo.create(postDto);
 
-    const post = await this.postRepo.getPostById(postId)
-
-
-    console.log(111111)
-    console.log(post)
-    console.log(111111)
-
     return notice;
   }
 }

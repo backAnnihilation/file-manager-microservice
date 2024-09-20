@@ -8,6 +8,7 @@ import { PostsRouting } from '../routes/posts.routing';
 import { ICreatePostCommand } from '../../../src/features/post/api/models/input/create-post.model';
 
 import { BaseTestManager } from './BaseTestManager';
+import { EditPostInputModel } from '../../../src/features/post/api/models/input/edit-profile.model';
 
 export class PostsTestManager extends BaseTestManager {
   protected readonly routing: PostsRouting;
@@ -30,9 +31,9 @@ export class PostsTestManager extends BaseTestManager {
       .post(this.routing.createPost())
       .auth(accessToken, this.constants.authBearer)
       .set('Content-Type', 'multipart/form-data')
-      .field('description', inputData.description)
+      .field('description', 'sadasdada')
       .attach('image', inputData.image.buffer, inputData.image.originalname)
-      //.expect(expectedStatus);
+      .expect(expectedStatus);
 
     return response.body;
   }
@@ -40,10 +41,10 @@ export class PostsTestManager extends BaseTestManager {
   async updatePost(
     postId: string,
     accessToken: string,
-    inputData: ICreatePostCommand = null,
+    inputData: EditPostInputModel = null,
     expectedStatus = HttpStatus.NO_CONTENT,
   ): Promise<void> {
-    await request(this.application)
+    const post = await request(this.application)
       .put(this.routing.updatePost(postId))
       .auth(accessToken, this.constants.authBearer)
       .send(inputData)

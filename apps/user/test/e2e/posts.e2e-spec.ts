@@ -59,15 +59,12 @@ aDescribe(skipSettings.for(e2eTestNamesEnum.Posts))('PostsController', () => {
       const inputData_1 = usersTestManager.createInputData({});
       await usersTestManager.registration(inputData_1);
       const { accessToken } = await usersTestManager.signIn(inputData_1);
-
       const inputData_2 = usersTestManager.createInputData({
         userName: 'etofiasko',
         email: 'bratan@gmail.com',
       });
       await usersTestManager.registration(inputData_2);
       const tokens_2 = await usersTestManager.signIn(inputData_2);
-      console.log(tokens_2.accessToken);
-
       const accessToken2 = tokens_2.accessToken;
 
       expect.setState({ accessToken2, accessToken });
@@ -77,15 +74,14 @@ aDescribe(skipSettings.for(e2eTestNamesEnum.Posts))('PostsController', () => {
       const { accessToken } = expect.getState();
 
       const postDto = {
-        description: 'constants.description',
+        description: 'badsfdasdsad',
         image: mockImage,
       };
 
       const post = await postsTestManager.createPost(accessToken, postDto);
 
-      console.log(post)
-
       const postId = post.id;
+
       expect.setState({ postId });
     });
 
@@ -154,9 +150,9 @@ aDescribe(skipSettings.for(e2eTestNamesEnum.Posts))('PostsController', () => {
 
     it(`should update post`, async () => {
       const { accessToken, postId } = expect.getState();
+
       const postDto = {
         description: 'constants.description',
-        image: mockImage,
       };
 
       await postsTestManager.updatePost(postId, accessToken, postDto);

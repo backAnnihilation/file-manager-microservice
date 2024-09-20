@@ -3,7 +3,7 @@ import { FileMetadata } from '@app/shared';
 
 export class CreatePostInputModel {
   @IsNotEmpty()
-  @Length(0, 500)
+  @Length(1, 500)
   description: string;
 }
 
