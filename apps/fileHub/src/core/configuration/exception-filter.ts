@@ -1,10 +1,12 @@
 import {
   ArgumentsHost,
+  BadRequestException,
   Catch,
   ExceptionFilter,
   HttpException,
   HttpStatus,
 } from '@nestjs/common';
+import { RpcException } from '@nestjs/microservices';
 import { Request, Response } from 'express';
 
 type ErrorResponse = {
@@ -20,9 +22,14 @@ export class HttpExceptionFilter implements ExceptionFilter {
   constructor(private currentENV: string) {}
   catch(exception: HttpException, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
-    const response = ctx.getResponse<Response>();
+    const response = ctx.getResponse<Response>() as any;
     const request = ctx.getRequest<Request>();
+    const rpcContext = host.switchToRpc();
+    const rpcData = rpcContext.getData();
+    const rpcCtx = rpcContext.getContext();
+
     const { message, key, statusCode } = exception.getResponse() as any;
+    console.log({ rpcContext, rpcCtx, rpcData });
 
     const devErrorResponse = {
       statusCode,

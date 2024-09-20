@@ -13,7 +13,7 @@ import {
   PostImageMetaDto,
   PostImageMetaModel,
 } from '../../domain/entities/post-image-meta.schema';
-import { FilesRepository } from '../../infrastructure/files.repository';
+import { PostsRepository } from '../../infrastructure/post-files.repository';
 import { FilesService } from '../services/file-metadata.service';
 
 export class UploadPostImageCommand {
@@ -26,13 +26,17 @@ export class UploadPostImageUseCase
 {
   constructor(
     private filesService: FilesService,
-    private filesRepo: FilesRepository<PostImageMetaDocument>,
+    private filesRepo: PostsRepository<PostImageMetaDocument>,
     @InjectModel(PostImageMeta.name) private PostImageModel: PostImageMetaModel,
-  ) {}
+  ) {
+
+  }
 
   async execute(
     command: UploadPostImageCommand,
   ): Promise<LayerNoticeInterceptor<OutputIdAndUrl>> {
+    const notice = new LayerNoticeInterceptor()
+    notice.validateFields
     const { userId, image, postId } = command.imageDto;
     const { originalname, size } = image;
 

@@ -30,7 +30,6 @@ export class FilesService {
       profileId,
       bucket: Bucket,
     } = uploadFileDto;
-    console.log(uploadFileDto);
 
     const { ContentType, Key } = this.generateImageKey({
       contentType: mimetype as ContentType,
@@ -73,16 +72,14 @@ export class FilesService {
   };
 
   getBasePathForCategory = (
-    imageCategory: string,
+    category: ImageCategory,
     postId?: string,
     profileId?: string,
-  ) => {
-    const paths = {
-      [ImageCategory.POST]: `images/posts/${postId}`,
-      [ImageCategory.PRODUCT]: `images/profiles/${profileId}`,
-    };
-    return paths[imageCategory];
-  };
+  ): string =>
+    ({
+      [ImageCategory.POST]: `images/posts/postId-${postId}`,
+      [ImageCategory.PROFILE]: `images/profiles/profileId-${profileId}`,
+    })[category];
 
   convertPhotoToStorageFormat = async (buffer: any): Promise<Buffer> =>
     await sharp(buffer).webp({ quality: 80 }).toBuffer();
