@@ -14,6 +14,7 @@ export const applyAppSettings = (app: INestApplication | INestMicroservice) => {
   // app.enableCors();
   pipesSetup(app);
   exceptionFilterSetup(app, currentENV);
+
   // app.use(cookieParser());
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
 };
