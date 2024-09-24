@@ -4,12 +4,12 @@ pipeline {
     agent any
     environment {
         ENV_TYPE = "production"
-        PORT = 3507
+        PORT = 3533
         NAMESPACE = "incta-team"
         REGISTRY_HOSTNAME = "backinstateam"
-        PROJECT = "back-404"
+        PROJECT = "file-microservice"
         REGISTRY = "registry.hub.docker.com"
-        DEPLOYMENT_NAME = "back-404-deployment"
+        DEPLOYMENT_NAME = "file-microservice-deployment"
         IMAGE_NAME = "${env.BUILD_ID}_${env.ENV_TYPE}_${env.GIT_COMMIT}"
         DOCKER_BUILD_NAME = "${env.REGISTRY_HOSTNAME}/${env.PROJECT}:${env.IMAGE_NAME}"
     }
@@ -28,24 +28,23 @@ pipeline {
                        [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
                        nvm use --lts
                        yarn install
-                       yarn run prisma:generate
                        yarn test
                     '''
                 }
             }
         }
-        // stage('e2e tests') {
-        //     steps {
-        //         script {
-        //             sh '''
-        //                export NVM_DIR="$HOME/.nvm"
-        //                [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
-        //                nvm use --lts
-        //                yarn test:e2e
-        //             '''
-        //         }
-        //     }
-        // }
+        stage('e2e tests') {
+            steps {
+                script {
+                    sh '''
+                       export NVM_DIR="$HOME/.nvm"
+                       [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+                       nvm use --lts
+                       yarn test:e2e
+                    '''
+                }
+            }
+        }
         stage('Build docker image') {
             steps {
                 echo "Build image started..."
