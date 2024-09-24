@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { useContainer } from 'class-validator';
 import { AppModule } from '../../app.module';
 import { exceptionFilterSetup } from './exception-filter.setup';
-import { pipesSetup } from './pipes.setup';
+import { pipesSetup } from '@file/core/configuration/pipes.setup';
 
 export const applyAppSettings = (app: INestApplication | INestMicroservice) => {
   const currentENV = app.get(ConfigService).getOrThrow('ENV');
