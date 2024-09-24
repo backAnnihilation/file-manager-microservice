@@ -23,9 +23,8 @@
       "@app/utils": ["libs/shared/utils/."],
       "@models/*": ["libs/shared/models/*"],
       "@config/*": ["libs/shared/config/*"],
-      "@user/core/*": ["apps/user/src/core/*"],
-      "@file/core/*": ["apps/fileHub/src/core/*"]
+      "@file/core/*": ["fileHub/src/core/*"]
     }
   },
-  "include": ["apps/**/*", "libs/**/*"]
+  "include": ["**/*", "libs/**/*"]
 }

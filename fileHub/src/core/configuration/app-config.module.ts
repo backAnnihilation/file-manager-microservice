@@ -11,7 +11,7 @@ import { awsConfig, validate } from './configuration';
       validate,
       cache: true,
       expandVariables: true,
-      envFilePath: 'apps/fileHub/.env',
+      envFilePath: 'fileHub/.env',
       // process.env.ENV === Environment.TESTING ? 'apps/fileHub/.env' : '',
     }),
   ],
