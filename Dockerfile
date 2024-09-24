@@ -1,30 +1,30 @@
+# Check out https://hub.docker.com/_/node to select a new base image
 FROM node:20.11-alpine
 
-USER root
-
-RUN npm install -g pnpm
-
+# Set to a non-root built-in user `node`
 USER node
 
+# Create app directory (with user `node`)
 RUN mkdir -p /home/node/dist/app
 
 WORKDIR /home/node/dist/app
 
-COPY --chown=node package*.json ./ 
-COPY --chown=node pnpm-lock.yaml ./
+# Install app dependencies
+# A wildcard is used to ensure both package.json AND package-lock.json are copied
+# where available (npm@5+)
 
-RUN pnpm install
+COPY --chown=node package*.json ./
 
-ENV PORT=3508
+RUN npm install
 
-COPY --chown=node . .
+ENV PORT=3533
+# Bundle app source code
+COPY --chown=node ../../Downloads .
 
-RUN npx prisma generate --schema=./apps/user/prisma/schemas/
+RUN npm run build
 
-RUN npx prisma migrate deploy --schema=./apps/user/prisma/schemas/
-
-RUN pnpm run build
+# Bind to all network interfaces so that it can be mapped to the host OS
 
 EXPOSE ${PORT}
 
-CMD ["pnpm", "start"]
+CMD [ "npm", "start" ]
