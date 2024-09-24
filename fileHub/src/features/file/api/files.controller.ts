@@ -24,7 +24,6 @@ import {
   RpcException,
 } from '@nestjs/microservices';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiTags } from '@nestjs/swagger';
 import { MicroserviceExceptionFilter } from '../../../core/configuration/rpc-exception-filter';
 import { ProfileNavigate } from '../../../core/routes/profile-navigate';
 import {
@@ -46,7 +45,6 @@ import { HttpExceptionFilter } from '../../../core/configuration/exception-filte
 import { validateOrReject } from 'class-validator';
 import { plainToClass } from 'class-transformer';
 
-@ApiTags(ApiTagsEnum.Files)
 @Controller(RoutingEnum.files)
 export class FilesController {
   constructor(
